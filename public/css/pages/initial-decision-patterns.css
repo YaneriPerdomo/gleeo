@@ -1,0 +1,15 @@
+.initial-decision-patterns__metric-icon {
+    background: var(--red);
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+}
+
+.initial-decision-patterns__metric-icon > i {
+    color: white;
+}
+
+.initial-decision-patterns__data-left,
+.initial-decision-patterns__metric--failure-limit,
+.initial-decision-patterns__data-right {
+    gap: 0.5rem;
+}

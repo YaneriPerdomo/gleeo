@@ -1,0 +1,61 @@
+.header__navigation-bar__list-item {
+    list-style: none;
+}
+
+.header__navigation-bar__link {
+    color: white;
+    text-decoration: none;
+}
+
+.header__navigation-bar__list {
+    gap: 1rem;
+    padding: 0rem;
+}
+
+.header__logo-figure {
+    margin: 0rem !important;
+}
+
+.header__top-bar {
+    margin-bottom: 1rem;
+}
+
+.dropdown-toggle {
+    background: none;
+    border: 0rem;
+}
+
+.header__logo-img {
+    width: 60px;
+}
+
+.header__logo-text {
+    background: #7859cf;
+    background: linear-gradient(
+        90deg,
+        rgba(120, 89, 207, 1) 29%,
+        rgba(255, 127, 72, 1) 100%
+    );
+    border-radius: 1rem;
+    padding-right: 0.5rem;
+}
+
+header {
+    background: var(--purple);
+    padding-top: 1rem;
+}
+
+.item-selected {
+    color: var(--purple) !important;
+    font-weight: bold;
+}
+
+.item-selected--nav {
+    font-weight: bold;
+    border-bottom: solid 2px white;
+}
+
+.dropdown-menu__button {
+    margin-left: 0.5rem;
+    color: white;
+}

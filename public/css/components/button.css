@@ -1,0 +1,15 @@
+.button__color-purple {
+    background: var(--purple) !important;
+}
+
+.button__color-orange {
+    background: var(--orange) !important;
+}
+
+.button {
+    background: none;
+    border: none;
+    padding: 0.5rem 2rem;
+    color: white;
+    border-radius: 1rem;
+}

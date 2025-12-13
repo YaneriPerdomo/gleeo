@@ -1,0 +1,19 @@
+:root {
+    --green: rgb(20 143 99);
+    --blue: rgb(25, 92, 147);
+    --black: rgb(47, 47, 47);
+    --red: rgb(244, 67, 67);
+    --gray: #4d545b;
+    --gold: rgb(176, 131, 22);
+    --light-blue: rgb(21, 79, 128);
+    --purple: #7859cf;
+    --orange: #ef7440;
+}
+
+.height-full {
+    height: 100%;
+}
+
+body {
+    background: #dbdbdb;
+}

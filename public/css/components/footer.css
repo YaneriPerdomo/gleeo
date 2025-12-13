@@ -1,0 +1,12 @@
+footer {
+    /* background: var(--black);*/
+    padding: 1.5rem;
+    color: white;
+}
+
+.footer__paragraph {
+    margin: 0rem;
+    border-top: solid 2px var(--purple);
+    color: var(--purple);
+    padding-top: 1.5rem;
+}

@@ -1,0 +1,40 @@
+.initial-decision-patterns__metric-icon {
+    background: var(--red);
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+}
+.alert-thresholds__metric-icon {
+    background: var(--orange);
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+}
+.initial-decision-patterns__metric-icon > i,
+.alert-thresholds__metric-icon > i {
+    color: white;
+}
+
+.initial-decision-patterns__data-left,
+.initial-decision-patterns__metric--failure-limit,
+.initial-decision-patterns__data-right,
+.alert-thresholds__data-left,
+.alert-thresholds__metric--failure-limit,
+.alert-thresholds__metric__data-right,
+.initial-decision-patterns__metric--activation-limit {
+    gap: 0.5rem !important;
+}
+
+.alert-thresholds__metric--activation-limit {
+    gap: 0.5rem;
+}
+
+li {
+    list-style: none;
+}
+
+.aside__list > a {
+    gap: 0.5rem;
+}
+
+.aside__list {
+    padding: 0rem;
+}

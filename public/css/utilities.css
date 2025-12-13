@@ -1,0 +1,49 @@
+.flex-and-direction-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.flex-and-direction-row {
+    display: flex;
+    flex-direction: row;
+}
+
+.flex-center-full {
+    justify-content: center;
+    align-items: center;
+}
+
+.flex-content-space-between {
+    justify-content: space-between;
+    align-items: center;
+}
+
+.flex-center-full-start {
+    justify-content: start !important;
+}
+
+.flex-content-end{
+        justify-content: end ;
+}
+
+.flex-aligh-items-center{
+        align-items: center;
+
+}
+.flex-grow-2 {
+    flex-grow: 2;
+}
+
+.bg-white-border {
+    padding: 1rem;
+    border-radius: 0.5rem;
+    border: solid 1px #e8d8ff;
+    background: white;
+    margin-top: 1rem !important;
+    margin-bottom: 1rem !important;
+}
+
+a {
+    text-decoration: none;
+    color: initial;
+}

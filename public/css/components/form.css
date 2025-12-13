@@ -1,0 +1,3 @@
+.is-invalid--border {
+    border: solid 1px var(--red);
+}

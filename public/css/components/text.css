@@ -1,0 +1,28 @@
+.text__gray {
+    color: var(--gray);
+}
+
+.text__orange {
+    color: var(--orange);
+}
+
+.text__purple{
+    color:var(--purple);
+}
+
+.text__red{
+    color:var(--red);
+}
+
+.text__green{
+    color:var(--green);
+}
+
+.text__blue{
+    color:var(--blue);
+}
+
+
+.text__gold{
+    color: var(--gold);
+}
