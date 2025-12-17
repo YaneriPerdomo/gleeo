@@ -14,16 +14,23 @@ if (url.href.includes("/configuracion-del-tutor")) {
     }
 }
 else if (url.href.includes("/bienvenido-a")) {
-            tutorSettingsListIcons[0].classList.add("item-selected");
+    tutorSettingsListIcons[0].classList.add("item-selected");
 
-        headerNavigationBarListItem[0].classList.add("item-selected--nav");
+    headerNavigationBarListItem[0].classList.add("item-selected--nav");
 }
 else if (url.href.includes("/perfil")) {
-    if(url.href.includes("/acceso")){
+    if (url.href.includes("/acceso")) {
         tutorSettingsListIcons[2].classList.add("item-selected");
-    }else if (url.href.includes("/cuenta")) {
+    } else if (url.href.includes("/cuenta")) {
         tutorSettingsListIcons[1].classList.add("item-selected");
     } else {
+        tutorSettingsListIcons[0].classList.add("item-selected");
+    }
+}
+else if (url.href.includes("/gestion-de-cuentas")) {
+    if (url.href.includes("/gestion-de-cuentas")
+    ) {
+        headerNavigationBarListItem[3].classList.add("item-selected--nav");
         tutorSettingsListIcons[0].classList.add("item-selected");
     }
 }

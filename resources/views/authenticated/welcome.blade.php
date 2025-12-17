@@ -104,9 +104,11 @@
                         <h1 class="fs-2">
                             <span class="">
                                 <div class="">
-                                    <span class="note ">
+                                    <b>
+                                        <span class="note ">
                                     </span>
                                     <span class="text__purple">{{ Auth::user()->user }}</span>!
+                                    </b>
                                 </div>
 
                                 <script>

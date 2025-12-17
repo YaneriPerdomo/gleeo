@@ -65,7 +65,7 @@
                          </a>
                      </li>
                      <li class="header__navigation-bar__list-item">
-                         <a href="#" class="header__navigation-bar__link"><i class="bi bi-people-fill"></i>
+                         <a href="{{ route('representative.index') }}" class="header__navigation-bar__link"><i class="bi bi-people-fill"></i>
                              Gestión de Cuentas</a>
                      </li>
 

@@ -1,23 +1,42 @@
 <?php
 
 use App\Http\Controllers\AlertThresholdsController;
+use App\Http\Controllers\CreateAccountController;
 use App\Http\Controllers\InitialDecisionPatternsController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RepresentativeController;
 use App\Http\Controllers\WelcomeController;
 use Illuminate\Support\Facades\Route;
 
 Route::controller(LoginController::class)->group(function () {
-    Route::get('autorizacion/iniciar-sesion', 'index')->name('login.index');
+    Route::get('iniciar-sesion', 'index')->name('login.index');
     Route::get('/', 'index')->name('login.index');
-    Route::post('autorizacion/iniciar-sesion', 'auth')->name('login.auth');
+    Route::post('iniciar-sesion', 'auth')->name('login.auth');
     Route::post('cerrar-sesion', 'logout')->name('login.logout');
+});
+
+Route::controller(CreateAccountController::class)->group(function () {
+    Route::get('crear-nueva-cuenta', 'index')->name('create-account.index');
+
 });
 
 Route::controller(WelcomeController::class)->group(function () {
     Route::get('bienvenido-a', '__invoke')->name('welcome');
     Route::get('bienvenido', '__invoke')->name('welcome');
     Route::get('bienvenida', '__invoke')->name('welcome');
+});
+
+
+Route::controller(RepresentativeController::class)->group(function () {
+    Route::get('gestion-de-cuentas/', 'index')->name('representative.index');
+    Route::post('gestion-de-cuentas/crear', 'create')->name('representative.create');
+    Route::get('gestion-de-cuentas/{search}/filtrar', 'filter')->name('representative.filter');
+    Route::get('gestion-de-cuentas/{slug}/editar-informacion', 'edit')->name('representative.edit');
+    Route::put('gestion-de-cuentas/{slug}', 'update')->name('representative.update');
+    Route::get('gestion-de-cuentas/{slug}/eliminar', 'delete')->name('representative.delete');
+    Route::delete('gestion-de-cuentas/{slug}/eliminar', 'destroy')->name('representative.destroy');
+
 });
 
 Route::controller(InitialDecisionPatternsController::class)->group(function () {

@@ -6,6 +6,20 @@
     background: var(--orange) !important;
 }
 
+.button__color-black {
+    background: var(--black) !important;
+}
+.button__color-green {
+    background: var(--green) !important;
+}
+.button__color-red {
+    background: var(--red) !important;
+}
+
+.button__color-gold {
+    background: var(--gold) !important;
+}
+
 .button {
     background: none;
     border: none;

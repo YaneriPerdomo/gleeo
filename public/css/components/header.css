@@ -30,10 +30,10 @@
 }
 
 .header__logo-text {
-    background: #7859cf;
+    background: var(--purple);
     background: linear-gradient(
         90deg,
-        rgba(120, 89, 207, 1) 29%,
+         var(--purple) 29%,
         rgba(255, 127, 72, 1) 100%
     );
     border-radius: 1rem;

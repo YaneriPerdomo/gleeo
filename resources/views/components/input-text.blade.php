@@ -1,4 +1,4 @@
-<div class="form__item">
+<div class="form__item {{ $item['additional_class'] ?? '' }}">
     <label for="{{ $item['form_input_name'] }}" class="form__label">{{ $item['form_title'] }}</label>
     <div class="input-group">
         <span class="form__icon input-group-text @error($item['form_input_name']) is-invalid--border @enderror">
