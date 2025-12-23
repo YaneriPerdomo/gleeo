@@ -1,0 +1,245 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Lesson;
+use App\Models\Level;
+use App\Models\Module;
+use App\Models\Topic;
+use Exception;
+use Illuminate\Database\QueryException;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB as FacadesDB;
+use Illuminate\Support\Str;
+use PDOException;
+
+class ModuleController extends Controller
+{
+    public function create($level)
+    {
+
+
+        $string = $level;
+        $numero = preg_replace('/[^0-9]/', '', $string);
+
+        $level_ = Level::where('number' , $numero)->first();
+
+
+        return view(
+            'authenticated.administrator.study-plan.level.module.create',
+            [
+                'infoLevel' => [
+                    'slug' => $level,
+                    'name' => $level_->name
+                ]
+            ]
+        );
+    }
+
+    public function store(Request $request, $level)
+    {
+
+
+        $string = $level;
+        $numero = preg_replace('/[^0-9]/', '', $string);
+        $level_ = Level::where('number' , $numero)->first();
+        try {
+            FacadesDB::beginTransaction();
+
+            $slug_module = Str::slug($request->module_title);
+            $newModule =  Module::create([
+                'title' => $request->module_title,
+                'slug' => $slug_module,
+                'level_id' => $level_->level_id,
+            ]);
+
+
+            FacadesDB::commit();
+
+            $request->session()->flash('alert-success', "El módulo '{$request->module_title}' y el tema '{$request->topic_title}' ha sido actualizado correctamente.");
+
+
+            return redirect()->route('study-plan.level-index', ['nivel' => $level]);
+        } catch (QueryException $ex) {
+            $request->session()->flash('alert-danger', 'Sucedio un error: ' . $ex->getMessage());
+            FacadesDB::rollBack();
+            return redirect()->route('module.create', ['nivel' => $level]);
+        } catch (PDOException $ex) {
+            $request->session()->flash('alert-danger', 'Sucedio un error: ' . $ex->getMessage());
+            FacadesDB::rollBack();
+            return redirect()->route('module.create', ['nivel' => $level]);
+        } catch (Exception $ex) {
+            $request->session()->flash('alert-danger', 'Sucedio un error: ' . $ex->getMessage());
+            FacadesDB::rollBack();
+            return redirect()->route('module.create', ['nivel' => $level]);
+        }
+    }
+
+    public function edit($nivel, $slug)
+    {
+        $module = Module::with(['topic' => function ($query) {
+            return $query;
+        }])->where('slug', $slug)->first();
+
+        if (! $module) {
+            return back()->with('alert-danger', 'Sucedio un error: Registro no encontrado');
+        }
+        $name = match ($nivel) {
+            'nivel-1-basico' => 'Nivel Basico',
+            '' => '',
+            default => 'ERROR'
+        };
+        return view(
+            'authenticated.administrator.study-plan.level.module.edit',
+            [
+                'module' => $module,
+                'level' => [
+                    [
+                        'slug' => $nivel,
+                        'name' => $name,
+                    ],
+                ],
+                'slug' => $slug,
+            ]
+        );
+    }
+
+    public function update(Request $request, $level, $slug)
+    {
+        $module = Module::with(['topic' => function ($query) {
+            return $query;
+        }])->where('slug', $slug)->first();
+
+        if (! $module) {
+            return back()->with('alert-danger', 'Sucedio un error: Registro no encontrado');
+        }
+
+        try {
+            FacadesDB::beginTransaction();
+
+            $slug = Str::slug($request->module_title);
+            $module->update([
+                'title' => $request->module_title,
+                'slug' => $slug,
+            ]);
+
+            FacadesDB::commit();
+
+            $request->session()->flash('alert-success', "El módulo '{$module->title}' ha sido actualizado correctamente.");
+
+            $route_name = match ($level) {
+                'nivel-1-basico' => '',
+                default => 'study-plan.level-index',
+            };
+
+            return redirect()->route('study-plan.level-index', ['nivel' => $level, 'slug' => $slug]);
+        } catch (QueryException $ex) {
+            $request->session()->flash('alert-danger', 'Sucedio un error: ' . $ex->getMessage());
+            FacadesDB::rollBack();
+
+            return redirect()->route('module.edit', ['nivel' => $level, 'slug' => $slug]);
+        } catch (PDOException $ex) {
+            $request->session()->flash('alert-danger', 'Sucedio un error: ' . $ex->getMessage());
+            FacadesDB::rollBack();
+
+            return redirect()->route('module.edit', ['nivel' => $level, 'slug' => $slug]);
+        } catch (Exception $ex) {
+            $request->session()->flash('alert-danger', 'Sucedio un error: ' . $ex->getMessage());
+            FacadesDB::rollBack();
+
+            return redirect()->route('module.edit', ['nivel' => $level, 'slug' => $slug]);
+        }
+    }
+
+    public function delete($level, $slug)
+    {
+        $module = Module::with(['topic' => function ($query) {
+            return $query;
+        }])->where('slug', $slug)->first();
+
+        if (! $module) {
+            return back()->with('alert-danger', 'Sucedio un error: Registro no encontrado');
+        }
+        $name = match ($level) {
+            'nivel-1-basico' => 'Nivel Basico',
+            '' => '',
+            default => 'ERROR'
+        };
+        return view(
+            'authenticated.administrator.study-plan.level.module.delete',
+            [
+                'module' => $module,
+                'level' => [
+                    [
+                        'slug' => $level,
+                        'name' => $name,
+                    ],
+                ],
+                'slug' => $slug,
+            ]
+        );
+    }
+
+    public function destroy(Request $request, $level, $slug)
+    {
+        $module = Module::with(['topic' => function ($query) {
+            return $query;
+        }])->where('slug', $slug)->first();
+
+        if (! $module) {
+            return back()->with('alert-danger', 'Sucedio un error: Registro no encontrado');
+        }
+        $name = match ($level) {
+            'nivel-1-basico' => 'Nivel Basico',
+            '' => '',
+            default => 'ERROR'
+        };
+
+        $module_id = $module->module_id;
+        try {
+            $countLessons = Lesson::whereHas('topic', function ($query) use ($module_id) {
+                $query->where('module_id', $module_id);
+            })->count();
+
+            $countTopics = Topic::where('module_id', $module_id)->count();
+
+            /*
+         Lesson::whereHas('topic', function ($query) use ($module_id) {
+                $query->where('module_id', $module_id);
+            })->delete();
+
+            Topic::where('module_id', $module_id)->delete();
+         */
+
+            Module::where('module_id', $module_id)->delete();
+
+            $moduleName = $module->title;
+            $module->delete();
+
+            FacadesDB::commit();
+
+            $mensaje = "El módulo '{$moduleName}' fue eliminado. ";
+            $mensaje .= "Se removieron {$countTopics} temas y {$countLessons} lecciones asociadas.";
+
+            $request->session()->flash('alert-success', $mensaje);
+
+
+            return redirect()->route('study-plan.level-index', ['nivel' => $level]);
+        } catch (QueryException $ex) {
+            $request->session()->flash('alert-danger', 'Sucedio un error: ' . $ex->getMessage());
+            FacadesDB::rollBack();
+
+            return redirect()->route('module.edit', ['nivel' => $level, 'slug' => $slug]);
+        } catch (PDOException $ex) {
+            $request->session()->flash('alert-danger', 'Sucedio un error: ' . $ex->getMessage());
+            FacadesDB::rollBack();
+
+            return redirect()->route('module.edit', ['nivel' => $level, 'slug' => $slug]);
+        } catch (Exception $ex) {
+            $request->session()->flash('alert-danger', 'Sucedio un error: ' . $ex->getMessage());
+            FacadesDB::rollBack();
+
+            return redirect()->route('module.edit', ['nivel' => $level, 'slug' => $slug]);
+        }
+    }
+}

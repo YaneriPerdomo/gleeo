@@ -18,6 +18,7 @@
     <link rel="stylesheet" href="{{ asset('css/components/form.css') }}">
     <link rel="stylesheet" href="{{ asset('css/components/search.css') }}">
     <link rel="stylesheet" href="{{ asset('css/components/header.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/components/pagination.css') }}">
     <link rel="stylesheet" href="{{ asset('css/components/table.css') }}">
     <link rel="stylesheet" href="{{ asset('css/components/text.css') }}">
     <link rel="icon" type="image/x-icon" href="{{ asset('img/logo.ico') }}">
@@ -44,8 +45,8 @@
                                     <i class="bi bi-search search__icon"></i>
                                 </span>
                                 <input type="text" name="name" id="name"
-                                    class="search__input  search__input--text form-control" data-url="/gestion-de-cuentas"
-                                    placeholder="Ingrese usuario o correo electronico"
+                                    class="search__input  search__input--text form-control"
+                                    data-url="/gestion-de-cuentas" placeholder="Ingrese usuario o correo electronico"
                                     aria-label="Ingrese usuario o correo electronico" autofocus
                                     data-name="{{ isset($searchValue) ? str_replace('-', ' ', $searchValue) : '' }}"
                                     value="{{ isset($searchValue) ? str_replace('-', ' ', $searchValue) : '' }}">
@@ -157,11 +158,10 @@
                             </tbody>
                         </table>
                     </section>
-                    <div>
-                    </div>
-                    <div class="flex-justify-content-between">
+
+                    <div class="flex-and-direction-row flex-content-space-between">
                         <div>
-                            <small>
+                            <small class="text__gray">
                                 Mostrando {{ $data->count() == 1 ? ' registro' : 'registros' }} 1 -
                                 {{ $data->count() }}
                                 de un total de {{ $data->total() }}

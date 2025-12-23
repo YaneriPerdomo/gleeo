@@ -34,3 +34,10 @@ else if (url.href.includes("/gestion-de-cuentas")) {
         tutorSettingsListIcons[0].classList.add("item-selected");
     }
 }
+else if (url.href.includes("/plataforma-educativa")) {
+    if (url.href.includes("/plataforma-educativa/plan-de-estudio")
+    ) {
+        headerNavigationBarListItem[2].classList.add("item-selected--nav");
+        tutorSettingsListIcons[0].classList.add("item-selected");
+    }
+}

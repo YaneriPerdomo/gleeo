@@ -54,6 +54,9 @@
     margin-top: 1rem !important;
     margin-bottom: 1rem !important;
 }
+.bg__color-purple{
+    background: var(--purple);
+}
 
 a {
     text-decoration: none;

@@ -25,6 +25,7 @@ return new class extends Migration
             $table->string('names', 200);
             $table->string('surnames', 200);
             $table->string('educational_center', 200)->nullable();
+            $table->enum('type', ['Profesional', 'Representante']);
             $table->string('slug', 90)->unique();
             $table->timestamp('created_at')->useCurrent();
         });

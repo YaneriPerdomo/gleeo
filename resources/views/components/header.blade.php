@@ -59,7 +59,7 @@
                              Configuración del Tutor</a>
                      </li>
                      <li class="header__navigation-bar__list-item">
-                         <a href="{{ route('initial-decision-patterns.index') }}" class="header__navigation-bar__link">
+                         <a href="{{ route('study-plan.index') }}" class="header__navigation-bar__link">
                              <i class="bi bi-journals"></i>
                              Gestión de Contenido
                          </a>

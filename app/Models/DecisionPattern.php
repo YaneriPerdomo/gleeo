@@ -1,7 +1,7 @@
 <?php
 namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\hasOne;
 class DecisionPattern extends Model
 {
     protected $table = "decision_pattern";
@@ -13,8 +13,8 @@ class DecisionPattern extends Model
         "is_active",
     ];
     public $timestamps = false;
-    public function alertThreshold(): HasMany
+    public function alertThreshold(): hasOne
     {
-        return $this->hasMany(AlertThreshold::class, 'decision_pattern_id');
+        return $this->hasOne(AlertThreshold::class, 'decision_pattern_id');
     }
 }
