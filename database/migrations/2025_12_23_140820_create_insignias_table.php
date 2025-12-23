@@ -11,11 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('levels', function (Blueprint $table) {
-            $table->id('level_id');
-            $table->string('name', '30')->unique();
-            $table->integer('number')->unique();
-            $table->boolean('deleted_at')->default(1);
+        Schema::create('insignias', function (Blueprint $table) {
+            $table->id();
             $table->timestamps();
         });
     }
@@ -25,6 +22,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('levels');
+        Schema::dropIfExists('insignias');
     }
 };

@@ -69,7 +69,7 @@ Route::controller(StudyPlanController::class)->group(function () {
     Route::get('plataforma-educativa/plan-de-estudio/{search}/filtrar', 'filter')->name('study-plan.filter');
     Route::post('plataforma-educativa/plan-de-estudio/agregar', 'store')->name('study-plan.store');
     Route::get('plataforma-educativa/plan-de-estudio/{nivel}', 'level')->name('study-plan.level-index');
-
+    Route::get('plataforma-educativa/plan-de-estudio/{nivel}/eliminar', 'delete')->name('study-plan.level-delete');
 });
 
 

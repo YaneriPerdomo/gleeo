@@ -65,15 +65,16 @@
             <x-aside-admin :items="[
                 [
                     'title' => 'Plan de Estudio',
-                    'route' => 'initial-decision-patterns.index',
-                    'icon' => 'bi bi-house-door-fill',
+                    'route' => 'study-plan.index',
+                    'icon' => 'bi bi-book-half',
                 ],
                 [
                     'title' => 'Insignias',
                     'route' => 'initial-decision-patterns.index',
-                    'icon' => 'bi bi-question-circle-fill',
+                    'icon' => 'bi bi-award-fill',
                 ],
             ]"></x-aside-admin>
+
             <div class="  col-10 bg-white-border main__content">
                 <small class="text__gray">
                     <a href="{{ route('study-plan.index') }}" class="text__gray"> Gestion de Contenido > </a>
@@ -190,15 +191,20 @@
                                                     <br>Plataforma</label>
                                             </button>
                                         </a>
-                                        <button type="button" class="button button__color-green">
+                                        <a href="" >
+                                            <button type="button" class="button button__color-green ">
 
                                             <label for=""><i class="bi bi-pencil-square fs-3"></i>
                                                 <br>Editar</label>
                                         </button>
-                                        <button type="button" class="button button__color-red">
+                                        </a>
+                                        <a href="" class="modal-buttons__link-delete">
+                                            <button type="button" class="button button__color-red">
                                             <label for=""><i class="bi bi-trash-fill fs-3"></i> <br>
                                                 Eliminar</label>
                                         </button>
+                                        </a>
+
                                     </div>
                                     <div class="modal-footer flex-and-direction-row flex-center-full-start ">
                                         <button type="button" class="button  text__gray"
@@ -213,12 +219,14 @@
                             let infoLevelButtons = document.querySelectorAll('[data-bs-target="#inforLevelModal"]');
                             let levelIdModalInput = document.querySelector('#level_id');
                             let buttonLinkPlatform = document.querySelector('.modal-buttons__link-platform');
+                            let buttonLinkDelete = document.querySelector('.modal-buttons__link-delete');
                             infoLevelButtons.forEach(button => {
                                 button.addEventListener('click', function(event) {
                                     let levelData = this.getAttribute('data-level');
                                     let slugData = this.getAttribute('data-slug');
                                     let routeData = this.getAttribute('data-route').replace('/eliminarlo','');
                                     buttonLinkPlatform.href = routeData+'/nivel-'+levelData+'-'+slugData;
+                                    buttonLinkDelete.href = routeData+'/nivel-'+levelData+'-'+slugData+'/eliminar';
                                     console.info(routeData);
                                     console.info("Datos del nivel seleccionado:", levelData);
                                 });

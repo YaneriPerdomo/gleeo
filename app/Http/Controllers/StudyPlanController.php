@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Level;
 use App\Models\Module;
+use App\Models\Topic;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -18,7 +19,6 @@ class StudyPlanController extends Controller
         $levels = Level::with(['module' => function ($query) {
             return $query;
         }])->orderBy('number', 'ASC')->paginate(10);
-
 
         return view(
             'authenticated.administrator.study-plan.index',
@@ -36,15 +36,13 @@ class StudyPlanController extends Controller
         $string = $level;
         $numero = preg_replace('/[^0-9]/', '', $string);
 
-
         $levelModel = Level::where('number', $numero)->first();
         $modules = Module::where('level_id', $levelModel->level_id)
             ->with(['topics' => function ($query) {
-                return $query->with(['lessons' => function ($query) {
-                    $query;
-                }]);
+                return $query->with(['lessons' => function ($query) {}]);
             }])
             ->paginate(5);
+
         return view(
             'authenticated.administrator.study-plan.level.index',
             [
@@ -52,8 +50,8 @@ class StudyPlanController extends Controller
                 'infoLevel' => [
                     'slug' => $level,
                     'number' => $numero,
-                    'name' => $levelModel->name
-                ]
+                    'name' => $levelModel->name,
+                ],
             ]
         );
     }
@@ -74,13 +72,11 @@ class StudyPlanController extends Controller
 
             $slug = Str::slug($request->level_title);
 
-            $level_new = new Level();
+            $level_new = new Level;
             $level_new->name = $request->level_title;
             $level_new->slug = $slug;
             $level_new->number = strval($request->number_level);
             $level_new->save();
-
-
 
             FacadesDB::commit();
 
@@ -108,19 +104,50 @@ class StudyPlanController extends Controller
     public function edit() {}
 
     public function update() {}
-    public function delete() {}
+
+    public function delete($level)
+    {
+         $numero = preg_replace('/\D/', '', $level);
+
+        $level = Level::where('number', $numero)
+        ->first();
+
+        $level_id = $level->level_id;
+        $count = [
+            'modules' => Module::where('level_id', $level_id)->count(),
+            'topics' =>  Topic::whereHas('module' , function($query) use ($level_id){
+                return $query->where('level_id', $level_id);
+            })->count()
+            ,
+        ];
+
+
+        return view(
+            'authenticated.administrator.study-plan.delete',
+            [
+                'infoLevel' => [
+                    'slug' => $level,
+                    'name' => $level->name,
+                    'number' => $level->number,
+                    'level_id' => $level_id,
+                    'count' => $count
+                ],
+            ]
+        );
+    }
+
     public function destroy() {}
 
     public function filter($search)
     {
         $test = explode('[', $search);
-        $search_l =  str_replace(']', '', $test[1]);
+        $search_l = str_replace(']', '', $test[1]);
 
         $levels = Level::with(['module' => function ($query) {
             return $query;
         }])
-        ->where('name' ,'LIKE' , '%'.trim($search_l).'%')
-        ->orderBy('number', 'ASC')->paginate(10);
+            ->where('name', 'LIKE', '%' . trim($search_l) . '%')
+            ->orderBy('number', 'ASC')->paginate(10);
 
         return view(
             'authenticated.administrator.study-plan.index',

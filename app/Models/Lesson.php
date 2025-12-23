@@ -15,6 +15,7 @@ class Lesson extends Model
         'topic_id',
         'title',
         'slug',
+        'deleted_at',
         'is_active'
     ];
 

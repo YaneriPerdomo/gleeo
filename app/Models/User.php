@@ -25,6 +25,7 @@ class User extends Authenticatable
         'password',
         'rol_id',
         'state',
+        'deleted_at',
         'user_id',
     ];
 

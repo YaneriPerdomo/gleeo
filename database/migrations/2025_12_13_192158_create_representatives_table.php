@@ -27,7 +27,8 @@ return new class extends Migration
             $table->string('educational_center', 200)->nullable();
             $table->enum('type', ['Profesional', 'Representante']);
             $table->string('slug', 90)->unique();
-            $table->timestamp('created_at')->useCurrent();
+            $table->boolean('deleted_at')->default(1);
+            $table->timestamps();
         });
     }
 

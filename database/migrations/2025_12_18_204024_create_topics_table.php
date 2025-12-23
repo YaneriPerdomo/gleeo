@@ -12,9 +12,9 @@ return new class extends Migration
             $table->id('topic_id');
             $table->foreignId('module_id')
                 ->constrained('modules', 'module_id')->cascadeOnDelete();
-            $table->string('title', 120);
-            $table->string('slug', 120);
-            $table->text('description')->nullable();
+            $table->string('title', 120)->unique();
+            $table->string('slug', 120)->unique();
+            $table->boolean('deleted_at')->default(1);
             $table->timestamps();
         });
     }

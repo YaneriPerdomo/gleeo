@@ -11,12 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('levels', function (Blueprint $table) {
-            $table->id('level_id');
-            $table->string('name', '30')->unique();
-            $table->integer('number')->unique();
-            $table->boolean('deleted_at')->default(1);
-            $table->timestamps();
+        Schema::create('practice_options', function (Blueprint $table) {
+            $table->id('practice_option_id');
+            $table->string('variables');
+            $table->string('correct_variable');
         });
     }
 
@@ -25,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('levels');
+        Schema::dropIfExists('practice_options');
     }
 };

@@ -29,15 +29,16 @@
             <x-aside-admin :items="[
                 [
                     'title' => 'Plan de Estudio',
-                    'route' => 'initial-decision-patterns.index',
-                    'icon' => 'bi bi-highlighter',
+                    'route' => 'study-plan.index',
+                    'icon' => 'bi bi-book-half',
                 ],
                 [
                     'title' => 'Insignias',
                     'route' => 'initial-decision-patterns.index',
-                    'icon' => 'bi bi-question-circle-fill',
+                    'icon' => 'bi bi-award-fill',
                 ],
             ]"></x-aside-admin>
+
             <div class="col-10 main__content bg-white-border">
                 <small class="text__gray">
                     <a href="{{ route('study-plan.index') }}" class="text__gray">Gestión de Contenido</a> >

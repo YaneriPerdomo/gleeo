@@ -1,7 +1,9 @@
 <?php
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+
 return new class extends Migration
 {
     public function up(): void
@@ -15,8 +17,10 @@ return new class extends Migration
             $table->foreignId('rol_id')
                 ->constrained('roles', 'rol_id');
             $table->rememberToken();
-                        $table->dateTime('last_session')->nullable();
+            $table->dateTime('last_session')->nullable();
             $table->boolean('state')->default(1);
+            $table->boolean('deleted_at')->default(1);
+
             $table->timestamps();
         });
 

@@ -15,7 +15,8 @@ class Topic extends Model
         'slug',
         'module_id',
         'title',
-        'description'
+        'description',
+        'deleted_ats'
     ];
 
     public function lessons(){

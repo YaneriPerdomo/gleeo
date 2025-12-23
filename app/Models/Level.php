@@ -11,7 +11,8 @@ class Level extends Model
     protected $fillable = [
         'name',
         'number',
-        'slug'
+        'slug',
+        'deleted_at'
     ];
 
     public function module(){

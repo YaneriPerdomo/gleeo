@@ -19,6 +19,7 @@ class Representative extends Model
         'slug',
         'created_at',
         'type',
+        'deleted_at',
         'country_id',
         'educational_center',
     ];

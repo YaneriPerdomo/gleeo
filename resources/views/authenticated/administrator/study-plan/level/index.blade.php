@@ -111,7 +111,7 @@
             <x-aside-admin :items="[
                 [
                     'title' => 'Plan de Estudio',
-                    'route' => 'initial-decision-patterns.index',
+                    'route' => 'study-plan.index',
                     'icon' => 'bi bi-highlighter',
                 ],
                 [

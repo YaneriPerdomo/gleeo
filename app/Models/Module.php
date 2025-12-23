@@ -14,7 +14,8 @@ class Module extends Model
         'name',
         'slug',
         'level_id',
-        'title'
+        'title',
+        'deleted_at'
     ];
 
     public function topics (){
