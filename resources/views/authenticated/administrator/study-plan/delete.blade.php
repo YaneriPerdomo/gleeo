@@ -43,15 +43,19 @@
             <div class="col-10 bg-white-border main__content">
                 <small class="text__gray">
                     <a href="{{ route('study-plan.index') }}" class="text__gray">Plan de Estudio</a> >
-                    <a href="#" class="text__gray">Nivel {{ $infoLevel['number'] }}</a> >
+                    <a href="#" class="text__gray">Nivel {{ $infoLevel->number }}</a> >
                     <span>Confirmar Eliminación</span>
                 </small>
+                    @if (session('alert-danger'))
+                        <div class="alert alert-danger" role="alert"><i class="bi bi-x-octagon-fill"></i>
+                            {{ session('alert-danger') }}</div>
+                    @endif
 
                 <div class="delete-card mt-4">
                     <div class="delete-card__header">
                         <b class="delete-card__title">
                             <i class="bi bi-exclamation-triangle-fill text-danger"></i>
-                            Eliminar Nivel: {{ $infoLevel['name'] }}
+                            Eliminar Nivel: {{ $infoLevel->name }}
                         </b>
                         <br>
                         <span class="delete-card__subtitle delete-card__subtitle--warning">
@@ -63,22 +67,22 @@
                     <div class="delete-card__body">
                         <i class="delete-card__alert-label text__red">Advertencia de Impacto:</i>
                         <p class="delete-card__description">
-                            Está a punto de eliminar permanentemente el <strong>"{{ $infoLevel['name'] }} (Nivel
-                                {{ $infoLevel['number'] }})"</strong>.
+                            Está a punto de eliminar permanentemente el <strong>"{{ $infoLevel->name }} (Nivel
+                                {{ $infoLevel->number }})"</strong>.
                             Al confirmar, se eliminará el progreso de los alumnos y la siguiente estructura de
                             contenido:
                         </p>
 
                         <ul class="mt-2">
-                            <li><strong>{{ $infoLevel['count']['modules'] }}</strong>
-                                Módulo{{ $infoLevel['count']['modules'] >= 0 ? '' : 's' }}
-                                asociado{{ $infoLevel['count']['modules'] >= 0 ? '' : 's' }}.
+                            <li><strong>{{ $count['modules'] }}</strong>
+                                Módulo{{ $count['modules'] >= 0 ? '' : 's' }}
+                                asociado{{ $count['modules'] >= 0 ? '' : 's' }}.
                             </li>
-                            <li><strong>{{ $infoLevel['count']['topics'] }}</strong>
-                                Tema{{ $infoLevel['count']['topics'] >= 0 ? '' : 's' }}
-                                contenido{{ $infoLevel['count']['topics'] > 0 ? 's' : '' }}
-                                en eso{{ $infoLevel['count']['modules'] >= 0 ? '' : 's' }}
-                                módulo{{ $infoLevel['count']['modules'] >= 0 ? '' : 's' }}.</li>
+                            <li><strong>{{ $count['topics'] }}</strong>
+                                Tema{{ $count['topics'] >= 0 ? '' : 's' }}
+                                contenido{{ $count['topics'] > 0 ? 's' : '' }}
+                                en eso{{ $count['modules'] >= 0 ? '' : 's' }}
+                                módulo{{ $count['modules'] >= 0 ? '' : 's' }}.</li>
                         </ul>
                     </div>
 
@@ -91,7 +95,7 @@
                             </button>
                         </a>
 
-                        <form action="" method="POST" class="delete-card__form">
+                        <form action="{{ route('study-plan.level-destroy' , ['nivel' => $slugLevel]) }}" method="POST" class="delete-card__form">
                             @method('DELETE')
                             @csrf
                             <button class="button button__color-red" type="submit">

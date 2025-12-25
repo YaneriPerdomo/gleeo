@@ -43,12 +43,12 @@
                 <small class="text__gray">
                     <a href="{{ route('study-plan.index') }}" class="text__gray">Gestión de Contenido</a> >
                     <a href="{{ route('study-plan.index') }}" class="text__gray">Plan de Estudio</a> >
-                    <a href="{{ route('study-plan.index') }}" class="text__gray"> {{ $name ?? '' }}</a> >
+                    <a href="{{ route('study-plan.index') }}" class="text__gray">Nivel {{ $infoLevel->number ?? '' }} - {{ $infoLevel->name ?? '' }}</a> >
                     <span>Registrar Nuevo Tema </span>
                 </small>
 
                 <form
-                    action="{{ route('topic.store', ['nivel' =>  $slug ?? '', 'slug' => $slug_module]) }}"
+                    action="{{ route('topic.store', ['nivel' =>  $slugLevel ?? '', 'slug' => $slugModule]) }}"
                     class="form" method="POST">
                     @csrf
                     @method('POST')
@@ -85,12 +85,12 @@
 
                     <hr>
                      <div class="flex-and-direction-row flex-content-space-between form-actions mt-4">
-                        <a href=" {{ route('study-plan.level-index', ['nivel' => $infoLevel['slug'] ?? '']) }}" class="button text__gray" style="text-decoration: none;">
-                            <i class="bi bi-arrow-left-circle"></i> Regresar
+                        <a href=" {{ route('study-plan.level-index', ['nivel' => $slugLevel ?? '']) }}" class="button text__gray" style="text-decoration: none;">
+                            <i class="bi bi-box-arrow-in-left"></i> Regresar
                         </a>
 
                         <button type="submit" class="button button__color-purple">
-                            <i class="bi bi-cloud-arrow-up"></i> Registrar Nuevo Tema
+                            <i class="bi bi-plus-lg"></i> Registrar Nuevo Tema
                         </button>
                     </div>
                 </form>

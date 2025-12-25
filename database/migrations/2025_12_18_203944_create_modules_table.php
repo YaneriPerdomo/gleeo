@@ -13,10 +13,11 @@ return new class extends Migration
     {
         Schema::create('modules', function (Blueprint $table) {
             $table->id('module_id');
+            $table->foreignId('level_id')->nullable()
+                ->constrained('levels', 'level_id')->cascadeOnDelete();
             $table->string('title', 120)->unique();
             $table->string('slug', 120)->unique();
-            $table->foreignId('level_id')
-                ->constrained('levels', 'level_id');
+
             $table->boolean('deleted_at')->default(1);
             $table->timestamps();
         });

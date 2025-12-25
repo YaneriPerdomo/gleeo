@@ -59,7 +59,7 @@
 
                     <x-input-text :item="[
                         'form_input_name' => 'level_title',
-                        'form_title' => 'Nombre del Módulo:',
+                        'form_title' => 'Nombre del Nivel:',
                         'type' => 'text',
                         'icon' => 'bi-layers-half',
                         'aria_label' => 'Agregar nombre del nivel',
@@ -68,28 +68,17 @@
                         'attribute_a' => 'required',
                         'form_help_text' => 'El nombre del nivel sera visible para los niños.',
                     ]"></x-input-text>
-                    <x-input-text :item="[
-                        'form_input_name' => 'number_level',
-                        'form_title' => 'Número del Nivel:',
-                        'type' => 'number',
-                        'icon' => 'bi-hash',
-                        'aria_label' => 'Agregar nombre del nivel',
-                        'placeholder' => '1, 2, 3...',
-                        'form_input_value_default' => old('number_level'),
-                        'attribute_a' => 'required',
-                        'form_help_text' => 'El numero del nivel sirve para ordenar los niveles.',
-                    ]"></x-input-text>
-                    <hr>
+
 
 
                     <div class="flex-and-direction-row flex-content-space-between form-actions mt-4">
                         <a href="{{ route('study-plan.index') }}" class="button text__gray"
                             style="text-decoration: none;">
-                            <i class="bi bi-x-circle"></i> Cancelar
+                            <i class="bi bi-box-arrow-in-left"></i> Regresar
                         </a>
 
                         <button type="submit" class="button button__color-purple">
-                            <i class="bi bi-check-lg"></i> Confirmar y Guardar
+                            <i class="bi bi-plus-lg"></i> Agregar Nuevo Nivel
                         </button>
                     </div>
                 </form>

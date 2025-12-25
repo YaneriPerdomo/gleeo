@@ -54,7 +54,7 @@
                     @method('POST')
 
                     <legend class="form__title">
-                        <b> Registrar Nuevo Modulo</b>
+                        <b> Agregar Nuevo Modulo</b>
                     </legend>
 
                     @if (session('alert-success'))
@@ -90,11 +90,11 @@
                             {{ route('study-plan.level-index', ['nivel' => $infoLevel['slug'] ?? '']) }}
                         "
                             class="button text__gray" style="text-decoration: none;">
-                            <i class="bi bi-arrow-left-circle"></i> Regresar
+                            <i class="bi bi-box-arrow-in-left"></i> Regresar
                         </a>
 
                         <button type="submit" class="button button__color-purple">
-                            <i class="bi bi-cloud-arrow-up"></i> Registrar Nuevo Módulo
+                            <i class="bi bi-plus-lg"></i> Agregar Nuevo Módulo
                         </button>
                     </div>
                 </form>

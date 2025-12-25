@@ -42,13 +42,13 @@
             <div class="col-10 main__content bg-white-border">
                 <small class="text__gray">
                     <a href="{{ route('study-plan.index') }}" class="text__gray">Gestión de Contenido</a> >
-                    <a href="{{ route('study-plan.index') }}" class="text__gray">Plan de Estudio</a> >
-                    <a href="{{ route('study-plan.index') }}" class="text__gray"> {{ $level[0]['name'] ?? '' }}</a> >
+                    <a href="{{ route('study-plan.index') }}" class="text__gray">Plan de Estudio</a>   >
+                    <a href="{{ route('study-plan.index') }}" class="text__gray"> {{ convertSlugToTitle($slug_level) }} </a>>
                     <span>Editar Módulo</span>
                 </small>
 
                 <form
-                    action="{{ route('module.update', ['nivel' => $level[0]['slug'] ?? '', 'slug' => $slug ?? '']) }}"
+                    action="{{ route('module.update', ['nivel' => $slug_level ?? '', 'slug' => $slug_module ?? '']) }}"
                     class="form" method="POST">
                     @csrf
                     @method('PUT')
@@ -86,14 +86,14 @@
                     <hr>
 
                     <div class="flex-and-direction-row flex-content-space-between form-actions mt-4">
-                        <a href=" {{ route('study-plan.level-index', ['nivel' => $level[0]['slug'] ?? '']) }}
+                        <a href=" {{ route('study-plan.level-index', ['nivel' => $slug_level ?? '']) }}
 
                         " class="button text__gray" style="text-decoration: none;">
-                            <i class="bi bi-arrow-left-circle"></i> Regresar
+                            <i class="bi bi-box-arrow-in-left"></i> Regresar
                         </a>
 
                         <button type="submit" class="button button__color-purple">
-                            <i class="bi bi-cloud-arrow-up"></i> Guardar Cambios
+                            <i class="bi bi-save"></i> Guardar Cambios
                         </button>
                     </div>
                 </form>

@@ -3,6 +3,7 @@
 use App\Http\Controllers\AlertThresholdsController;
 use App\Http\Controllers\CreateAccountController;
 use App\Http\Controllers\InitialDecisionPatternsController;
+use App\Http\Controllers\LessonController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\ProfileController;
@@ -70,8 +71,15 @@ Route::controller(StudyPlanController::class)->group(function () {
     Route::post('plataforma-educativa/plan-de-estudio/agregar', 'store')->name('study-plan.store');
     Route::get('plataforma-educativa/plan-de-estudio/{nivel}', 'level')->name('study-plan.level-index');
     Route::get('plataforma-educativa/plan-de-estudio/{nivel}/eliminar', 'delete')->name('study-plan.level-delete');
+    Route::delete('plataforma-educativa/plan-de-estudio/{nivel}/eliminar', 'destroy')->name('study-plan.level-destroy');
+    Route::get('plataforma-educativa/plan-de-estudio/{nivel}/editar', 'edit')->name('study-plan.level-edit');
+    Route::put('plataforma-educativa/plan-de-estudio/{nivel}/editar', 'update')->name('study-plan.level-update');
 });
 
+Route::controller(LessonController::class)->group(function () {
+    Route::post('plataforma-educativa/plan-de-estudio/{nivel}/tema/{topic_slug}/leccion/agregar', 'store')->name('lesson.store');
+    Route::get('plataforma-educativa/plan-de-estudio/{nivel}/tema/{topic_slug}/leccion/agregar', 'create')->name('lesson.create');
+});
 
 Route::controller(ModuleController::class)->group(function () {
     Route::get('plataforma-educativa/plan-de-estudio/{nivel}/modulo/{slug}/editar', 'edit')->name('module.edit');
@@ -83,8 +91,8 @@ Route::controller(ModuleController::class)->group(function () {
 });
 
 Route::controller(TopicController::class)->group(function () {
-    Route::get('plataforma-educativa/plan-de-estudio/{nivel}/tema/{slug}/agregar', 'create')->name('topic.create');
-    Route::post('plataforma-educativa/plan-de-estudio/{nivel}/tema/{slug}/agregar', 'store')->name('topic.store');
+    Route::get('plataforma-educativa/plan-de-estudio/{nivel}/modulo/{slug}/tema/agregar', 'create')->name('topic.create');
+    Route::post('plataforma-educativa/plan-de-estudio/{nivel}/modulo/{slug}/tema/agregar', 'store')->name('topic.store');
     Route::get('plataforma-educativa/plan-de-estudio/{nivel}/tema/{slug}/eliminar', 'delete')->name('topic.delete');
     Route::delete('plataforma-educativa/plan-de-estudio/{nivel}/tema/{slug}/eliminar', 'destroy')->name('topic.destroy');
     Route::get('plataforma-educativa/plan-de-estudio/{nivel}/tema/{slug}/editar', 'edit')->name('topic.edit');

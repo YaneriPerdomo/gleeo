@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('lessons', function (Blueprint $table) {
             $table->id('lesson_id');
-            $table->foreignId('topic_id')->constrained('topics', 'topic_id');
+            $table->foreignId('topic_id')->constrained('topics', 'topic_id')->cascadeOnDelete();
             $table->foreignId('guide_id')->constrained('guides', 'guide_id');
             $table->string('title', 120)->unique();
             $table->string('slug', 120)->unique();

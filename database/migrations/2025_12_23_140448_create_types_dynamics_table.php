@@ -13,7 +13,10 @@ return new class extends Migration
     {
         Schema::create('types_dynamics', function (Blueprint $table) {
             $table->id('type_dynamic_id');
-            $table->enum('type', ['Opcione Multiple', 'Verdedaero y Falso', 'Auto Completado']);
+            $table->string('type', 60);
+            /*
+             $table->enum('type', ['Opción múltiple', 'Verdadero/Falso', 'Autocompletar']);
+            */
         });
     }
 

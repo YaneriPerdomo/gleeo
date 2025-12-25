@@ -47,7 +47,7 @@
                     Editar Informacion del Tema
                 </small>
 
-                <form action="{{ route('topic.update', ['nivel' => $level[0]['slug'] ?? '', 'slug' => $slug ?? '']) }}"
+                <form action="{{ route('topic.update', ['nivel' => $slugLevel ?? '', 'slug' => $slugTopic ?? '']) }}"
                     class="form" method="POST">
                     @csrf
                     @method('PUT')
@@ -76,7 +76,7 @@
                         'icon' => 'bi-collection-play-fill',
                         'aria_label' => 'Introduce el nombre del módulo.',
                         'placeholder' => 'Ampliando el Concepto de Número',
-                        'form_input_value_default' => old('module_title', $data->title),
+                        'form_input_value_default' => old('module_title', $levelInfo->title),
                         'attribute_a' => 'disabled',
                         'form_help_text' => 'Este es el título principal que verán los niños.',
                     ]"></x-input-text>
@@ -88,7 +88,7 @@
                         'icon' => 'bi-journal-bookmark-fill',
                         'aria_label' => 'Introduce el nombre del tema.',
                         'placeholder' => 'Números Naturales',
-                        'form_input_value_default' => old('topic_title', $data->topic[0]->title ?? ''),
+                        'form_input_value_default' => old('topic_title', $levelInfo->topic[0]->title ?? ''),
                         'attribute_a' => 'required',
                         'form_help_text' => 'Título del primer tema asociado a este módulo.',
                     ]"></x-input-text>
@@ -96,13 +96,13 @@
                     <hr>
 
                     <div class="flex-and-direction-row flex-content-space-between form-actions mt-4">
-                        <a href=" {{ route('study-plan.level-index', ['nivel' => $level[0]['slug'] ?? '']) }}"
+                        <a href=" {{ route('study-plan.level-index', ['nivel' => $slugLevel ?? '']) }}"
                             class="button text__gray" style="text-decoration: none;">
-                            <i class="bi bi-arrow-left-circle"></i> Regresar
+                            <i class="bi bi-box-arrow-in-left"></i> Regresar
                         </a>
 
                         <button type="submit" class="button button__color-purple">
-                            <i class="bi bi-cloud-arrow-up"></i> Guardar Cambios
+                            <i class="bi bi-save"></i> Guardar Cambios
                         </button>
                     </div>
                 </form>

@@ -66,17 +66,16 @@
                 @method('POST')
                 <legend class="form__title fs-4 text-center ">
                     <b>
-                         Iniciar Sesión
+                        Iniciar Sesión
                     </b>
                 </legend>
-                @if (session('alert-success'))
-                <div class="alert alert-success"><i class="bi bi-check-circle"></i>
-                    {{ session('alert-success') }}</div>
-                @endif
                 @if (session('alert-danger'))
-                <div class="alert alert-danger" role="alert"><i class="bi bi-x-octagon"></i>
-                    {{ session('alert-danger') }}</div>
+                    <div class="alert alert-danger" role="alert">
+                        <i class="bi bi-x-octagon-fill"></i>
+                        {{ session('alert-danger') }}
+                    </div>
                 @endif
+
                 <x-input-text :item="[
                     'form_input_name' => 'user',
                     'form_title' => 'Usuario',

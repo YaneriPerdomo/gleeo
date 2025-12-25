@@ -7,7 +7,7 @@
 }
 
 .text__purple{
-    color:var(--purple);
+    color:var(--purple) !important;
 }
 
 .text__red{

@@ -32,7 +32,7 @@
             color: white;
         }
 
-        .level-card__circle--add{
+        .level-card__circle--add {
             background: var(--green) !important;
             outline: 5px solid var(--green) !important;
         }
@@ -126,22 +126,23 @@
                     <a href="{{ route('study-plan.index') }}" class="text__gray">
                         Plan de Estudio >
                     </a>
-                    <a href="{{ route('study-plan.level-index', ['nivel' => $infoLevel['slug']]) }}" class="text__gray">
-                        Nivel {{ $infoLevel['number'] }} - {{ $infoLevel['name'] }}
+                    <a href="{{ route('study-plan.level-index', ['nivel' => $infoLevel['slug']]) }}"
+                        class="text__gray">
+                        {{ convertSlugToTitle($infoLevel['slug']) }}
                     </a>
                 </small>
                 <div class="flex-and-direction-row flex-content-space-between p-0">
                     <div>
                         <legend>
                             <b>
-                                Nivel {{ $infoLevel['number'] }} - {{ $infoLevel['name'] }}
+                                {{ convertSlugToTitle($infoLevel['slug']) }}
                             </b>
                         </legend>
                     </div>
                     <div>
                         <a href="{{ route('module.create', ['nivel' => $infoLevel['slug']]) }}">
                             <button class="button button__color-black">
-                                Agregar Módulo
+                                <i class="bi bi-plus-lg"></i> Agregar Nuevo Módulo
                             </button>
                         </a>
                     </div>
@@ -169,10 +170,11 @@
                                             <i class="bi bi-pencil-square"></i>
                                         </button>
                                     </a>
-                                    <a href="{{ route('module.delete', ['nivel' => $infoLevel['slug'], 'slug' => $module->slug ?? '']) }}">
+                                    <a
+                                        href="{{ route('module.delete', ['nivel' => $infoLevel['slug'], 'slug' => $module->slug ?? '']) }}">
                                         <button class="button button__color-red button--icon-only">
-                                        <i class="bi bi-trash-fill"></i>
-                                    </button>
+                                            <i class="bi bi-trash-fill"></i>
+                                        </button>
                                     </a>
                                 </div>
                             </div>
@@ -181,7 +183,7 @@
                                 <a
                                     href="{{ route('topic.create', ['nivel' => $infoLevel['slug'], 'slug' => $module->slug ?? '']) }}">
                                     <button class="button button__color-green">
-                                        <i class="bi bi-plus-lg"></i> Agregar Tema
+                                        <i class="bi bi-plus-lg"></i> Agregar Nuevo Tema
                                     </button>
                                 </a>
                             </div>
@@ -211,7 +213,8 @@
                                 <div class="flex-and-direction-row ">
                                     @forelse ($topic->lessons as $lesson)
                                         <div class="levels-section px-4 my-3">
-                                            <a href="{{ route('study-plan.level-index', ['nivel' => $infoLevel['slug']]) }}" class="level-card">
+                                            <a href="{{ route('study-plan.level-index', ['nivel' => $infoLevel['slug']]) }}"
+                                                class="level-card">
                                                 <div class="level-card__circle">
                                                     <i class="bi bi-check fs-1"></i>
                                                 </div>
@@ -221,10 +224,10 @@
                                             </a>
                                         </div>
                                     @empty
-
                                     @endforelse
                                     <div class="levels-section px-4 my-3">
-                                        <a href="{{ route('study-plan.level-index', ['nivel' => $infoLevel['slug']]) }}" class="level-card level-card--add">
+                                        <a href="{{ route('lesson.create', ['nivel' => $infoLevel['slug'], 'topic_slug' => $topic->slug]) }}"
+                                            class="level-card level-card--add">
                                             <div class="level-card__circle level-card__circle--add">
                                                 <i class="bi bi-plus-lg fs-1"></i>
                                             </div>

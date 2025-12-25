@@ -111,7 +111,7 @@
                     <div>
                         <a href="{{ route('study-plan.create') }}">
                             <button class="button button__color-green color-white" type="button">
-                                <i class="bi bi-plus"></i> Agregar Nuevo Nivel
+                                <i class="bi bi-plus-lg"></i> Agregar Nuevo Nivel
                             </button>
                         </a>
                     </div>
@@ -147,7 +147,6 @@
                             </tr>
                         @else
                             @foreach ($levels->items() as $level)
-                                <!--nivel-{$level->number}-{$level->slug}-->
                                 <div class="levels-cards__content">
                                     <button type="button" class="button" data-level="{{ $level->number }}"
                                         data-slug="{{ $level->slug }}" data-bs-toggle="modal"
@@ -191,7 +190,7 @@
                                                     <br>Plataforma</label>
                                             </button>
                                         </a>
-                                        <a href="" >
+                                        <a href=""  class="modal-buttons__link-edit">
                                             <button type="button" class="button button__color-green ">
 
                                             <label for=""><i class="bi bi-pencil-square fs-3"></i>
@@ -220,13 +219,15 @@
                             let levelIdModalInput = document.querySelector('#level_id');
                             let buttonLinkPlatform = document.querySelector('.modal-buttons__link-platform');
                             let buttonLinkDelete = document.querySelector('.modal-buttons__link-delete');
+                            let buttonLinkEdit = document.querySelector('.modal-buttons__link-edit');
                             infoLevelButtons.forEach(button => {
                                 button.addEventListener('click', function(event) {
                                     let levelData = this.getAttribute('data-level');
                                     let slugData = this.getAttribute('data-slug');
                                     let routeData = this.getAttribute('data-route').replace('/eliminarlo','');
-                                    buttonLinkPlatform.href = routeData+'/nivel-'+levelData+'-'+slugData;
-                                    buttonLinkDelete.href = routeData+'/nivel-'+levelData+'-'+slugData+'/eliminar';
+                                    buttonLinkPlatform.href = routeData+'/'+slugData;
+                                    buttonLinkDelete.href = routeData+'/'+slugData+'/eliminar';
+                                    buttonLinkEdit.href = routeData+'/'+slugData+'/editar';
                                     console.info(routeData);
                                     console.info("Datos del nivel seleccionado:", levelData);
                                 });

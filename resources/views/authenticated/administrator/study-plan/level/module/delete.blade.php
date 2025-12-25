@@ -40,8 +40,9 @@
 
             <div class="col-10 bg-white-border main__content">
                 <small class="text__gray">
+                    <a href="{{ route('study-plan.index') }}" class="text__gray">Gestion de Contenido </a> >
                     <a href="{{ route('study-plan.index') }}" class="text__gray">Plan de Estudio</a> >
-                    <a href="#" class="text__gray">{{ $level[0]['name'] ?? 'Nivel' }}</a> >
+                    <a href="#" class="text__gray">  {{ convertSlugToTitle($slug_level) }}</a> >
                     <span>Eliminar Módulo</span>
                 </small>
 
@@ -71,13 +72,13 @@
                     <hr class="delete-card__divider">
 
                     <div class="delete-card__actions flex-and-direction-row flex-content-space-between">
-                        <a href="{{ route('study-plan.index') }}" class="delete-card__link">
+                        <a href="{{ route('study-plan.level-index', ['nivel' => $slug_level]) }}" class="delete-card__link">
                             <button class="button button__color-green" type="button">
                                 <i class="bi bi-box-arrow-in-left"></i> Cancelar, mantener módulo
                             </button>
                         </a>
 
-                        <form action="{{ route('module.destroy', ['nivel' => $level[0]['slug'], 'slug' => $module->slug]) }}"
+                        <form action="{{ route('module.destroy', ['nivel' => $slug_level, 'slug' => $slug_module]) }}"
                               method="POST" class="delete-card__form">
                             @method('DELETE')
                             @csrf

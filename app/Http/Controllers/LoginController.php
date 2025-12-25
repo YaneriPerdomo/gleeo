@@ -19,7 +19,7 @@ class LoginController extends Controller
         if (Auth::attempt($credentials)) {
 
             if (Auth::user()->deleted_at == 0) {
-                return back()->withErrors([
+                return back()->with([
                     'alert-danger' => 'Lo sentimos, tu cuenta de usuario ha sido eliminado. Si tiene alguna duda, comunícate con el administrador.'
                 ]);
             }

@@ -15,30 +15,26 @@ use PDOException;
 
 class TopicController extends Controller
 {
-    public function create($level, $slug_module)
+    public function create($slugLevel, $slugModule)
     {
 
 
 
-        $string = $level;
-        $numero = preg_replace('/[^0-9]/', '', $string);
 
-        $level_ = Level::where('number' , $numero)->first();
+        $infoLevel = Level::where('slug' , $slugLevel)->first();
 
         return view(
             'authenticated.administrator.study-plan.level.topic.create',
             [
-                'slug' => $level,
-                'slug_module' => $slug_module,
-                'infoLevel' => [
-                    'slug' => $level,
-                    'name' => $level_->name
-                ]
+                'infoLevel' => $infoLevel,
+                'slugLevel' => $slugLevel,
+                'slugModule' => $slugModule,
+
             ]
         );
     }
 
-    public function store(Request $request, $level, $slug_module)
+    public function store(Request $request, $slug_level, $slug_module)
     {
 
         $module = Module::select('module_id', 'slug', 'title')->where('slug', $slug_module)->first();
@@ -47,11 +43,7 @@ class TopicController extends Controller
             return back()->with('alert-danger', 'Sucedio un error: Registro no encontrado');
         }
 
-
-        $string = $level;
-
-         $numero = preg_replace('/[^0-9]/', '', $string);
-
+        $string = $slug_level;
 
         $module_id = $module->module_id;
         try {
@@ -69,58 +61,41 @@ class TopicController extends Controller
 
             $request->session()->flash('alert-success', "Se ha creado el tema '{$request->topic_title}' en el módulo '{$module->title}' con éxito.");
 
-
-            return redirect()->route('study-plan.level-index', ['nivel' => $level]);
+            return redirect()->route('study-plan.level-index', ['nivel' => $slug_level]);
         } catch (QueryException $ex) {
             $request->session()->flash('alert-danger', 'Sucedio un error: ' . $ex->getMessage());
             FacadesDB::rollBack();
 
-            return redirect()->route('topic.create', ['nivel' => $level, 'slug' => $slug_module]);
+            return redirect()->route('topic.create', ['nivel' => $slug_level, 'slug' => $slug_module]);
         } catch (PDOException $ex) {
             $request->session()->flash('alert-danger', 'Sucedio un error: ' . $ex->getMessage());
             FacadesDB::rollBack();
 
-            return redirect()->route('topic.create', ['nivel' => $level , 'slug' => $slug_module]);
+            return redirect()->route('topic.create', ['nivel' => $slug_level , 'slug' => $slug_module]);
         } catch (Exception $ex) {
             $request->session()->flash('alert-danger', 'Sucedio un error: ' . $ex->getMessage());
             FacadesDB::rollBack();
 
-            return redirect()->route('topic.create', ['nivel' => $level , 'slug' => $slug_module]);
+            return redirect()->route('topic.create', ['nivel' => $slug_level , 'slug' => $slug_module]);
         }
     }
 
-    public function edit($level, $slug)
+    public function edit($slugLevel, $slugTopic)
     {
-        $data = Module::whereHas('topic', function ($query) use ($slug) {
-            return $query->where('slug', $slug);
-        })->with(['topic' => function ($query) {
-            return $query;
+        $levelInfo = Module::whereHas('topic', function ($query) use ($slugTopic) {
+            return $query->where('slug', $slugTopic);
+        })->with(['topic' => function ($query) use ($slugTopic) {
+            return $query->where('slug', $slugTopic);
         }])->first();
-
-        if (! $data) {
+        if (! $levelInfo) {
             return back()->with('alert-danger', 'Sucedio un error: Registro no encontrado');
         }
-
-        $name = match ($level) {
-            'nivel-1-basico' => 'Nivel Basico',
-            '' => '',
-            default => 'ERROR'
-        };
-
-
-
         return view(
             'authenticated.administrator.study-plan.level.topic.edit',
             [
-                'data' => $data,
-                'level' => [
-                    [
-                        'slug' => $level,
-                        'name' => $name,
-                    ],
-
-                ],
-                'slug' => $slug,
+                'levelInfo' => $levelInfo,
+                'slugLevel' => $slugLevel,
+                'slugTopic' => $slugTopic
             ]
         );
     }

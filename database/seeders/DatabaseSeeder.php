@@ -13,7 +13,9 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             DecisionPatternSeeder::class,
             AlertThresholdSeeder::class,
-            IdentityCardSeeder::class
+            IdentityCardSeeder::class,
+            GenderSeeder::class,
+            CountriesSeeder::class
         ]);
     }
 }
