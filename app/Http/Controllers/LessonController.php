@@ -2,9 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Lesson;
 use App\Models\Module;
+use App\Models\Practice;
+use App\Models\practiceOption;
+use App\Models\Reinforcement;
 use App\Models\Topic;
+use Exception;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+use PDOException;
 
 class LessonController extends Controller
 {
@@ -22,9 +31,9 @@ class LessonController extends Controller
 
 
         $moduloTopicInfo = Module::select('module_id',  'title', 'slug')->whereHas('topic', function ($query) use ($slugTopic) {
-              $query->select('slug', 'topic_id', 'module_id')->where('slug', $slugTopic);
+            $query->select('slug', 'topic_id', 'module_id')->where('slug', $slugTopic);
         })->with(['topic' => function ($query) {
-              $query->select('slug', 'topic_id', 'title', 'module_id');
+            $query->select('slug', 'topic_id', 'title', 'module_id');
         }])->first();
 
 
@@ -39,7 +48,80 @@ class LessonController extends Controller
         );
     }
 
-    public function store(Request $request){
-        return $request;
+    public function store(Request $request, $slugLevel, $slugTopic)
+    {
+
+        $requestPraticeData = $request->except([
+            '_method',
+            '_token',
+            'leccion_activa',
+            'guia_parrafo',
+            'leccion_titulo',
+        ]);
+        $topic = Topic::where('slug', $slugTopic)->first();
+        $topicId = $topic->topic_id;
+        $numberOfItems = count($requestPraticeData) / 8;
+        try {
+            DB::beginTransaction();
+            $lesson = new Lesson();
+            $lesson->topic_id = $topicId;
+            $lesson->title = $request['leccion_titulo'];
+            $lesson->guide = $request['guia_parrafo'];
+            $lesson->slug = Str::slug($request->leccion_titulo);
+            $lesson->is_active = 1;
+            $lesson->save();
+            for ($i = 1; $i <= $numberOfItems; $i++) {
+                $tipoPregunta = $requestPraticeData['tipoPregunta_' . $i] ?? null;
+                $tituloPractica = $requestPraticeData['tituloPractica_' . $i] ?? null;
+                $variables = $requestPraticeData['variables_' . $i] ?? null;
+                $variableCorrecta = $requestPraticeData['variableCorrecta_' . $i] ?? null;
+                $refuerzoUrl = $requestPraticeData['refuerzoUrl_' . $i] ?? null;
+                $refuerzoTitulo = $requestPraticeData['refuerzoTitulo_' . $i] ?? null;
+                $refuerzoParrafo = $requestPraticeData['refuerzoParrafo_' . $i] ?? null;
+                $practicaPantalla = $requestPraticeData['practicaPantalla_' . $i] ?? null;
+
+                //Añadiendo las variables al igual la correcta a la tabla de opciones que se relaciona con la tabla padre llamada practicas
+                $practiceOptiones = new practiceOption();
+                $practiceOptiones->variables = $variables;
+                $practiceOptiones->correct_variable = $variableCorrecta;
+                $practiceOptiones->save();
+
+                $reinforcement = new Reinforcement;
+                $reinforcement->title = $refuerzoTitulo;
+                $reinforcement->paragraph = $refuerzoParrafo;
+                $reinforcement->url = $refuerzoUrl;
+                $reinforcement->img = null;
+                $reinforcement->save();
+
+                $practice = new Practice();
+                $practice->number = $i;
+                $practice->topic_id = $topicId;
+                $practice->reinforcement_id = $reinforcement->reinforcement_id;
+                $practice->practice_option_id = $practiceOptiones->practice_option_id;
+                $practice->type_dynamic = $tipoPregunta;
+                $practice->screen = $practicaPantalla;
+                $practice->save();
+            }
+            DB::commit();
+            $lessonTitle = $lesson->title;
+            $topicTitle  = $topic->title;
+            $moduleTitle = $topic->module->title;
+            $mensaje = "¡Lección creada! En el módulo '{$moduleTitle}', tema '{$topicTitle}', ";
+            $mensaje .= "se ha guardado la lección '{$lessonTitle}' con {$numberOfItems} prácticas y sus refuerzos.";
+            $request->session()->flash('alert-success', $mensaje);
+            return redirect()->route('study-plan.level-index', ['nivel' => $slugLevel]);
+        } catch (QueryException $ex) {
+            $request->session()->flash('alert-danger', 'Sucedio un error: ' . $ex->getMessage());
+            DB::rollBack();
+            return redirect()->route('lesson.create', ['nivel' => $slugLevel]);
+        } catch (PDOException $ex) {
+            $request->session()->flash('alert-danger', 'Sucedio un error: ' . $ex->getMessage());
+            DB::rollBack();
+            return redirect()->route('lesson.create', ['nivel' => $slugLevel]);
+        } catch (Exception $ex) {
+            $request->session()->flash('alert-danger', 'Sucedio un error: ' . $ex->getMessage());
+            DB::rollBack();
+            return redirect()->route('lesson.create', ['nivel' => $slugLevel]);
+        }
     }
 }

@@ -26,23 +26,29 @@
     <x-header></x-header>
     <main class="flex-grow-2 w-100 flex-and-direction-column flex-center-full flex-center-full-start">
         <article class="row main__article container-xl w-100">
-            <x-aside-admin :items="[
-                [
-                    'title' => 'Información Personal',
-                    'route' => 'initial-decision-patterns.index',
-                    'icon' => 'bi bi-person-lines-fill',
-                ],
-                [
+            @php
+                $sidebarItems = [];
+                if (Auth::user()->rol_id == 2) {
+                    $sidebarItems[] = [
+                        'title' => 'Información Personal',
+                        'route' => 'personal-profile.index',
+                        'icon' => 'bi bi-person-lines-fill',
+                    ];
+                }
+                $sidebarItems[] = [
                     'title' => 'Información de la Cuenta',
                     'route' => 'account-profile.index',
                     'icon' => 'bi bi-person-fill',
-                ],
-                 [
+                ];
+
+                $sidebarItems[] = [
                     'title' => 'Cambiar Contraseña',
                     'route' => 'change-password.edit',
                     'icon' => 'bi bi-person-lock',
-                ]
-            ]"></x-aside-admin>
+                ];
+            @endphp
+
+            <x-aside-admin :items="$sidebarItems"></x-aside-admin>
             <div class="col-10 main__content bg-white-border profile">
                 <small class="text__gray">
                     <a href="{{ route('account-profile.index') }}" class="text__gray"> Perfil > </a>

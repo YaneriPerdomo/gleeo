@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Player;
 use Illuminate\Http\Request;
 use Auth;
+use Illuminate\Support\Facades\Auth as FacadesAuth;
 
 class LoginController extends Controller
 {
@@ -16,33 +18,29 @@ class LoginController extends Controller
     {
 
         $credentials = $request->only('user', 'password');
-        if (Auth::attempt($credentials)) {
+        if (FacadesAuth::attempt($credentials)) {
 
-            if (Auth::user()->deleted_at == 0) {
+            if (FacadesAuth::user()->deleted_at == 0) {
                 return back()->with([
                     'alert-danger' => 'Lo sentimos, tu cuenta de usuario ha sido eliminado. Si tiene alguna duda, comunícate con el administrador.'
                 ]);
             }
-            if (Auth::user()->state == 0) {
+            if (FacadesAuth::user()->state == 0) {
                 return back()->withErrors([
                     'alert-danger' => 'Lo sentimos, tu cuenta de usuario está deshabilitada. Para obtener asistencia, comunícate con el administrador.'
                 ]);
             }
             $request->session()->regenerate();
-            if (Auth::user()->rol_id == 2 || Auth::user()->rol_id == 3) {
-                return 'Profesor';
-                /*
-                    $user = Employee::where('user_id', Auth::user()->user_id)->first();
-                    $user->last_session = Carbon::now();
-                    $user->save();
-                    $user = Auth::user()->load('employee');
-                    $request->session()->put('name_lastname', $user->employee->name . ' ' . $user->employee->lastname);
-                    $gender = Auth::user()->employee->gender_id == 1 ? '/bienvenido' : '/bienvenida';
-                    return redirect()->intended($gender);
-                */
-                //redirect()->intended($gender);
+            if (FacadesAuth::user()->rol_id == 3) {
+                $request->session()->put('user_id', FacadesAuth::user()->user_id);
+                $player = Player::where('user_id', FacadesAuth::id())->first();
+                if ($player) {
+                    $request->session()->put('player_id', $player->player_id);
+                }
+                $request->session()->put('current_level_id', $player->level_assigned_id);
+                return redirect()->route('educational-platform.index', ['slugCurrentLevel' => $player->level_assigned->slug]);
             }
-            return redirect()->intended('/bienvenido-a');
+            return redirect()->intended('/inicio');
         } else {
             return back()->withErrors([
                 'message_incorrect_credentials' => 'Credenciales incorrectas'
@@ -51,7 +49,7 @@ class LoginController extends Controller
     }
     public function logout(Request $request)
     {
-        Auth::logout();
+        FacadesAuth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         return redirect()->route('login.index');

@@ -211,7 +211,7 @@ class RepresentativeController extends Controller
             $slug = Str::slug($request->Username);
 
             $data->update([
-                /* 'names' => $request->name,
+                /*'names' => $request->name,
                 'surnames' => $request->surnames,*/
                 'educational_center' => $request->role_identification == 'Profesional' ? $request->educational_center : '',
                 'type' => $request->role_identification,

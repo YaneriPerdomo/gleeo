@@ -13,7 +13,7 @@ if (url.href.includes("/configuracion-del-tutor")) {
         headerNavigationBarListItem[1].classList.add("item-selected--nav");
     }
 }
-else if (url.href.includes("/bienvenido-a")) {
+else if (url.href.includes("/inicio")) {
     tutorSettingsListIcons[0].classList.add("item-selected");
 
     headerNavigationBarListItem[0].classList.add("item-selected--nav");
@@ -28,9 +28,17 @@ else if (url.href.includes("/perfil")) {
     }
 }
 else if (url.href.includes("/gestion-de-cuentas")) {
-    if (url.href.includes("/gestion-de-cuentas")
+    if (url.href.includes("representante-y-profesionale") ||
+        url.href.includes("representantes-y-profesionales")
     ) {
         headerNavigationBarListItem[3].classList.add("item-selected--nav");
+        tutorSettingsListIcons[0].classList.add("item-selected");
+    }
+
+    if (url.href.includes("jugadores") ||
+        url.href.includes("jugador")
+    ) {
+        headerNavigationBarListItem[1].classList.add("item-selected--nav");
         tutorSettingsListIcons[0].classList.add("item-selected");
     }
 }

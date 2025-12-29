@@ -16,4 +16,7 @@ class Reinforcement extends Model
         'img',
         'url',
     ];
+
+            public $timestamps = false;
+
 }

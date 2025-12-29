@@ -26,23 +26,29 @@
     <x-header></x-header>
     <main class="flex-grow-2 w-100 flex-and-direction-column flex-center-full flex-center-full-start">
         <article class="row main__article container-xl w-100">
-            <x-aside-admin :items="[
-                [
-                    'title' => 'Información Personal',
-                    'route' => 'initial-decision-patterns.index',
-                    'icon' => 'bi bi-person-lines-fill',
-                ],
-                [
+            @php
+                $sidebarItems = [];
+                if (Auth::user()->rol_id == 2) {
+                    $sidebarItems[] = [
+                        'title' => 'Información Personal',
+                        'route' => 'personal-profile.index',
+                        'icon' => 'bi bi-person-lines-fill',
+                    ];
+                }
+                $sidebarItems[] = [
                     'title' => 'Información de la Cuenta',
-                    'route' => 'alert-thresholds.index',
+                    'route' => 'account-profile.index',
                     'icon' => 'bi bi-person-fill',
-                ],
-                 [
+                ];
+
+                $sidebarItems[] = [
                     'title' => 'Cambiar Contraseña',
-                    'route' => 'alert-thresholds.index',
+                    'route' => 'change-password.edit',
                     'icon' => 'bi bi-person-lock',
-                ]
-            ]"></x-aside-admin>
+                ];
+            @endphp
+
+            <x-aside-admin :items="$sidebarItems"></x-aside-admin>
             <div class="col-10 main__content bg-white-border profile">
                 <small class="text__gray">
                     <a href="{{ route('account-profile.index') }}" class="text__gray"> Perfil > </a>
@@ -53,10 +59,10 @@
                 <div class="flex-and-direction-row flex-content-space-between profile__header">
                     <span class="fs-4 profile__title-text">
                         <strong>
-                            Información de la Cuenta
+                            Información Personal
                         </strong>
                     </span>
-                    <a href="{{ route('account-profile.edit') }}">
+                    <a href="{{ route('personal-profile.edit') }}">
                         <button class="button button__color-purple profile__config-button">
                             <i class="bi bi-save"></i> Editar
                         </button>
@@ -64,15 +70,23 @@
                 </div>
                 <section class="profile__data">
                     <div>
-                        <b>Nombre de Usuario: </b>
+                        <b>Identificación de Rol: </b>
                         <span>
-                            {{ $data->user }}
+                            {{ $data->type }}
                         </span>
                     </div>
+                    @if ($data->type == 'Profesional')
+                        <div>
+                            <b>Centro Educativo: </b>
+                            <span>
+                                {{ $data->educational_center }}
+                            </span>
+                        </div>
+                    @endif
                     <div>
-                        <b>Correo Electrónico: </b>
+                        <b>Género: </b>
                         <span>
-                            {{ $data->email }}
+                            {{ $data->gender->name }}
                         </span>
                     </div>
                 </section>

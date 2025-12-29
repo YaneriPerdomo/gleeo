@@ -126,8 +126,7 @@
                     <a href="{{ route('study-plan.index') }}" class="text__gray">
                         Plan de Estudio >
                     </a>
-                    <a href="{{ route('study-plan.level-index', ['nivel' => $infoLevel['slug']]) }}"
-                        class="text__gray">
+                    <a href="{{ route('study-plan.level-index', ['nivel' => $infoLevel['slug']]) }}" class="text__gray">
                         {{ convertSlugToTitle($infoLevel['slug']) }}
                     </a>
                 </small>
@@ -148,116 +147,115 @@
                     </div>
                 </div>
                 @if (session('alert-success'))
-                    <div class="alert alert-success"><i class="bi bi-check-circle-fill"></i>
-                        {{ session('alert-success') }}</div>
+                <div class="alert alert-success"><i class="bi bi-check-circle-fill"></i>
+                    {{ session('alert-success') }}</div>
                 @endif
                 @if (session('alert-danger'))
-                    <div class="alert alert-danger" role="alert"><i class="bi bi-x-octagon-fill"></i>
-                        {{ session('alert-danger') }}</div>
+                <div class="alert alert-danger" role="alert"><i class="bi bi-x-octagon-fill"></i>
+                    {{ session('alert-danger') }}</div>
                 @endif
                 <div class="mt-2">
                     @forelse ($modules->items() as $module)
-                        <section class="study-plan">
+                    <section class="study-plan">
 
-                            <div class="study-plan__module flex-and-direction-row flex-content-space-between">
-                                <b class="study-plan__module-title">
-                                    Módulo {{ $loop->iteration }}: {{ $module->title }}
-                                </b>
-                                <div class="study-plan__module-actions">
-                                    <a
-                                        href="{{ route('module.edit', ['nivel' => $infoLevel['slug'], 'slug' => $module->slug ?? '']) }}">
-                                        <button class="button button__color-green button--icon-only">
-                                            <i class="bi bi-pencil-square"></i>
-                                        </button>
-                                    </a>
-                                    <a
-                                        href="{{ route('module.delete', ['nivel' => $infoLevel['slug'], 'slug' => $module->slug ?? '']) }}">
-                                        <button class="button button__color-red button--icon-only">
-                                            <i class="bi bi-trash-fill"></i>
-                                        </button>
-                                    </a>
-                                </div>
-                            </div>
-
-                            <div class="study-plan__add-action">
+                        <div class="study-plan__module flex-and-direction-row flex-content-space-between">
+                            <b class="study-plan__module-title">
+                                Módulo {{ $loop->iteration }}: {{ $module->title }}
+                            </b>
+                            <div class="study-plan__module-actions">
                                 <a
-                                    href="{{ route('topic.create', ['nivel' => $infoLevel['slug'], 'slug' => $module->slug ?? '']) }}">
-                                    <button class="button button__color-green">
-                                        <i class="bi bi-plus-lg"></i> Agregar Nuevo Tema
+                                    href="{{ route('module.edit', ['nivel' => $infoLevel['slug'], 'slug' => $module->slug ?? '']) }}">
+                                    <button class="button button__color-green button--icon-only">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </button>
+                                </a>
+                                <a
+                                    href="{{ route('module.delete', ['nivel' => $infoLevel['slug'], 'slug' => $module->slug ?? '']) }}">
+                                    <button class="button button__color-red button--icon-only">
+                                        <i class="bi bi-trash-fill"></i>
                                     </button>
                                 </a>
                             </div>
+                        </div>
 
-                            @foreach ($module->topics as $topic)
-                                <div class="study-plan__topic flex-and-direction-row flex-content-space-between">
-                                    <div class="study-plan__topic-info">
-                                        <b>Tema {{ $loop->iteration }}: {{ $topic->title }}</b>
+                        <div class="study-plan__add-action">
+                            <a
+                                href="{{ route('topic.create', ['nivel' => $infoLevel['slug'], 'slug' => $module->slug ?? '']) }}">
+                                <button class="button button__color-green">
+                                    <i class="bi bi-plus-lg"></i> Agregar Nuevo Tema
+                                </button>
+                            </a>
+                        </div>
+
+                        @foreach ($module->topics as $topic)
+                        <div class="study-plan__topic flex-and-direction-row flex-content-space-between">
+                            <div class="study-plan__topic-info">
+                                <b>Tema {{ $loop->iteration }}: {{ $topic->title }}</b>
+                            </div>
+                            <div class="study-plan__topic-actions">
+                                <a
+                                    href="{{ route('topic.edit', ['nivel' => $infoLevel['slug'], 'slug' => $topic->slug ?? '']) }}">
+                                    <button class="button button__color-green button--icon-only"
+                                        style="padding: 0.8rem;">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </button>
+                                </a>
+                                <a
+                                    href="{{ route('topic.delete', ['nivel' => 'nivel-1-basico', 'slug' => $topic->slug ?? '']) }}">
+                                    <button class="button button__color-red button--icon-only" style="padding: 0.8rem;">
+                                        <i class="bi bi-trash-fill"></i>
+                                    </button>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="flex-and-direction-row ">
+                            @forelse ($topic->lessons as $lesson)
+                            <div class="levels-section px-4 my-3">
+                                <a href="{{ route('study-plan.level-index', ['nivel' => $infoLevel['slug']]) }}"
+                                    class="level-card">
+                                    <div class="level-card__circle">
+                                        <i class="bi bi-check fs-1"></i>
                                     </div>
-                                    <div class="study-plan__topic-actions">
-                                        <a
-                                            href="{{ route('topic.edit', ['nivel' => $infoLevel['slug'], 'slug' => $topic->slug ?? '']) }}">
-                                            <button class="button button__color-green button--icon-only"
-                                                style="padding: 0.8rem;">
-                                                <i class="bi bi-pencil-square"></i>
-                                            </button>
-                                        </a>
-                                        <a
-                                            href="{{ route('topic.delete', ['nivel' => 'nivel-1-basico', 'slug' => $topic->slug ?? '']) }}">
-                                            <button class="button button__color-red button--icon-only"
-                                                style="padding: 0.8rem;">
-                                                <i class="bi bi-trash-fill"></i>
-                                            </button>
-                                        </a>
+                                    <div class="level-card__title">
+                                        <i class="text__gray">{{ $lesson->title }}</i>
                                     </div>
-                                </div>
-                                <div class="flex-and-direction-row ">
-                                    @forelse ($topic->lessons as $lesson)
-                                        <div class="levels-section px-4 my-3">
-                                            <a href="{{ route('study-plan.level-index', ['nivel' => $infoLevel['slug']]) }}"
-                                                class="level-card">
-                                                <div class="level-card__circle">
-                                                    <i class="bi bi-check fs-1"></i>
-                                                </div>
-                                                <div class="level-card__title">
-                                                    <i class="text__gray">{{ $lesson->title }}</i>
-                                                </div>
-                                            </a>
-                                        </div>
-                                    @empty
-                                    @endforelse
-                                    <div class="levels-section px-4 my-3">
-                                        <a href="{{ route('lesson.create', ['nivel' => $infoLevel['slug'], 'topic_slug' => $topic->slug]) }}"
-                                            class="level-card level-card--add">
-                                            <div class="level-card__circle level-card__circle--add">
-                                                <i class="bi bi-plus-lg fs-1"></i>
-                                            </div>
-                                            <div class="level-card__title">
-                                                <i class="text__gray"> Agregar <br> Nueva Lección</i>
-                                            </div>
-                                        </a>
+                                </a>
+                            </div>
+                            @empty
+                            @endforelse
+                            <div class="levels-section px-4 my-3">
+                                <a href="{{ route('lesson.create', ['nivel' => $infoLevel['slug'], 'topic_slug' => $topic->slug]) }}"
+                                    class="level-card level-card--add">
+                                    <div class="level-card__circle level-card__circle--add">
+                                        <i class="bi bi-plus-lg fs-1"></i>
                                     </div>
-                                </div>
-                            @endforeach
+                                    <div class="level-card__title">
+                                        <i class="text__gray"> Agregar <br> Nueva Lección</i>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                        @endforeach
 
 
 
-                        </section>
-                        @empty
-                            <p>No hay módulos registrados.</p>
-                        @endforelse
+                    </section>
+                    @empty
+                    <p>No hay módulos registrados.</p>
+                    @endforelse
 
 
-                    </div>
                 </div>
-            </article>
-            <script src="{{ asset('js/components/header.js') }}" type="module"></script>
-        </main>
-        <x-footer name="Gleeo"></x-footer>
-    </body>
-    <script src="https://unpkg.com/typed.js@2.1.0/dist/typed.umd.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous">
-    </script>
-    </body>
+            </div>
+        </article>
+        <script src="{{ asset('js/components/header.js') }}" type="module"></script>
+    </main>
+    <x-footer name="Gleeo"></x-footer>
+</body>
+<script src="https://unpkg.com/typed.js@2.1.0/dist/typed.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous">
+</script>
+</body>
 
-    </html>
+</html>

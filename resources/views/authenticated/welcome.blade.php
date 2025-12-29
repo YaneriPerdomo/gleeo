@@ -89,16 +89,17 @@
                     <div class="col-6 welcome ">
                         <small class="text__gray">
                             <a href="{{ route('initial-decision-patterns.index') }}" class="text__gray">Inicio > </a>
-                            <a href="{{ route('alert-thresholds.index') }}" class="text__gray"> @php
-                                if (Auth::user()->rol_id == 1) {
-                                echo 'Bienvenido-a';
-                                } else {
-                                if (Auth::user()->employee->gender_id == 1) {
-                                echo 'Bienvenido';
-                                } else {
-                                echo 'Bienvenida';
-                                }
-                                }
+                            <a href="{{ route('alert-thresholds.index') }}" class="text__gray">
+                                @php
+                                    if (Auth::user()->rol_id == 1) {
+                                        echo 'Bienvenido-a';
+                                    } else {
+                                        if (Auth::user()->representative->gender_id == 1) {
+                                            echo 'Bienvenido';
+                                        } else {
+                                            echo 'Bienvenida';
+                                        }
+                                    }
                                 @endphp </a>
                         </small>
                         <h1 class="fs-2">
@@ -106,8 +107,8 @@
                                 <div class="">
                                     <b>
                                         <span class="note ">
-                                    </span>
-                                    <span class="text__purple">{{ Auth::user()->user }}</span>!
+                                        </span>
+                                        <span class="text__purple">{{ ucfirst(Auth::user()->user) }}</span>!
                                     </b>
                                 </div>
 
@@ -136,15 +137,15 @@
 
                             <div class="msg_paragraph">
                                 @php
-                                if (Auth::user()->rol_id == 1) {
-                                echo 'Bienvenido-a';
-                                } else {
-                                if (Auth::user()->employee->gender_id == 1) {
-                                echo 'Bienvenido';
-                                } else {
-                                echo 'Bienvenida';
-                                }
-                                }
+                                    if (Auth::user()->rol_id == 1) {
+                                        echo 'Bienvenido-a';
+                                    } else {
+                                        if (Auth::user()->representative->gender_id == 1) {
+                                            echo 'Bienvenido';
+                                        } else {
+                                            echo 'Bienvenida';
+                                        }
+                                    }
                                 @endphp al panel central de Gleeo, el Sistema Educativo con Tutor
                                 Inteligente
                                 (STI) basado en reglas. Tu rol es clave para mantener la precisión y eficiencia
@@ -165,36 +166,48 @@
                             <i class="bi bi-lightning-charge-fill"></i>
                             Acciones Rápidas y Configuración </b> </div>
                     <div class="rapid-actions__content flex-and-direction-row py-2" style="gap:1rem">
-                        <div class="rapid-actions__card flex-and-direction-column  ">
-                            <i class="bi bi-gear-wide-connected text__blue fs-1"></i>
-                            <span class="rapid-actions__subtitle"><b>Patrones de Decisión</b></span>
-                            <p class="text__gray">
-                                Define la lógica de intervención y las reglas del STI.
-                            </p>
-                        </div>
-                        <div class="rapid-actions__card flex-and-direction-column   ">
-                            <i class="bi bi-bell-fill fs-1 text__red"></i>
-                            <span class="rapid-actions__subtitle fs-5"><b>Umbrales de Alerta</b></span>
-                            <p class="text__gray">
-                                Establece los límites para activar las alertas de refuerzo.
-                            </p>
-                        </div>
-                        <div class="rapid-actions__card flex-and-direction-column  ">
-                            <i class="bi bi-journals fs-1 text__green"></i>
-                            <span class="rapid-actions__subtitle"><b> Gestión de Contenido</b></span>
-                            <p class="text__gray">
-                                Carga, organiza y clasifica los materiales de aprendizaje.
-                            </p>
-                        </div>
-                        <div class="rapid-actions__card flex-and-direction-column  ">
-                            <i class="bi bi-people-fill fs-1 text__gold"></i>
-                            <span class="rapid-actions__subtitle"><b>
-                                    Gestión de Cuentas</b></span>
-                            <p class="text__gray">
-                                Administra estudiantes, profesores y sus roles/permisos.
-                            </p>
-                        </div>
-
+                        @if (Auth::user()->rol_id == 1)
+                            <div class="rapid-actions__card flex-and-direction-column  ">
+                                <i class="bi bi-gear-wide-connected text__blue fs-1"></i>
+                                <span class="rapid-actions__subtitle"><b>Patrones de Decisión</b></span>
+                                <p class="text__gray">
+                                    Define la lógica de intervención y las reglas del STI.
+                                </p>
+                            </div>
+                            <div class="rapid-actions__card flex-and-direction-column   ">
+                                <i class="bi bi-bell-fill fs-1 text__red"></i>
+                                <span class="rapid-actions__subtitle fs-5"><b>Umbrales de Alerta</b></span>
+                                <p class="text__gray">
+                                    Establece los límites para activar las alertas de refuerzo.
+                                </p>
+                            </div>
+                            <div class="rapid-actions__card flex-and-direction-column  ">
+                                <i class="bi bi-journals fs-1 text__green"></i>
+                                <span class="rapid-actions__subtitle"><b> Gestión de Contenido</b></span>
+                                <p class="text__gray">
+                                    Carga, organiza y clasifica los materiales de aprendizaje.
+                                </p>
+                            </div>
+                            <div class="rapid-actions__card flex-and-direction-column  ">
+                                <i class="bi bi-people-fill fs-1 text__gold"></i>
+                                <span class="rapid-actions__subtitle"><b>
+                                        Gestión de Cuentas</b></span>
+                                <p class="text__gray">
+                                    Administra estudiantes, profesores y sus roles/permisos.
+                                </p>
+                            </div>
+                        @endif
+                        @if (Auth::user()->rol_id == 2)
+                            <div class="rapid-actions__card flex-and-direction-column">
+                                <i class="bi bi-person-video3 fs-1 text__gold"></i>
+                                <span class="rapid-actions__subtitle"><b>
+                                        Gestión de Cuentas de Jugadores</b></span>
+                                <p class="text__gray">
+                                    Administra las cuentas de los niños y consulta el historial de decisiones del
+                                    tutor para cada uno.
+                                </p>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>

@@ -11,17 +11,18 @@ class Practice extends Model
     protected $primaryKey = 'practice_id';
 
     protected $fillable = [
-        'lesson_id',
+        'topic_id',
         'reinforcement_id',
         'practice_option_id',
-        'type_dynamic_id',
+        'type_dynamic',
         'screen',
-        'practice_id'
+        'practice_id',
+        'number'
     ];
 
-    public function lesson()
+    public function topic()
     {
-        return $this->belongsTo(Lesson::class, 'lesson_id');
+        return $this->belongsTo(Lesson::class, 'topic_id');
     }
     public function reinforcement()
     {
@@ -31,10 +32,7 @@ class Practice extends Model
     {
         return $this->belongsTo(practiceOption::class, 'practice_option_id');
     }
-    public function typeDynamic()
-    {
-        return $this->belongsTo(TypeDynamic::class, 'type_dynamic_id');
-    }
+
 
     public function practice()
     {

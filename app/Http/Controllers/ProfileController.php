@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\PasswordConfirmationRequest;
+use App\Models\Representative;
 use App\Models\User;
 use Exception;
 use Illuminate\Container\Attributes\Auth;
@@ -18,32 +19,71 @@ class ProfileController extends Controller
 {
     public function IndexPersonal()
     {
-        $data = User::select('user_id', 'user', 'email')->where('rol_id', 1)->first();
+        $data = Representative::with(['user' => function ($query) {
+            return $query;
+        }])->where('user_id', FacadesAuth::user()->user_id)->first();
 
-        return view('authenticated.profile.account-information.index', ['data' => $data]);
+        return view('authenticated.profile.personal-information.index', ['data' => $data]);
     }
 
     public function IndexAccount()
     {
-        $data = User::select('user_id', 'user', 'email')->where('rol_id', 1)->first();
-
+        $data = User::select('user_id', 'user', 'email')->where('user_id', FacadesAuth::user()->user_id)->first();
         return view('authenticated.profile.account-information.index', ['data' => $data]);
     }
 
-    public function editPersonal() {}
 
-    public function updatePersonal() {}
+
+    public function editPersonal()
+    {
+        $data = Representative::with(['user' => function ($query) {
+            return $query;
+        }])->where('user_id', FacadesAuth::user()->user_id)->first();
+
+
+        return view('authenticated.profile.personal-information.edit', ['data' => $data]);
+    }
+
+    public function updatePersonal(Request $request)
+    {
+
+        $data = Representative::where('user_id', FacadesAuth::user()->user_id)->first();
+        try {
+            FacadesDB::beginTransaction();
+            $data->update([
+                'type' => $request->role_identification,
+                'gender_id' => $request->gender_id,
+                'educational_center' => $request->educational_center
+            ]);
+            FacadesDB::commit();
+            $request->session()->flash('alert-success', 'La Información personal ha sido actualizada correctamente.');
+
+            return redirect()->route('personal-profile.edit');
+        } catch (QueryException $ex) {
+            $request->session()->flash('alert-danger', 'Sucedio un error: ' . $ex->getMessage());
+
+            return redirect()->route('personal-profile.edit');
+        } catch (PDOException $ex) {
+            $request->session()->flash('alert-danger', 'Sucedio un error: ' . $ex->getMessage());
+
+            return redirect()->route('personal-profile.edit');
+        } catch (Exception $ex) {
+            $request->session()->flash('alert-danger', 'Sucedio un error: ' . $ex->getMessage());
+
+            return redirect()->route('personal-profile.edit');
+        }
+    }
 
     public function EditAccount()
     {
-        $data = User::select('user_id', 'user', 'email')->where('rol_id', 1)->first();
+        $data = User::select('user_id', 'user', 'email')->where('user_id', FacadesAuth::user()->user_id)->first();
 
         return view('authenticated.profile.account-information.edit', ['data' => $data]);
     }
 
     public function updateAccount(Request $request)
     {
-        $data = User::select('user_id', 'user', 'email')->where('rol_id', 1)->firstOrFail();
+        $data = User::select('user_id', 'user', 'email')->where('user_id', FacadesAuth::user()->user_id)->firstOrFail();
 
         if (
             User::where('user', $request->user_name)
@@ -117,7 +157,7 @@ class ProfileController extends Controller
             FacadesDB::commit();
 
             return redirect()->route('change-password.edit');
-       } catch (QueryException $ex) {
+        } catch (QueryException $ex) {
             $request->session()->flash('alert-danger', 'Sucedio un error: ' . $ex->getMessage());
 
             return redirect()->route('change-password.edit');

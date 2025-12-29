@@ -1,5 +1,7 @@
  <header class="header">
-     <div class="header__content container-xl">
+     <div class="header__content
+     {{ $isPlayer == '1' ? 'header__content--rol-player' : 'container-xl ' }}
+     ">
          <section class="header__top-bar flex-and-direction-row flex-content-space-between">
              <div class="header__logo">
                  <section class="header__logo-section flex-and-direction-row">
@@ -12,14 +14,16 @@
              </div>
              @auth
                  <div class="header__profile-container flex-and-direction-row flex-center-full ">
-                     <div class="notification">
-                         <i class="bi bi-bell-fill text-white"></i>
-                     </div>
+                     @if (Auth::user()->rol_id == 1)
+                         <div class="notification">
+                             <i class="bi bi-bell-fill text-white"></i>
+                         </div>
+                     @endif
                      <div class="profile">
                          <div class="profile__greeting dropdown">
                              <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
                                  aria-expanded="false">
-                                 ¡Hola, {{ Auth::user()->user }}!
+                                 ¡Hola, {{ ucfirst(Auth::user()->user) }}!
                              </button>
                              <ul class="dropdown-menu dropdown-menu-dark">
                                  <li><a class="dropdown-item active" href="{{ route('account-profile.index') }}">Perfil</a>
@@ -53,22 +57,31 @@
                                  class="bi bi-house-door-fill"></i>
                              Inicio</a>
                      </li>
-                     <li class="header__navigation-bar__list-item">
-                         <a href="{{ route('initial-decision-patterns.index') }}"
-                             class="header__navigation-bar__link"><i class="bi bi-robot"></i>
-                             Configuración del Tutor</a>
-                     </li>
-                     <li class="header__navigation-bar__list-item">
-                         <a href="{{ route('study-plan.index') }}" class="header__navigation-bar__link">
-                             <i class="bi bi-journals"></i>
-                             Gestión de Contenido
-                         </a>
-                     </li>
-                     <li class="header__navigation-bar__list-item">
-                         <a href="{{ route('representative.index') }}" class="header__navigation-bar__link"><i class="bi bi-people-fill"></i>
-                             Gestión de Cuentas</a>
-                     </li>
-
+                     @if (Auth::user()->rol_id == 1)
+                         <li class="header__navigation-bar__list-item">
+                             <a href="{{ route('initial-decision-patterns.index') }}"
+                                 class="header__navigation-bar__link"><i class="bi bi-robot"></i>
+                                 Configuración del Tutor</a>
+                         </li>
+                         <li class="header__navigation-bar__list-item">
+                             <a href="{{ route('study-plan.index') }}" class="header__navigation-bar__link">
+                                 <i class="bi bi-journals"></i>
+                                 Gestión de Contenido
+                             </a>
+                         </li>
+                         <li class="header__navigation-bar__list-item">
+                             <a href="{{ route('representative.index') }}" class="header__navigation-bar__link"><i
+                                     class="bi bi-people-fill"></i>
+                                 Gestión de Cuentas </a>
+                         </li>
+                     @endif
+                     @if (Auth::user()->rol_id == 2)
+                         <li class="header__navigation-bar__list-item">
+                             <a href="{{ route('children.index') }}" class="header__navigation-bar__link"><i
+                                     class="bi bi-person-video3"></i>
+                                 Gestión de Cuentas </a>
+                         </li>
+                     @endif
                  </ul>
              </nav>
          </section>

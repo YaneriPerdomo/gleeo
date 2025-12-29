@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\AlertThresholdsController;
+use App\Http\Controllers\ChildrenController;
 use App\Http\Controllers\CreateAccountController;
+use App\Http\Controllers\EducationalPlatformController;
 use App\Http\Controllers\InitialDecisionPatternsController;
 use App\Http\Controllers\LessonController;
 use App\Http\Controllers\LoginController;
@@ -11,6 +13,7 @@ use App\Http\Controllers\RepresentativeController;
 use App\Http\Controllers\StudyPlanController;
 use App\Http\Controllers\TopicController;
 use App\Http\Controllers\WelcomeController;
+use App\Models\Children;
 use Illuminate\Support\Facades\Route;
 
 Route::controller(LoginController::class)->group(function () {
@@ -25,20 +28,17 @@ Route::controller(CreateAccountController::class)->group(function () {
 });
 
 Route::controller(WelcomeController::class)->group(function () {
-    Route::get('bienvenido-a', '__invoke')->name('welcome');
-    Route::get('bienvenido', '__invoke')->name('welcome');
-    Route::get('bienvenida', '__invoke')->name('welcome');
+    Route::get('inicio', '__invoke')->name('welcome');
 });
 
-
 Route::controller(RepresentativeController::class)->group(function () {
-    Route::get('gestion-de-cuentas/', 'index')->name('representative.index');
-    Route::post('gestion-de-cuentas/crear', 'create')->name('representative.create');
-    Route::get('gestion-de-cuentas/{search}/filtrar', 'filter')->name('representative.filter');
-    Route::get('gestion-de-cuentas/{slug}/editar-informacion', 'edit')->name('representative.edit');
-    Route::put('gestion-de-cuentas/{slug}', 'update')->name('representative.update');
-    Route::get('gestion-de-cuentas/{slug}/eliminar', 'delete')->name('representative.delete');
-    Route::delete('gestion-de-cuentas/{slug}/eliminar', 'destroy')->name('representative.destroy');
+    Route::get('gestion-de-cuentas/representantes-y-profesionales', 'index')->name('representative.index');
+    Route::post('gestion-de-cuentas/representante-y-profesionale/crear', 'create')->name('representative.create');
+    Route::get('gestion-de-cuentas/representantes-y-profesionales/{search}/filtrar', 'filter')->name('representative.filter');
+    Route::get('gestion-de-cuentas/representante-y-profesionale/{slug}/editar-informacion', 'edit')->name('representative.edit');
+    Route::put('gestion-de-cuentas/representante-y-profesionale/{slug}', 'update')->name('representative.update');
+    Route::get('gestion-de-cuentas/representante-y-profesionale/{slug}/eliminar', 'delete')->name('representative.delete');
+    Route::delete('gestion-de-cuentas/representante-y-profesionale/{slug}/eliminar', 'destroy')->name('representative.destroy');
 });
 
 Route::controller(InitialDecisionPatternsController::class)->group(function () {
@@ -54,14 +54,15 @@ Route::controller(AlertThresholdsController::class)->group(function () {
 });
 
 Route::controller(ProfileController::class)->group(function () {
-    Route::get('perfil/verificacion', 'verification')->name('verification');
-    Route::get('perfil/personal', 'IndexPersonal')->name('personal-profile.index');
     Route::get('perfil/cuenta', 'IndexAccount')->name('account-profile.index');
     Route::get('perfil/personal/editar', 'EditPersonal')->name('personal-profile.edit');
     Route::get('perfil/cuenta/editar', 'EditAccount')->name('account-profile.edit');
     Route::put('perfil/cuenta/editar', 'updateAccount')->name('account-profile.update');
     Route::get('perfil/acceso/cambiar', 'ChangePasswordEdit')->name('change-password.edit');
     Route::put('perfil/acceso/cambiar', 'ChangePasswordUpdate')->name('change-password.update');
+    Route::get('perfil/personal', 'IndexPersonal')->name('personal-profile.index');
+    Route::get('perfil/personal/editar', 'EditPersonal')->name('personal-profile.edit');
+    Route::put('perfil/personal/editar', 'updatePersonal')->name('personal-profile.update');
 });
 
 Route::controller(StudyPlanController::class)->group(function () {
@@ -97,4 +98,15 @@ Route::controller(TopicController::class)->group(function () {
     Route::delete('plataforma-educativa/plan-de-estudio/{nivel}/tema/{slug}/eliminar', 'destroy')->name('topic.destroy');
     Route::get('plataforma-educativa/plan-de-estudio/{nivel}/tema/{slug}/editar', 'edit')->name('topic.edit');
     Route::put('plataforma-educativa/plan-de-estudio/{nivel}/tema/{slug}/actualizar', 'update')->name('topic.update');
+});
+
+Route::controller(ChildrenController::class)->group(function () {
+    Route::get('gestion-de-cuentas/jugadores', 'index')->name('children.index');
+    Route::get('gestion-de-cuentas/jugador/agregar', 'create')->name('children.create');
+    Route::post('gestion-de-cuentas/jugador/agregar', 'store')->name('children.store');
+});
+
+Route::controller(EducationalPlatformController::class)->group(function () {
+    Route::get('niveles/{slugCurrentLevel}', 'index')->name('educational-platform.index');
+ ;
 });

@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class practiceOption extends Model
+class PracticeOption extends Model
 {
     protected $table = 'practice_options';
 
@@ -14,4 +14,7 @@ class practiceOption extends Model
         'variables',
         'correct_variable',
     ];
+
+        public $timestamps = false;
+
 }

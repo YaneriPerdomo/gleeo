@@ -68,12 +68,12 @@
                 @csrf
                 @method('POST')
                 @if (session('alert-success'))
-                <div class="alert alert-success"><i class="bi bi-check-circle"></i>
-                    {{ session('alert-success') }}</div>
+                    <div class="alert alert-success"><i class="bi bi-check-circle"></i>
+                        {{ session('alert-success') }}</div>
                 @endif
                 @if (session('alert-danger'))
-                <div class="alert alert-danger" role="alert"><i class="bi bi-x-octagon"></i>
-                    {{ session('alert-danger') }}</div>
+                    <div class="alert alert-danger" role="alert"><i class="bi bi-x-octagon"></i>
+                        {{ session('alert-danger') }}</div>
                 @endif
                 <legend class="form__title fs-4 text-center ">
                     <b>
@@ -137,7 +137,7 @@
                         });
                     </script>
                     @error('role_identification')
-                    <div class="alert alert-danger mt-1">{{ $message }}</div>
+                        <div class="alert alert-danger mt-1">{{ $message }}</div>
                     @enderror
                 </div>
                 <x-input-text :item="[
@@ -154,6 +154,8 @@
                 ]"></x-input-text>
 
 
+
+
                 <div class="form__item">
                     <label for="gender" class="form__label form__label--required">Género</label>
                     <div class="input-group">
@@ -164,17 +166,16 @@
                         <select class="form-select @error('gender_id') is-invalid @enderror" name="gender_id"
                             id="gender" aria-label="Seleccione el género">
                             <option disabled>Seleccione una opción</option>
-                            <option value="1" {{ old('gender_id')==1 ? 'selected' : '' }}>Masculino
+                            <option value="1" {{ old('gender_id') == 1 ? 'selected' : '' }}>Masculino
                             </option>
-                            <option value="2" {{ old('gender_id')==2 ? 'selected' : '' }}>Femenina
+                            <option value="2" {{ old('gender_id') == 2 ? 'selected' : '' }}>Femenina
                             </option>
                         </select>
                     </div>
                     @error('gender_id')
-                    <div class="alert alert-danger mt-1">{{ $message }}</div>
+                        <div class="alert alert-danger mt-1">{{ $message }}</div>
                     @enderror
                 </div>
-
 
                 <div class="form__item">
                     <label for="password" class="form__label form__label--required">Contraseña</label>
@@ -189,7 +190,7 @@
                             aria-describedby="password-addon" value="" autocomplete="off">
                     </div>
                     @error('password')
-                    <div class="alert alert-danger mt-1">{{ $message }}</div>
+                        <div class="alert alert-danger mt-1">{{ $message }}</div>
                     @enderror
                 </div>
 
@@ -208,7 +209,7 @@
                             aria-describedby="password-confirm-addon" value="">
                     </div>
                     @error('password_confirmation')
-                    <div class="alert alert-danger mt-1">{{ $message }}</div>
+                        <div class="alert alert-danger mt-1">{{ $message }}</div>
                     @enderror
                 </div>
 
@@ -225,7 +226,7 @@
                         ¿Ya tienes una cuenta?
                         <a href="{{ route('login.index') }}" class="text__purple">Iniciar Sesión</a></small>
                 </div>
-                <input type="hidden" name="country_name" >
+                <input type="hidden" name="country_name">
             </form>
         </section>
     </main>

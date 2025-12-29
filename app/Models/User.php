@@ -34,6 +34,16 @@ class User extends Authenticatable
         return $this->belongsTo(Rol::class, 'rol_id');
     }
 
+    public function representative()
+    {
+        return $this->hasOne(Representative::class, 'user_id');
+    }
+
+     public function player()
+    {
+        return $this->hasOne(Player::class, 'user_id');
+    }
+
 
     /**
      * The attributes that should be hidden for serialization.

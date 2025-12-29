@@ -123,7 +123,7 @@
                                     'aria_label' => 'Nombre del tema',
                                     'placeholder' => 'Números Naturales',
                                     'form_input_value_default' => old('tema_nombre', $moduloTopicInfo->topic[0]->title),
-                                    'attribute_a' => 'readonly',
+                                    'attribute_a' => 'disabled',
                                     'form_help_text' => '',
                                 ]"></x-input-text>
                             </div>

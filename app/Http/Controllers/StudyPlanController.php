@@ -19,7 +19,9 @@ class StudyPlanController extends Controller
     {
         $levels = Level::with(['module' => function ($query) {
             return $query;
-        }])->orderBy('number', 'ASC')->paginate(10);
+        }])
+        ->where('deleted_at', '=' , 1)
+        ->orderBy('number', 'ASC')->paginate(10);
 
         return view(
             'authenticated.administrator.study-plan.index',

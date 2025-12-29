@@ -13,11 +13,12 @@ return new class extends Migration
     {
         Schema::create('practices', function (Blueprint $table) {
             $table->id('practice_id');
-            $table->foreignId('lesson_id')->constrained('lessons', 'lesson_id');
-            $table->foreignId('reinforcement_id')->constrained('reinforcements', 'reinforcement_id');
+            $table->foreignId('topic_id')->constrained('topics', 'topic_id')->cascadeOnDelete();
+            $table->foreignId('reinforcement_id')->constrained('reinforcements', 'reinforcement_id')->cascadeOnDelete();
             $table->foreignId('practice_option_id')->constrained('practice_options', 'practice_option_id')->cascadeOnDelete();
-            $table->foreignId('type_dynamic_id')->constrained('types_dynamics', 'type_dynamic_id');
-            $table->string('screen', 150)->unique();
+            $table->enum('type_dynamic', ['Verdadero/Falso', 'Opción Múltiple', 'Autocompletar'])->nullable();
+            $table->string('screen', 150);
+            $table->integer('number');
             $table->timestamps();
         });
     }
