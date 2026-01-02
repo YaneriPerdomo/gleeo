@@ -18,6 +18,8 @@ return new class extends Migration
             $table->foreignId('level_id')
                 ->constrained('levels', 'level_id')->cascadeOnDelete();
             $table->decimal('percentage_bar', 10, 2)->default(0.00);
+            $table->integer('diamonds')->default(0);
+            $table->enum('state', ['Completado', 'Bloqueado', 'En Progreso'])->default('Bloqueado');
             $table->timestamps();
         });
     }

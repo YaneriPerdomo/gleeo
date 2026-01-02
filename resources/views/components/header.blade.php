@@ -2,7 +2,7 @@
      <div class="header__content
      {{ $isPlayer == '1' ? 'header__content--rol-player' : 'container-xl ' }}
      ">
-         <section class="header__top-bar flex-and-direction-row flex-content-space-between">
+         <section class="header__top-bar flex-and-direction-row flex-content-space-between" style="{{ $splashScreen == 'true' ? 'margin-bottom: 0rem; !important' : '' }}">
              <div class="header__logo">
                  <section class="header__logo-section flex-and-direction-row">
                      <span class="header__logo-text text-white fs-4">
@@ -14,25 +14,35 @@
              </div>
              @auth
                  <div class="header__profile-container flex-and-direction-row flex-center-full ">
-                     @if (Auth::user()->rol_id == 1)
+                     @if (Auth::user()->rol_id == 2 || Auth::user()->rol_id == 3)
                          <div class="notification">
                              <i class="bi bi-bell-fill text-white"></i>
                          </div>
                      @endif
                      <div class="profile">
-                         <div class="profile__greeting dropdown">
-                             <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
-                                 aria-expanded="false">
+                         <div class="profile__greeting dropdown flex-and-direction-row">
+
+                             @if ($img != 'null')
+                                 <img src="{{ asset('img/avatars/' . $img ) }}" class="profile__avatar"
+                                     alt="">
+                             @endif <button class="btn btn-secondary dropdown-toggle" type="button"
+                                 data-bs-toggle="dropdown" aria-expanded="false">
                                  ¡Hola, {{ ucfirst(Auth::user()->user) }}!
                              </button>
+
                              <ul class="dropdown-menu dropdown-menu-dark">
-                                 <li><a class="dropdown-item active" href="{{ route('account-profile.index') }}">Perfil</a>
-                                 </li>
-                                 <li><a class="dropdown-item" href="{{ route('change-password.edit') }}">Cambiar
-                                         Contraseña</a></li>
-                                 <li>
-                                     <hr class="dropdown-divider">
-                                 </li>
+                                @if($splashScreen != 'true')
+                                    <li><a class="dropdown-item active" href="{{ route('account-profile.index') }}">Perfil</a>
+                                    </li>
+                                @endif
+                                 @if (Auth::user()->rol_id == 3)
+                                 @else
+                                     <li><a class="dropdown-item" href="{{ route('change-password.edit') }}">Cambiar
+                                             Contraseña</a></li>
+                                     <li>
+                                         <hr class="dropdown-divider">
+                                     </li>
+                                 @endif
                                  <li>
                                      <form action="{{ route('login.logout') }}" method="POST" class="dropdown-menu__form">
                                          @csrf
@@ -52,12 +62,38 @@
          <section class="header__navigation-bar">
              <nav class="header__navigation-bar__nav">
                  <ul class="header__navigation-bar__list flex-and-direction-row">
-                     <li class="header__navigation-bar__list-item">
-                         <a href="{{ route('welcome') }}" class="header__navigation-bar__link"><i
-                                 class="bi bi-house-door-fill"></i>
-                             Inicio</a>
-                     </li>
+                     @if (Auth::user()->rol_id == 3 && $splashScreen != 'true')
+                         <li class="header__navigation-bar__list-item">
+                             <a href="{{ route('welcome') }}" class="header__navigation-bar__link">
+                                 <i class="bi bi-house-door-fill"></i> Inicio
+                             </a>
+                         </li>
+
+                         <li class="header__navigation-bar__list-item">
+                             <a href="#" class="header__navigation-bar__link">
+                                 <i class="bi bi-layers-fill"></i> Mis Niveles
+                             </a>
+                         </li>
+
+                         <li class="header__navigation-bar__list-item">
+                             <a href="#" class="header__navigation-bar__link">
+                                 <i class="bi bi-award-fill"></i> Ranking Global
+                             </a>
+                         </li>
+
+                         <li class="header__navigation-bar__list-item">
+                             <a href="#" class="header__navigation-bar__link">
+                                 <i class="bi bi-graph-up-arrow"></i> Progreso
+                             </a>
+                         </li>
+                     @endif
+
                      @if (Auth::user()->rol_id == 1)
+                         <li class="header__navigation-bar__list-item">
+                             <a href="{{ route('welcome') }}" class="header__navigation-bar__link">
+                                 <i class="bi bi-house-door-fill"></i> Inicio
+                             </a>
+                         </li>
                          <li class="header__navigation-bar__list-item">
                              <a href="{{ route('initial-decision-patterns.index') }}"
                                  class="header__navigation-bar__link"><i class="bi bi-robot"></i>
@@ -66,7 +102,7 @@
                          <li class="header__navigation-bar__list-item">
                              <a href="{{ route('study-plan.index') }}" class="header__navigation-bar__link">
                                  <i class="bi bi-journals"></i>
-                                 Gestión de Contenido
+                                 Plataforma Educativa
                              </a>
                          </li>
                          <li class="header__navigation-bar__list-item">
@@ -76,6 +112,11 @@
                          </li>
                      @endif
                      @if (Auth::user()->rol_id == 2)
+                         <li class="header__navigation-bar__list-item">
+                             <a href="{{ route('welcome') }}" class="header__navigation-bar__link">
+                                 <i class="bi bi-house-door-fill"></i> Inicio
+                             </a>
+                         </li>
                          <li class="header__navigation-bar__list-item">
                              <a href="{{ route('children.index') }}" class="header__navigation-bar__link"><i
                                      class="bi bi-person-video3"></i>

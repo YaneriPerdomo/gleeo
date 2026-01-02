@@ -92,7 +92,7 @@
                                 @if ($data->items() == [])
                                     <tr>
                                         <td colspan="7" style="text-align: center;">
-                                            @if (isset($searchValue))
+                                            @if (!isset($searchValue))
                                                 <br>
                                                 <p>Por el momento no hay registros que coincidan con tu búsqueda.</p>
                                                 <ul>

@@ -1,0 +1,50 @@
+.theme-option__figure {
+    position: relative;
+    width: 100%;
+    height: 80px;
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: #f8f9fa;
+    margin-bottom: 8px;
+}
+
+.theme-option__bg-preview {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.9);
+}
+
+.theme-option__no-bg {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: #adb5bd;
+    font-size: 0.7rem;
+}
+
+.theme-option__colors-badge {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    background: rgba(255, 255, 255, 0.8);
+    padding: 3px 6px;
+    border-radius: 20px;
+    display: flex;
+    gap: 4px;
+}
+
+.theme-option__dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.theme-option__name {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #333;
+}

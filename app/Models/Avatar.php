@@ -11,7 +11,8 @@ class Avatar extends Model
     protected $fillable = [
         'avatar_id',
         'name',
-        'url'
+        'url',
+        'slug'
 
     ];
 }

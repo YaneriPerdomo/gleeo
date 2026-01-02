@@ -15,7 +15,9 @@ class Theme extends Model
         'secondary_color',
         'background_path',
         'border_radius',
-        'for_sale'
-
+        'for_sale',
+        'solid_background',
+        'slug',
+        'topic_color'
     ];
 }

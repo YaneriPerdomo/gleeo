@@ -13,11 +13,14 @@ return new class extends Migration
     {
         Schema::create('themes', function (Blueprint $table) {
             $table->id('theme_id');
-            $table->string('name')->unique();
-            $table->string('main_color', 20);
-            $table->string('secondary_color', 20);
-            $table->string('background_path', 70);
+            $table->string('name', 20)->unique();
+            $table->string('main_color', 10);
+            $table->string('secondary_color', 10);
+            $table->string('background_path', 60)->nullable()->default(null);
             $table->boolean('border_radius')->default(0);
+            $table->string('solid_background', 10)->nullable()->default(null);
+            $table->string('topic_color', 10);
+            $table->string('slug', 20)->unique();
             $table->boolean('for_sale')->default(0);
             $table->timestamps();
         });

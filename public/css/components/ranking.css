@@ -1,0 +1,27 @@
+.ranking__avatar {
+    width: 40px;
+}
+
+
+.ranking__score {
+    background: var(--orange);
+    padding: 0.5rem;
+    border-radius: 0rem 0.5rem 0.5rem 0rem;
+    color: white;
+}
+
+.ranking__number-one > span {
+    position: relative;
+    bottom: 0.3rem;
+    text-align: center;
+}
+
+.ranking__number {
+    font-weight: bold;
+    text-align: center;
+    width: 33.33%;
+    border-radius: 1rem 1rem 0 0;
+    background: var(--purple);
+    padding: 0.5rem 2.5rem;
+    color: white;
+}

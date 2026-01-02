@@ -19,10 +19,44 @@
     <link rel="stylesheet" href="{{ asset('css/components/header.css') }}">
     <link rel="stylesheet" href="{{ asset('css/components/table.css') }}">
     <link rel="stylesheet" href="{{ asset('css/components/text.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/components/study-plan.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/components/ranking.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/components/level.css') }}">
     <link rel="icon" type="image/x-icon" href="{{ asset('img/logo.ico') }}">
+    @php
+        $bodyCSS = '';
+        if ($theme->background_path != null) {
+            $urlAsset = asset('img/themes/' . $theme->background_path);
+            $bodyCSS = "background-image: url('$urlAsset');
+                background-repeat: repeat;
+                background-attachment: fixed;
+                background-size: auto;";
+        } else {
+            $bodyCSS = "background-color: {$theme->solid_background};";
+        }
+    @endphp
     <style>
-        .study-plan {
-            margin-bottom: 2rem;
+        :root {
+            --purple: {{ $theme->main_color ?? '#7052c2' }};
+            --orange: {{ $theme->secondary_color ?? '#ef7440' }};
+        }
+
+        .ranking__item--i {
+            background: {{ $theme->secondary_color ?? ' #ef7440' }}80;
+            border-radius: 0.5rem;
+        }
+
+        .ranking__item--highlight {
+            border-bottom: solid var(--purple);
+
+        }
+
+        .bg-white-border {
+            background: {{ $theme->topic_color ?? 'white' }} !important;
+        }
+
+        body {
+            {!! $bodyCSS !!}
         }
 
         .study-plan__module,
@@ -34,129 +68,138 @@
             color: white;
         }
 
-        .level-card__circle--add {
-            background: var(--green) !important;
-            outline: 5px solid var(--green) !important;
+        .ranking__header--the-best {
+            background: none;
         }
 
-        .study-plan__module-title {
-            font-size: 1.75rem;
-            /* fs-3 */
-            font-weight: bold;
-        }
-
-        .study-plan__topic {
-            background: var(--orange);
-            color: white;
-            padding: 0.6rem 1rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .study-plan__add-action {
-            background: var(--green);
-            padding: 0.3rem;
-            display: flex;
-            justify-content: center;
-        }
-
-        .levels-section {
-            margin-top: 1.5rem;
-            display: flex;
-            gap: 1.25rem;
-        }
-
-        .level-card {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-decoration: none;
-        }
-
-        .level-card__circle {
-            background: #7a5bd2;
-            color: white;
-            width: clamp(65px, 7vw, 75px);
-            height: clamp(65px, 7vw, 75px);
-            border-radius: 100%;
+        .level-item {
             display: flex;
             align-items: center;
-            justify-content: center;
-            outline: 5px solid #7a5bd2;
-            outline-offset: 0.2rem;
-            transition: transform 0.2s;
+            padding: 12px;
+            margin-bottom: 8px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
         }
 
-        .level-card__circle:hover {
-            transform: scale(1.05);
+        .progress {
+            background: var(--gray);
+            height: 10px;
         }
 
-        .level-card__title {
-            margin-top: 0.8rem;
-            text-align: center;
+        .level-item__icon {
             color: var(--purple);
-            font-weight: bold;
-            line-height: 1.4;
         }
 
-        .button--icon-only {
-            background: none !important;
-            border-radius: 0 !important;
-            padding: 0.5rem;
+        .level-item--active {}
+
+        .level-item--locked {}
+
+        .level-item__progress-bar {}
+
+        .level-item__progress-fill {}
+
+        [data-link-deactivated="true"] {
+            pointer-events: none;
+            cursor: default;
+            opacity: 0.5;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .level-item--current {
+            border: solid var(--purple) 2px;
+            margin-top: 0.5rem;
+            filter: drop-shadow(1px 1px 0px var(--purple));
+            background: white;
+        }
+
+        .progress-bar {
+            background-color: var(--orange);
         }
 
 
-        .header__content--rol-player {
-            padding: 0rem 1rem !important;
+        @media screen and (max-width: 992px) {
+            .my-levels {
+                height: 200px !important;
+                margin-bottom: 1rem !important;
+            }
+        }
+
+        .my-levels {
+            overflow-x: hidden;
         }
     </style>
 </head>
 
 <body class="flex-and-direction-column height-full">
-    <x-header isPlayer="1"></x-header>
+    <x-header isPlayer="1" img="{{ $player->avatar->url }}"></x-header>
     <main class="flex-grow-2 w-100 flex-and-direction-column flex-center-full flex-center-full-start">
         <article class="row main__article     w-100">
-            <div class="col-3 bg-white-border">
+            <div class="col-12 col-lg-3 bg-white-border my-levels">
                 <aside class="sidebar-levels">
                     <div class="sidebar-levels__header">
-                        <h2 class="sidebar-levels__title">Mis Niveles</h2>
+                        <h2 class="sidebar-levels__title fs-4">
+                            <b>
+                                <i class="bi bi-play-fill"></i>
+                                Mis Niveles</b>
+                        </h2>
                     </div>
                     <nav class="sidebar-levels__nav">
-                        <div class="level-item level-item--completed">
-                            <div class="level-item__icon">
-                                <i class="bi bi-check-circle-fill"></i>
-                            </div>
-                            <div class="level-item__content">
-                                <span class="level-item__name">Nivel 1</span>
-                                <div class="level-item__progress-bar">
-                                    <div class="level-item__progress-fill" style="width: 100%"></div>
-                                </div>
-                            </div>
-                        </div>
+                        @forelse ($levels as $level)
+                            <a href="{{ route('educational-platform.index', ['slugCurrentLevel' => $level->slug]) }}"
+                                data-link-deactivated="{{ $level->progress->state == 'Completado' || $level->progress->state == 'En Progreso' ? 'false' : 'true' }}"
+                                class="level-item level-item-link  flex-and-direction-row {{ $level->level_id === $currentLevel->level_id ? 'level-item--current' : '' }}">
+                                <div class="level-item__icon">
+                                    <i
+                                        class="bi fs-1
+                                        @php
+                            if ($level->progress->state == 'Completado') { //ENUM ['Bloqueado','Completado', 'En Progreso']
+                                                                //Completado
+                                                                echo 'bi bi-check';
+                                                            }else{
+                                                                //Bloqueado
+                                                                if($level->progress->state == 'En Progreso'){
+                                                                    echo 'bi-hourglass-bottom';
+                                                                }  else{
+                                                                    echo 'bi-lock-fill';
+                                                                }
+                                                            } @endphp
+                                                    "></i>
+                                                </div><!---    border: solid var(--purple) 2px;
+                    filter: drop-shadow(1px 1px 6px black);
+                    background: white;-->
+                                <div class="level-item__content flex-grow-2">
+                                    <span class="level-item__name">
+                                        <b>
+                                            Nivel {{ $level->number }} -
+                                            {{ $level->name }}
+                                        </b>
+                                    </span>
+                                    <div class="level-item__progress-bar">
+                                        <div class="progress level-item__progress-fill" role="progressbar"
+                                            aria-label="Animated striped example" aria-valuenow="75" aria-valuemin="0"
+                                            aria-valuemax="100">
+                                            <div class="progress-bar progress-bar-striped progress-bar-animated"
+                                                style="width: {{ $level->progress->percentage_bar ?? '' }}%">
 
-                        <div class="level-item level-item--active">
-                            <div class="level-item__icon">
-                                <i class="bi bi-play-fill"></i>
-                            </div>
-                            <div class="level-item__content">
-                                <span class="level-item__name">Nivel 2</span>
-                                <div class="level-item__progress-bar">
-                                    <div class="level-item__progress-fill" style="width: 45%"></div>
+                                            </div>
+                                        </div>
+                                        <small class="text__gray">
+                                            {{ $level->progress->percentage_bar ?? '2' }}%
+                                        </small>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
+                            </a>
 
-                        <div class="level-item level-item--locked">
-                            <div class="level-item__icon">
-                                <i class="bi bi-lock-fill"></i>
-                            </div>
-                            <div class="level-item__content">
-                                <span class="level-item__name">Nivel 3</span>
-                            </div>
-                        </div>
+                        @empty
+                            NO HAY NIVELES
+                        @endforelse
+                        <!--level-item--locked--->
                     </nav>
+
                 </aside>
             </div>
-            <div class="  col-6 bg-white-border main__content">
+            <div class="col-6 bg-white-border main__content">
 
 
 
@@ -205,16 +248,56 @@
             <div class="col-3 bg-white-border">
                 <section class="ranking">
                     <div class="ranking__header">
-                        <h2 class="ranking__title fs-4">Clasificaciones Actuales</h2>
+                        <h2 class="ranking__title fs-4">
+                            <i class="bi bi-award-fill"></i>
+                            <b>Ranking Global</b>
+                        </h2>
                     </div>
-                    <hr>
+
                     <div class="ranking__body">
-                        <div class="ranking__item ranking__item--highlight">
-                            <div class="ranking__user-info">
-                                <img src="avatar.png" alt="Avatar" class="ranking__avatar">
-                                <span class="ranking__username">Yane2024</span>
+                        <div class="ranking__i mt-3">
+                            <div
+                                class="ranking__item ranking__item--i flex-and-direction-row flex-content-space-between ranking__item--highlight">
+                                <div class="ranking__user-info">
+                                    <img src="{{ asset('img/avatars/' . $player->avatar->url ) }}"
+                                        alt="Avatar" class="ranking__avatar">
+                                    <span class="ranking__username">{{ $player->user->user }}</span>
+                                </div>
+                                <span class="ranking__score"><b>{{ $player->diamonds ?? 0 }} <i
+                                            class="bi bi-gem"></i></b></span>
                             </div>
-                            <span class="ranking__score">87</span>
+                        </div>
+                        <br>
+
+                        <div class="ranking__the-best mt-2">
+                            <div
+                                class="ranking__header ranking__header--the-best ranking__top flex-and-direction-row flex-center-full">
+                                <div class=" ranking__number ranking__number-two">
+                                    <span class="fs-2">2</span>
+                                </div>
+                                <div class=" ranking__number ranking__number-one">
+                                    <span class="fs-1">1</span>
+                                </div>
+                                <div class=" ranking__number ranking__number-then">
+                                    <span class="fs-3">3</span>
+                                </div>
+                            </div>
+
+                            <div class="ranking__body">
+                                @forelse ($bestRanking as $theBest)
+                                    <div
+                                        class="rankink__item ranking__item--i mt-2 flex-and-direction-row flex-content-space-between {{ $theBest->player->player_id == $player->player_id ? 'ranking__item--highlight' : '' }}">
+                                        <div class="ranking__user-info">
+                                            <img src="{{ asset('img/avatars/' . $theBest->player->avatar->url) }}"
+                                                alt="Avatar" class="ranking__avatar">
+                                            <span class="ranking__username">{{ $theBest->player->user->user }}</span>
+                                        </div>
+                                        <span class="ranking__score"><b>{{ $theBest->diamonds }} <i
+                                                    class="bi bi-gem"></i></b></span>
+                                    </div>
+                                @empty
+                                @endforelse
+                            </div>
                         </div>
                     </div>
                 </section>

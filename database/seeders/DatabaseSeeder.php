@@ -15,7 +15,9 @@ class DatabaseSeeder extends Seeder
             AlertThresholdSeeder::class,
             IdentityCardSeeder::class,
             GenderSeeder::class,
-            CountriesSeeder::class
+            CountriesSeeder::class,
+            AvatarSeeder::class,
+            ThemeSeeder::class,
         ]);
     }
 }

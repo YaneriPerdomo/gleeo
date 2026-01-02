@@ -19,66 +19,17 @@
     <link rel="stylesheet" href="{{ asset('css/components/header.css') }}">
     <link rel="stylesheet" href="{{ asset('css/components/table.css') }}">
     <link rel="stylesheet" href="{{ asset('css/components/text.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/components/theme.css') }}">
     <link rel="icon" type="image/x-icon" href="{{ asset('img/logo.ico') }}">
     <style>
         .avatar-option__img {
             width: 70px
         }
 
-        /* Contenedor de la imagen de fondo */
-        .theme-option__figure {
-            position: relative;
-            width: 100%;
-            height: 80px;
-            border-radius: 8px;
-            overflow: hidden;
-            background-color: #f8f9fa;
-            margin-bottom: 8px;
-        }
-
-        /* Imagen de fondo mini */
-        .theme-option__bg-preview {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            filter: brightness(0.9);
-        }
-
-        /* Indicador cuando no hay fondo */
-        .theme-option__no-bg {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100%;
-            color: #adb5bd;
-            font-size: 0.7rem;
-        }
-
-        /* Pequeños puntos de color sobre la imagen */
-        .theme-option__colors-badge {
-            position: absolute;
-            bottom: 5px;
-            right: 5px;
-            background: rgba(255, 255, 255, 0.8);
-            padding: 3px 6px;
-            border-radius: 20px;
-            display: flex;
-            gap: 4px;
-        }
-
-        .theme-option__dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            border: 1px solid rgba(0, 0, 0, 0.1);
-        }
-
-        /* Títulos y etiquetas */
-        .theme-option__name {
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: #333;
+         .avatar__circle {
+            width: 75px;
+                height: 95px;
+            clip-path: circle(39% at 50% 50%);
         }
     </style>
 </head>
@@ -193,20 +144,24 @@
                                                 jugador</small>
                                         </div>
 
-                                        <div class="avatars-selector__grid">
+                                        <div class="avatars-selector__grid flex-and-direction-row">
                                             @forelse ($avatars as $avatar)
-                                                <div class="avatar-option">
+                                                <div class="avatar-option flex-and-direction-column">
                                                     <input type="radio" name="avatar_id"
                                                         value="{{ $avatar->avatar_id }}"
                                                         id="avatar-{{ $avatar->avatar_id }}"
                                                         class="avatar-option__input"
                                                         {{ old('avatar_id') == $avatar->avatar_id ? 'checked' : '' }}>
                                                     <label for="avatar-{{ $avatar->avatar_id }}"
-                                                        class="avatar-option__label">
-                                                        <img src="{{ asset('img/avatars/' . $avatar->url . '.png') }}"
+                                                        class="avatar-option__labe flex-grow-2l">
+                                                        <img src="{{ asset('img/avatars/' . $avatar->url ) }}"
+                                                        class=" clip-path-50 avatar__circle"
                                                             title="{{ $avatar->name }}" alt="{{ $avatar->name }}"
-                                                            draggable="false" class="avatar-option__img">
+                                                            draggable="false" >
                                                     </label>
+                                                    <div>
+                                                         <span> {{ $avatar->name }}</span>
+                                                    </div>
                                                 </div>
                                             @empty
                                                 <p class="avatars-selector__empty">No hay avatares disponibles.</p>
@@ -243,16 +198,15 @@
                                                         {{ old('theme_id') == $theme->theme_id ? 'checked' : '' }}>
                                                     <label for="theme-{{ $theme->id }}" class="theme-option__card">
 
-                                                        {{-- Previsualización del Fondo --}}
-                                                        <div class="theme-option__figure">
-                                                            @if ($theme->background_path)
-                                                                <img src="{{ asset('img/avatars/' . $theme->background_path . '.png') }}"
+                                                         <div class="theme-option__figure">
+                                                            @if ($theme->background_path != null)
+                                                                <img src="{{ asset('img/themes/' . $theme->background_path ) }}"
                                                                     class="theme-option__bg-preview"
                                                                     alt="Fondo del tema">
                                                             @else
-                                                                <div class="theme-option__no-bg">
-                                                                    <i class="bi bi-slash-circle"></i>
-                                                                    <span>Sin fondo</span>
+                                                                <div class="theme-option__no-bg" style="background: {{ $theme->solid_background }}">
+
+                                                                    <span style="filter: invert(1)">Fondo Solido</span>
                                                                 </div>
                                                             @endif
 

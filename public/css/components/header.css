@@ -33,8 +33,8 @@
     background: var(--purple);
     background: linear-gradient(
         90deg,
-         var(--purple) 29%,
-        rgba(255, 127, 72, 1) 100%
+        var(--purple) 29%,
+        var(--orange) 100%
     );
     border-radius: 1rem;
     padding-right: 0.5rem;
@@ -58,4 +58,8 @@ header {
 .dropdown-menu__button {
     margin-left: 0.5rem;
     color: white;
+}
+
+.profile__avatar {
+    width: 40px;
 }

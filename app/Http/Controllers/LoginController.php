@@ -38,8 +38,8 @@ class LoginController extends Controller
                     $request->session()->put('player_id', $player->player_id);
                 }
                 $request->session()->put('current_level_id', $player->level_assigned_id);
-                return redirect()->route('educational-platform.index', ['slugCurrentLevel' => $player->level_assigned->slug]);
-            }
+                return $player->gender_id == 1 ? redirect()->route('educational-platform.welcome-m') :  redirect()->route('educational-platform.welcome-f') ;
+             }
             return redirect()->intended('/inicio');
         } else {
             return back()->withErrors([

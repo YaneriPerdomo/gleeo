@@ -1,0 +1,29 @@
+
+
+.header__content--rol-player {
+    padding: 0rem 1rem !important;
+}
+
+.study-plan__module-title {
+    font-size: 1.75rem;
+    /* fs-3 */
+    font-weight: bold;
+}
+
+.study-plan__topic {
+    background: var(--orange);
+    color: white;
+    padding: 0.6rem 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.study-plan__add-action {
+    background: var(--green);
+    padding: 0.3rem;
+    display: flex;
+    justify-content: center;
+}
+
+.study-plan {
+    margin-bottom: 2rem;
+}

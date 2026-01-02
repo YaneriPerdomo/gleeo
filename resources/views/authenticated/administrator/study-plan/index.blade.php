@@ -64,14 +64,29 @@
         <article class="row main__article   container-xl w-100">
             <x-aside-admin :items="[
                 [
+                    'title' => 'Informacion General',
+                    'route' => 'news-board.index',
+                    'icon' => 'bi bi-info-square-fill',
+                ],
+                [
                     'title' => 'Plan de Estudio',
                     'route' => 'study-plan.index',
-                    'icon' => 'bi bi-book-half',
+                    'icon' => 'bi bi-journal-check',
                 ],
                 [
                     'title' => 'Insignias',
                     'route' => 'initial-decision-patterns.index',
-                    'icon' => 'bi bi-award-fill',
+                    'icon' => 'bi bi-patch-check-fill',
+                ],
+                [
+                    'title' => 'Avatares',
+                    'route' => 'avatar.index',
+                    'icon' => 'bi bi-person-badge-fill',
+                ],
+                [
+                    'title' => 'Temas de Interfaz',
+                    'route' => 'theme.index',
+                    'icon' => 'bi bi-palette-fill',
                 ],
             ]"></x-aside-admin>
 
@@ -110,7 +125,7 @@
                     </div>
                     <div>
                         <a href="{{ route('study-plan.create') }}">
-                            <button class="button button__color-green color-white" type="button">
+                            <button class="button button__color-black color-white" type="button">
                                 <i class="bi bi-plus-lg"></i> Agregar Nuevo Nivel
                             </button>
                         </a>
@@ -190,18 +205,18 @@
                                                     <br>Plataforma</label>
                                             </button>
                                         </a>
-                                        <a href=""  class="modal-buttons__link-edit">
+                                        <a href="" class="modal-buttons__link-edit">
                                             <button type="button" class="button button__color-green ">
 
-                                            <label for=""><i class="bi bi-pencil-square fs-3"></i>
-                                                <br>Editar</label>
-                                        </button>
+                                                <label for=""><i class="bi bi-pencil-square fs-3"></i>
+                                                    <br>Editar</label>
+                                            </button>
                                         </a>
                                         <a href="" class="modal-buttons__link-delete">
                                             <button type="button" class="button button__color-red">
-                                            <label for=""><i class="bi bi-trash-fill fs-3"></i> <br>
-                                                Eliminar</label>
-                                        </button>
+                                                <label for=""><i class="bi bi-trash-fill fs-3"></i> <br>
+                                                    Eliminar</label>
+                                            </button>
                                         </a>
 
                                     </div>
@@ -224,10 +239,10 @@
                                 button.addEventListener('click', function(event) {
                                     let levelData = this.getAttribute('data-level');
                                     let slugData = this.getAttribute('data-slug');
-                                    let routeData = this.getAttribute('data-route').replace('/eliminarlo','');
-                                    buttonLinkPlatform.href = routeData+'/'+slugData;
-                                    buttonLinkDelete.href = routeData+'/'+slugData+'/eliminar';
-                                    buttonLinkEdit.href = routeData+'/'+slugData+'/editar';
+                                    let routeData = this.getAttribute('data-route').replace('/eliminarlo', '');
+                                    buttonLinkPlatform.href = routeData + '/' + slugData;
+                                    buttonLinkDelete.href = routeData + '/' + slugData + '/eliminar';
+                                    buttonLinkEdit.href = routeData + '/' + slugData + '/editar';
                                     console.info(routeData);
                                     console.info("Datos del nivel seleccionado:", levelData);
                                 });

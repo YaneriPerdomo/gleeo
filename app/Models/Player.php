@@ -43,7 +43,7 @@ class Player extends Model
 
     public function theme()
     {
-        return $this->hasOne(ModelsTheme::class, 'theme_id');
+        return $this->belongsTo(ModelsTheme::class, 'theme_id');
     }
     public function user()
     {
@@ -51,6 +51,6 @@ class Player extends Model
     }
     public function avatar()
     {
-        return $this->hasOne(Avatar::class, 'avatar_id');
+        return $this->belongsTo(Avatar::class, 'avatar_id');
     }
 }
