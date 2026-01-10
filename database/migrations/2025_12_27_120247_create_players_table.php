@@ -25,6 +25,9 @@ return new class extends Migration
             $table->foreignId('level_assigned_id')
                 ->nullable()
                 ->constrained('levels', 'level_id')->nullOnDelete();
+            $table->foreignId('current_level_id')
+                ->nullable()
+                ->constrained('levels', 'level_id')->nullOnDelete();
             $table->boolean('validated')->default(0);
             $table->foreignId('user_id')->constrained('users', 'user_id')->cascadeOnDelete();
             $table->string('names', 200);

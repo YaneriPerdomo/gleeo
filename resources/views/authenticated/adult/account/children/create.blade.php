@@ -30,6 +30,7 @@
             width: 75px;
                 height: 95px;
             clip-path: circle(39% at 50% 50%);
+            object-fit: cover;
         }
     </style>
 </head>
@@ -215,17 +216,15 @@
                                                                     style="background-color: {{ $theme->main_color }}"></span>
                                                                 <span class="theme-option__dot"
                                                                     style="background-color: {{ $theme->secondary_color }}"></span>
+                                                                    <span class="theme-option__dot"
+                                                                    style="background-color: {{ $theme->solid_background }}"></span>
                                                             </div>
                                                         </div>
                                                         <div class="theme-option__body">
                                                             <h6 class="theme-option__name">{{ $theme->name }}</h6>
 
                                                             <div class="theme-option__status">
-                                                                <span class="theme-option__badge">
-                                                                    <i
-                                                                        class="bi {{ $theme->border_radius == 1 ? 'bi-circle-fill' : 'bi-square' }}"></i>
-                                                                    {{ $theme->border_radius == 1 ? 'Redondeado' : 'Cuadrado' }}
-                                                                </span>
+
                                                                 <span class="theme-option__badge">
                                                                     <i
                                                                         class="bi {{ $theme->background_path ? 'bi-image' : 'bi-dash-circle' }}"></i>

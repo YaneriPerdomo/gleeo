@@ -11,18 +11,19 @@ class Practice extends Model
     protected $primaryKey = 'practice_id';
 
     protected $fillable = [
-        'topic_id',
+        'lesson_id',
         'reinforcement_id',
         'practice_option_id',
         'type_dynamic',
         'screen',
+        'title',
         'practice_id',
         'number'
     ];
 
-    public function topic()
+    public function lesson()
     {
-        return $this->belongsTo(Lesson::class, 'topic_id');
+        return $this->belongsTo(Lesson::class, 'lesson_id');
     }
     public function reinforcement()
     {

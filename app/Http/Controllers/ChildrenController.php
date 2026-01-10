@@ -59,7 +59,7 @@ class ChildrenController extends Controller
             FacadesDB::beginTransaction();
             $only_name = explode(' ', $request->names);
             $only_lastname = explode(' ', $request->last_names);
-            $slug = Str::slug($only_name[0] . ' ' . $only_lastname[0] . ' ' .  $request->Username);
+            $slug = Str::slug($only_name[0] . '-' . $only_lastname[0] . '-' .  $request->Username);
 
             $newUser = new User();
             $newUser->rol_id = 3;
@@ -76,6 +76,7 @@ class ChildrenController extends Controller
                 $newChildren->validated = 0;
             }
             $newChildren->level_assigned_id = $request->assigned_level;
+            $newChildren->current_level_id = $request->assigned_level;
             $newChildren->user_id = $newUser->user_id;
             $newChildren->names = $request->names;
             $newChildren->slug = $slug;
@@ -91,15 +92,18 @@ class ChildrenController extends Controller
 
             $countLevels = Level::count();
             for ($i=1; $i <= $countLevels; $i++) {
-
                 $newProgress = new Progress();
                 $newProgress->player_id = $newChildren->player_id;
                 $levelProgress = Level::where('number', $i)->first();
                 $newProgress->level_id = $levelProgress->level_id;
+                $newProgress->state = 'Bloqueado';
                 $newProgress->save();
             }
 
-
+            $updateStateProgreso =  Progress::where('level_id', $request->assigned_level)->first();
+            $updateStateProgreso->update([
+                'state' => 'En Progreso'
+            ]);
             $message = !$esMasculino ? 'La jugadora ha sido creada de manera exitosa' : 'El jugador  ha sido creado de manera exitoso';
             FacadesDB::commit();
             $request->session()->flash('alert-success', $message);

@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id('avatar_id');
             $table->string('name')->unique();
             $table->string('url')->unique();
+            $table->string('slug')->unique();
             $table->timestamps();
         });
     }

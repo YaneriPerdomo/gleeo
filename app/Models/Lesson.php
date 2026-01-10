@@ -17,12 +17,14 @@ class Lesson extends Model
         'slug',
         'guide_id',
         'deleted_at',
-        'is_active'
+        'is_active',
+        'order'
     ];
+
 
 
     public function topic()
     {
-        return $this->hasOne(Topic::class, 'topic_id');
+        return $this->belongsTo(Topic::class, 'topic_id');
     }
 }

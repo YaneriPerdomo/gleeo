@@ -13,9 +13,10 @@ return new class extends Migration
     {
         Schema::create('practices', function (Blueprint $table) {
             $table->id('practice_id');
-            $table->foreignId('topic_id')->constrained('topics', 'topic_id')->cascadeOnDelete();
+            $table->foreignId('lesson_id')->constrained('lessons', 'lesson_id')->cascadeOnDelete();
             $table->foreignId('reinforcement_id')->constrained('reinforcements', 'reinforcement_id')->cascadeOnDelete();
             $table->foreignId('practice_option_id')->constrained('practice_options', 'practice_option_id')->cascadeOnDelete();
+            $table->string('title' , 90);
             $table->enum('type_dynamic', ['Verdadero/Falso', 'Opción Múltiple', 'Autocompletar'])->nullable();
             $table->string('screen', 150);
             $table->integer('number');

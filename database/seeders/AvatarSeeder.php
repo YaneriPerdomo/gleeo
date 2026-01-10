@@ -13,7 +13,18 @@ class AvatarSeeder extends Seeder
         DB::table('avatars')->insert([
             [
                 'name' => 'Defecto',
-                'url' => 'default'
+                'slug' => 'default',
+                'url' => 'default.png'
+            ],
+             [
+                'name' => 'Niño',
+                'slug' => 'boy',
+                'url' => 'boy.png'
+             ],
+              [
+                'name' => 'Niña',
+                'slug' => 'nina',
+                'url' => 'girl.png'
             ]
         ]);
     }

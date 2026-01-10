@@ -64,25 +64,27 @@
                  <ul class="header__navigation-bar__list flex-and-direction-row">
                      @if (Auth::user()->rol_id == 3 && $splashScreen != 'true')
                          <li class="header__navigation-bar__list-item">
-                             <a href="{{ route('welcome') }}" class="header__navigation-bar__link">
+                             <a href="{{ route('educational-platform.index' , ['slugCurrentLevel' => Auth::user()->player->current_level->slug]) }}" class="header__navigation-bar__link">
                                  <i class="bi bi-house-door-fill"></i> Inicio
                              </a>
                          </li>
 
+                        <!--
                          <li class="header__navigation-bar__list-item">
                              <a href="#" class="header__navigation-bar__link">
                                  <i class="bi bi-layers-fill"></i> Mis Niveles
                              </a>
                          </li>
+                        -->
 
                          <li class="header__navigation-bar__list-item">
-                             <a href="#" class="header__navigation-bar__link">
+                             <a href="{{ route('ranking-global.index' , ['slugCurrentLevel' => Auth::user()->player->current_level->slug]) }}" class="header__navigation-bar__link">
                                  <i class="bi bi-award-fill"></i> Ranking Global
                              </a>
                          </li>
 
                          <li class="header__navigation-bar__list-item">
-                             <a href="#" class="header__navigation-bar__link">
+                             <a href="{{ route('progress.index', ['slugCurrentLevel' => Auth::user()->player->current_level->slug ]) }}" class="header__navigation-bar__link">
                                  <i class="bi bi-graph-up-arrow"></i> Progreso
                              </a>
                          </li>

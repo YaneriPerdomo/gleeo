@@ -29,7 +29,7 @@
         <article class="row main__article   container-xl w-100">
             <x-aside-admin :items="[
                 [
-                    'title' => 'Representante',
+                    'title' => 'Representantes y <br> Profesionales',
                     'route' => 'representative.index',
                     'icon' => 'bi bi-people-fill',
                 ],

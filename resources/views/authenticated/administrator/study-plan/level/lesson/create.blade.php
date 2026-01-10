@@ -57,16 +57,32 @@
         <article class="row main__article container-xl w-100">
             <x-aside-admin :items="[
                 [
+                    'title' => 'Informacion General',
+                    'route' => 'news-board.index',
+                    'icon' => 'bi bi-info-square-fill',
+                ],
+                [
                     'title' => 'Plan de Estudio',
                     'route' => 'study-plan.index',
-                    'icon' => 'bi bi-book-half',
+                    'icon' => 'bi bi-journal-check',
                 ],
                 [
                     'title' => 'Insignias',
                     'route' => 'initial-decision-patterns.index',
-                    'icon' => 'bi bi-award-fill',
+                    'icon' => 'bi bi-patch-check-fill',
+                ],
+                [
+                    'title' => 'Avatares',
+                    'route' => 'avatar.index',
+                    'icon' => 'bi bi-person-badge-fill',
+                ],
+                [
+                    'title' => 'Temas de Interfaz',
+                    'route' => 'theme.index',
+                    'icon' => 'bi bi-palette-fill',
                 ],
             ]"></x-aside-admin>
+
 
             <div class="col-10 main__content bg-white-border">
                 <small class="text__gray">
@@ -141,7 +157,6 @@
                                 ]"></x-input-text>
                             </div>
                         </div>
-
                         <div class="form__item ">
                             <label for="guia_parrafo" class="form__label">Contenido de la Guía (Párrafo)</label>
                             <div class="input-group">
@@ -150,7 +165,6 @@
                                     placeholder="Escribe aquí el texto instructivo para la lección..." aria-label="Contenido de la guía"></textarea>
                             </div>
                         </div>
-
                         <div class="form__item ">
                             <div class="form-check form-switch">
                                 <input class="form-check-input" type="checkbox" role="switch" name="leccion_activa"
@@ -162,7 +176,6 @@
                         </div>
                     </fieldset>
                     <hr>
-
                     <fieldset>
                         <div class="flex-and-direction-row flex-content-space-between">
                             <div>
@@ -242,7 +255,7 @@
                         <legend class="">Configuración de la Práctica</legend>
                         <x-input-text :item="[
                             'form_input_name' => 'titulo_practica',
-                            'form_title' => 'Titulo de la Practica:',
+                            'form_title' => 'Instrucciones de práctica:',
                             'type' => 'text',
                             'icon' => 'bi-window-sidebar',
                             'aria_label' => 'Nombre de la pantalla',

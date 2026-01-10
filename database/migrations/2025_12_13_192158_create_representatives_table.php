@@ -22,8 +22,8 @@ return new class extends Migration
                 ->references('user_id')
                 ->on('users')
                 ->onDelete('cascade');*/
-            $table->string('names', 200);
-            $table->string('surnames', 200);
+            $table->string('names', 200)->nullable();
+            $table->string('surnames', 200)->nullable();
             $table->string('educational_center', 200)->nullable();
             $table->enum('type', ['Profesional', 'Representante']);
             $table->string('slug', 90)->unique();

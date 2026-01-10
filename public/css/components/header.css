@@ -31,11 +31,7 @@
 
 .header__logo-text {
     background: var(--purple);
-    background: linear-gradient(
-        90deg,
-        var(--purple) 29%,
-        var(--orange) 100%
-    );
+    background: linear-gradient(90deg, var(--purple) 29%, var(--orange) 100%);
     border-radius: 1rem;
     padding-right: 0.5rem;
 }
@@ -62,4 +58,13 @@ header {
 
 .profile__avatar {
     width: 40px;
+    margin-left: 0.8rem;
+    clip-path: circle(39% at 50% 50%);
+    object-fit: cover;
+}
+
+[alt="Avatar"] {
+    width: 40px;
+     clip-path: circle(39% at 50% 50%);
+    object-fit: cover;
 }

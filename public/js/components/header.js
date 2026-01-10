@@ -4,6 +4,8 @@ import {
     url,
 } from "../variables.js";
 
+function header(){
+
 if (url.href.includes("/configuracion-del-tutor")) {
     if (url.href.includes("/alerta-intervencion-requerida")) {
         tutorSettingsListIcons[1].classList.add("item-selected");
@@ -63,4 +65,21 @@ else if (url.href.includes("/plataforma-educativa")) {
         headerNavigationBarListItem[2].classList.add("item-selected--nav");
         tutorSettingsListIcons[3].classList.add("item-selected");
     }
+} else if(url.href.includes("/niveles") && !tutorSettingsListIcons.length){
+    if (url.href.includes("/ranking-global")
+    ) {
+        return headerNavigationBarListItem[1].classList.add("item-selected--nav");
+    }
+    if (url.href.includes("/progreso")
+    ) {
+        return headerNavigationBarListItem[2].classList.add("item-selected--nav");
+    }
+    if (url.href.includes("/nivel")
+    ) {
+       return  headerNavigationBarListItem[0].classList.add("item-selected--nav");
+    }
 }
+
+}
+
+header()

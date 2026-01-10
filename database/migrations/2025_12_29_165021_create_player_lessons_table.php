@@ -19,6 +19,7 @@ return new class extends Migration
                 ->constrained('lessons', 'lesson_id')->cascadeOnDelete();
             $table->time('duration')->nullable()->default(NULL);
             $table->integer('diamonds')->default(0);
+            $table->enum('state', ['Bloqueada', 'En Espera', 'Completada'])->default('Bloqueada');
             $table->timestamps();
         });
     }

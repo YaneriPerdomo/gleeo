@@ -12,7 +12,9 @@ class Level extends Model
         'name',
         'number',
         'slug',
-        'deleted_at'
+        'deleted_at',
+        'description',
+        'order'
     ];
 
     public function module(){

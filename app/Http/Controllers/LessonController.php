@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Lesson;
+use App\Models\Level;
 use App\Models\Module;
 use App\Models\Practice;
 use App\Models\practiceOption;
@@ -63,7 +64,14 @@ class LessonController extends Controller
         $numberOfItems = count($requestPraticeData) / 8;
         try {
             DB::beginTransaction();
+            $level = Level::where('slug', $slugLevel)->first();
+            $levelID = $level->level_id;
+            $allLessons = Lesson::whereHas('topic.module.level', function ($query) use ($levelID){
+                return $query->where('level_id', $levelID);
+            })->count();
+
             $lesson = new Lesson();
+            $lesson->order = $allLessons + 1;
             $lesson->topic_id = $topicId;
             $lesson->title = $request['leccion_titulo'];
             $lesson->guide = $request['guia_parrafo'];
@@ -89,19 +97,22 @@ class LessonController extends Controller
                 $reinforcement = new Reinforcement;
                 $reinforcement->title = $refuerzoTitulo;
                 $reinforcement->paragraph = $refuerzoParrafo;
-                $reinforcement->url = $refuerzoUrl;
+                $reinforcement->url = str_replace('"', "'", $refuerzoUrl);
                 $reinforcement->img = null;
                 $reinforcement->save();
 
                 $practice = new Practice();
                 $practice->number = $i;
-                $practice->topic_id = $topicId;
+                $practice->lesson_id = $lesson->lesson_id;
+                $practice->title = $tituloPractica;
                 $practice->reinforcement_id = $reinforcement->reinforcement_id;
                 $practice->practice_option_id = $practiceOptiones->practice_option_id;
                 $practice->type_dynamic = $tipoPregunta;
                 $practice->screen = $practicaPantalla;
                 $practice->save();
             }
+
+
             DB::commit();
             $lessonTitle = $lesson->title;
             $topicTitle  = $topic->title;
@@ -113,15 +124,18 @@ class LessonController extends Controller
         } catch (QueryException $ex) {
             $request->session()->flash('alert-danger', 'Sucedio un error: ' . $ex->getMessage());
             DB::rollBack();
-            return redirect()->route('lesson.create', ['nivel' => $slugLevel]);
+            return redirect()->route('lesson.create', ['nivel' => $slugLevel, 'topic_slug' => $slugTopic]);
         } catch (PDOException $ex) {
             $request->session()->flash('alert-danger', 'Sucedio un error: ' . $ex->getMessage());
             DB::rollBack();
-            return redirect()->route('lesson.create', ['nivel' => $slugLevel]);
+            return redirect()->route('lesson.create', ['nivel' => $slugLevel, 'topic_slug' => $slugTopic]);
         } catch (Exception $ex) {
             $request->session()->flash('alert-danger', 'Sucedio un error: ' . $ex->getMessage());
             DB::rollBack();
-            return redirect()->route('lesson.create', ['nivel' => $slugLevel]);
+            return redirect()->route('lesson.create', ['nivel' => $slugLevel, 'topic_slug' => $slugTopic]);
         }
     }
+
+
+
 }

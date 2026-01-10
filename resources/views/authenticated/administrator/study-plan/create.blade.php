@@ -70,6 +70,15 @@
                     ]"></x-input-text>
 
 
+                    <div class="form__item ">
+                        <label for="description" class="form__label">Descripción del Nivel (Opcional)</label>
+                        <div class="input-group">
+                            <span class="form__icon input-group-text"><i class="bi bi-blockquote-left"></i></span>
+                            <textarea name="description" id="description" rows="3" class="form-control"
+                                placeholder="Escribe aquí la descripción del nivel..." aria-label="Descripción del nivel"></textarea>
+                        </div>
+                    </div>
+
 
                     <div class="flex-and-direction-row flex-content-space-between form-actions mt-4">
                         <a href="{{ route('study-plan.index') }}" class="button text__gray"

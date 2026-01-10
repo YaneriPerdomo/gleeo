@@ -18,6 +18,8 @@ class DatabaseSeeder extends Seeder
             CountriesSeeder::class,
             AvatarSeeder::class,
             ThemeSeeder::class,
+            NewsBoardSeeder::class,
+            RepresentativeSeeder::class,
         ]);
     }
 }

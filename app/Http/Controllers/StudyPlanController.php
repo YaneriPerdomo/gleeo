@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Lesson;
 use App\Models\Level;
 use App\Models\Module;
+use App\Models\Player;
+use App\Models\Progress;
 use App\Models\Topic;
 use Exception;
 use Illuminate\Database\QueryException;
@@ -20,8 +22,8 @@ class StudyPlanController extends Controller
         $levels = Level::with(['module' => function ($query) {
             return $query;
         }])
-        ->where('deleted_at', '=' , 1)
-        ->orderBy('number', 'ASC')->paginate(10);
+            ->where('deleted_at', '=', 1)
+            ->orderBy('number', 'ASC')->paginate(10);
 
         return view(
             'authenticated.administrator.study-plan.index',
@@ -81,9 +83,28 @@ class StudyPlanController extends Controller
 
             $level_new = new Level;
             $level_new->name = $request->level_title;
+            $level_new->description = $request->description;
             $level_new->slug = $slug;
             $level_new->number = $ultimoNivel;
             $level_new->save();
+
+            $allLevel = Level::all();
+            $allPlayer = Player::all();
+            foreach ($allLevel as $level) {
+                foreach ($allPlayer as $player) {
+                    Progress::firstOrCreate( //SI NO SE CUMPLE CON EL PRIMER PARAMETROS ENTONCES SE CREA UN NUEVO MODELO CON LOS DOS PARAMETROS
+                        [
+                            'level_id'  => $level->level_id, //WHERE
+                            'player_id' => $player->player_id //WHERE
+                        ],
+                        [
+                            'state'          => 'Bloqueado',
+                            'diamonds'       => 0,
+                            'percentage_bar' => 0.00
+                        ]
+                    );
+                }
+            }
 
             FacadesDB::commit();
 
@@ -132,8 +153,10 @@ class StudyPlanController extends Controller
             FacadesDB::beginTransaction();
             $slug_level_title = Str::slug($request->level_title);
             $slug = 'nivel-' . $level->number . '-' . $slug_level_title;
+
             $level->update([
                 'name' => $request->level_title,
+                'description' => $request->description,
                 'slug' => $slug,
             ]);
             FacadesDB::commit();

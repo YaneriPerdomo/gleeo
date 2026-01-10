@@ -2,7 +2,6 @@
     width: 40px;
 }
 
-
 .ranking__score {
     background: var(--orange);
     padding: 0.5rem;
@@ -25,3 +24,22 @@
     padding: 0.5rem 2.5rem;
     color: white;
 }
+
+.ranking__item--highlight {
+    border-bottom: solid var(--black);
+}
+
+.ranking__header--the-best {
+    background: none;
+}
+
+.study-plan__module,
+.ranking__title,
+.sidebar-levels__header {
+    background: var(--purple);
+    border-radius: 1rem 1rem 0 0;
+    padding: 0.6rem 1rem;
+    color: white;
+}
+
+

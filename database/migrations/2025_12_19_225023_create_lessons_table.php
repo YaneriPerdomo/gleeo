@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('topic_id')->constrained('topics', 'topic_id')->cascadeOnDelete();
             $table->text('guide')->nullable();
             $table->string('title', 120)->unique();
+            $table->integer('order');
             $table->string('slug', 120)->unique();
             $table->boolean('is_active')->default(1);
             $table->boolean('deleted_at')->default(1);

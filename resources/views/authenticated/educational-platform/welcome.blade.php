@@ -42,20 +42,22 @@
         }
 
 
+
         .welcome__img {
             width: 230px;
         }
 
 
-        .progress-bar {
-            background-color: var(--orange);
-        }
 
         body {
             background: {{ $theme->solid_background }};
         }
 
-        .welcome {
+        body {
+            {!! $bodyCSS !!}
+        }
+
+        .welcome__content {
             width: clamp(300px, 50%, 600px) !important;
             height: auto !important;
 
@@ -66,17 +68,15 @@
             border: none;
         }
 
-        /* Antes: .progress-bar */
-        .welcome__progress-bar {
-            background-color: var(--orange) !important;
+        .progress-bar {
+            background-color: var(--purple);
             transition: width 0.4s ease;
-            /* Para que el movimiento no sea brusco */
         }
 
-        /* Antes: .welcome__descripcion */
-        .welcome__description {
-            /* tus estilos aquí */
+        .bg-white-border {
+            background: {{ $theme->topic_color ?? 'white' }} !important;
         }
+
     </style>
 </head>
 
@@ -84,35 +84,39 @@
     <x-header isPlayer="1" img="{{ $player->avatar->url }}" splashScreen="true"></x-header>
 
     <main class="flex-grow-2 w-100 flex-and-direction-column flex-center-full">
-        <section class="welcome bg-white-border w-100 h-100 flex-and-direction-column flex-center-full">
+        <section class="welcome  w-100 h-100 flex-and-direction-column flex-center-full">
+            <div class="welcome__content bg-white-border flex-and-direction-column flex-center-full ">
+                <div class="welcome__logo">
+                    <figure class="welcome__figure">
+                        <img src="{{ asset('img/logo.png') }}" alt="Logo Gleeo" draggable="false" class="welcome__img">
+                    </figure>
+                </div>
 
-            <div class="welcome__logo">
-                <figure class="welcome__figure">
-                    <img src="{{ asset('img/logo.png') }}" alt="Logo Gleeo" draggable="false" class="welcome__img">
-                </figure>
-            </div>
+                <div class="welcome__info text__gray">
+                    <b class="welcome__label">Materia: </b>
+                    <span class="welcome__subject">{{ $data->subject }}</span>
+                    <p class="welcome__description">
+                        <i>
+                            {{ $data->description }}
+                        </i>
+                    </p>
+                </div>
 
-            <div class="welcome__info text__gray">
-                <b class="welcome__label">Materia: </b>
-                <span class="welcome__subject">{{ $data->subject }}</span>
-                <p class="welcome__description">
-                    {{ $data->description }}
-                </p>
-            </div>
-
-            <div class="welcome__progress-container w-100">
-                <div class="progress welcome__progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100">
-                    <div class="progress-bar progress-bar-striped progress-bar-animated welcome__progress-bar"
-                        style="width: 0%">
+                <div class="welcome__progress-container w-100">
+                    <div class="progress welcome__progress-track" role="progressbar" aria-valuemin="0"
+                        aria-valuemax="100">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated welcome__progress-bar"
+                            style="width: 0%">
+                        </div>
                     </div>
-                </div>
 
-                <div class="welcome__percentage-wrapper text_center d-none">
-                    <small class="text__gray welcome__percentage-text">0%</small>
-                </div>
+                    <div class="welcome__percentage-wrapper text_center d-none">
+                        <small class="text__gray welcome__percentage-text">0%</small>
+                    </div>
 
-                <a href="{{ route('educational-platform.index', ['slugCurrentLevel' => $player->level_assigned->slug]) }}"
-                    class="welcome__link-hidden"></a>
+                    <a href="{{ route('educational-platform.index', ['slugCurrentLevel' => $player->level_assigned->slug]) }}"
+                        class="welcome__link-hidden"></a>
+                </div>
             </div>
 
             <script>
@@ -127,7 +131,7 @@
                         if (count >= 100) {
                             clearInterval(interval);
                             // Activamos el enlace automáticamente al terminar
-                             redirectLink.click();
+                            redirectLink.click();
                         } else {
                             count += 10;
                             progressBar.style.width = `${count}%`;
@@ -140,7 +144,7 @@
             </script>
         </section>
     </main>
-        <x-footer name="Gleeo"></x-footer>
+    <x-footer name="Gleeo"></x-footer>
 
 </body>
 <script src="https://unpkg.com/typed.js@2.1.0/dist/typed.umd.js"></script>

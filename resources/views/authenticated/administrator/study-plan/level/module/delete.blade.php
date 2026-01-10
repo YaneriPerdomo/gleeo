@@ -25,16 +25,31 @@
     <x-header></x-header>
     <main class="flex-grow-2 w-100 flex-and-direction-column flex-center-full flex-center-full-start">
         <article class="row main__article container-xl w-100">
-            <x-aside-admin :items="[
+          <x-aside-admin :items="[
+                [
+                    'title' => 'Informacion General',
+                    'route' => 'news-board.index',
+                    'icon' => 'bi bi-info-square-fill',
+                ],
                 [
                     'title' => 'Plan de Estudio',
                     'route' => 'study-plan.index',
-                    'icon' => 'bi bi-book-half',
+                    'icon' => 'bi bi-journal-check',
                 ],
                 [
                     'title' => 'Insignias',
                     'route' => 'initial-decision-patterns.index',
-                    'icon' => 'bi bi-award-fill',
+                    'icon' => 'bi bi-patch-check-fill',
+                ],
+                [
+                    'title' => 'Avatares',
+                    'route' => 'avatar.index',
+                    'icon' => 'bi bi-person-badge-fill',
+                ],
+                [
+                    'title' => 'Temas de Interfaz',
+                    'route' => 'theme.index',
+                    'icon' => 'bi bi-palette-fill',
                 ],
             ]"></x-aside-admin>
 

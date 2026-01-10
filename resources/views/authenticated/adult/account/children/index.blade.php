@@ -130,7 +130,7 @@
                                                         : 'Año';
                                                 @endphp
                                             </td>
-                                            <th>Nivel {{ $value->level_assigned->number ?? ''}} - {{ $value->level_assigned->name ?? '' }} </th>
+                                            <td>Nivel {{ $value->level_assigned->number ?? ''}} - {{ $value->level_assigned->name ?? '' }} </td>
                                             <td>
                                                 @php
                                                     $badgeClass = match ($value->user->state ?? '') {

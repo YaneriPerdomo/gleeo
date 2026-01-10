@@ -33,7 +33,7 @@ class LoginController extends Controller
             $request->session()->regenerate();
             if (FacadesAuth::user()->rol_id == 3) {
                 $request->session()->put('user_id', FacadesAuth::user()->user_id);
-                $player = Player::where('user_id', FacadesAuth::id())->first();
+                $player = Player::where('user_id', FacadesAuth::user()->user_id)->first();
                 if ($player) {
                     $request->session()->put('player_id', $player->player_id);
                 }

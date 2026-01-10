@@ -27,14 +27,29 @@
         <article class="row main__article container-xl w-100">
             <x-aside-admin :items="[
                 [
+                    'title' => 'Informacion General',
+                    'route' => 'news-board.index',
+                    'icon' => 'bi bi-info-square-fill',
+                ],
+                [
                     'title' => 'Plan de Estudio',
                     'route' => 'study-plan.index',
-                    'icon' => 'bi bi-book-half',
+                    'icon' => 'bi bi-journal-check',
                 ],
                 [
                     'title' => 'Insignias',
                     'route' => 'initial-decision-patterns.index',
-                    'icon' => 'bi bi-award-fill',
+                    'icon' => 'bi bi-patch-check-fill',
+                ],
+                [
+                    'title' => 'Avatares',
+                    'route' => 'avatar.index',
+                    'icon' => 'bi bi-person-badge-fill',
+                ],
+                [
+                    'title' => 'Temas de Interfaz',
+                    'route' => 'theme.index',
+                    'icon' => 'bi bi-palette-fill',
                 ],
             ]"></x-aside-admin>
 
@@ -45,11 +60,11 @@
                     <a href="#" class="text__gray">{{ $level[0]['name'] ?? 'Nivel' }}</a> >
                     <span>Eliminar Tema</span>
                 </small>
-                  @if (session('alert-danger'))
-                        <div class="alert alert-danger" role="alert">
-                            <i class="bi bi-x-octagon-fill"></i> {{ session('alert-danger') }}
-                        </div>
-                    @endif
+                @if (session('alert-danger'))
+                    <div class="alert alert-danger" role="alert">
+                        <i class="bi bi-x-octagon-fill"></i> {{ session('alert-danger') }}
+                    </div>
+                @endif
                 <div class="delete-card mt-4">
                     <div class="delete-card__header">
                         <b class="delete-card__title">
@@ -67,7 +82,7 @@
                         <i class="delete-card__alert-label text__red">Advertencia Crítica:</i>
                         <p class="delete-card__description">
                             Está a punto de eliminar el tema <strong>"{{ $topic->title }}"</strong>, y que pertenece al
-                           modulo <b>"{{ $topic->module->title }}"</b>.
+                            modulo <b>"{{ $topic->module->title }}"</b>.
                             Al confirmar, se borrarán permanentemente todas las lecciones, actividades y registros
                             de calificaciones asociados a este tema para todos los niños del
                             <strong>{{ $level[0]['name'] ?? 'nivel seleccionado' }}</strong>.
@@ -83,8 +98,9 @@
                             </button>
                         </a>
 
-                        <form action="{{ route('topic.destroy', ['nivel' => $level[0]['slug'], 'slug' => $topic->slug]) }}"
-                              method="POST" class="delete-card__form">
+                        <form
+                            action="{{ route('topic.destroy', ['nivel' => $level[0]['slug'], 'slug' => $topic->slug]) }}"
+                            method="POST" class="delete-card__form">
                             @method('DELETE')
                             @csrf
                             <button class="button button__color-red" type="submit">
@@ -99,9 +115,9 @@
     </main>
     <x-footer name="Gleeo"></x-footer>
     <script src="https://unpkg.com/typed.js@2.1.0/dist/typed.umd.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous">
-</script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous">
+    </script>
 </body>
 
 </html>

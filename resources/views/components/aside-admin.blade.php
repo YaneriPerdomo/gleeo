@@ -4,7 +4,7 @@
              @foreach ($items as $item)
                  <a href="{{ route($item['route']) }}" class="flex-and-direction-row flex-aligh-items-center">
                      <i class="{{ $item['icon'] }} fs-4 aside__list-icon text__gray"></i>
-                     <li class="aside__list-item text__gray">{{ $item['title'] }}</li>
+                     <li class="aside__list-item text__gray">{!! $item['title'] !!}</li>
                  </a>
              @endforeach
          </ul>

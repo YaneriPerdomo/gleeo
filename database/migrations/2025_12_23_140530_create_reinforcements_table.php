@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('title', 120)->nullable();
             $table->text('paragraph')->nullable();
             $table->string('img', 60)->nullable();
-            $table->string('url',120)->nullable();
+            $table->text('url')->nullable();
         });
     }
 

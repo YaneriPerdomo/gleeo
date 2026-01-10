@@ -5,12 +5,15 @@ use App\Http\Controllers\AvatarController;
 use App\Http\Controllers\ChildrenController;
 use App\Http\Controllers\CreateAccountController;
 use App\Http\Controllers\EducationalPlatformController;
+use App\Http\Controllers\GlobalRankingController;
 use App\Http\Controllers\InitialDecisionPatternsController;
 use App\Http\Controllers\LessonController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\NewsBoardController;
+use App\Http\Controllers\PlayerController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ProgressController;
 use App\Http\Controllers\RepresentativeController;
 use App\Http\Controllers\StudyPlanController;
 use App\Http\Controllers\ThemeController;
@@ -35,10 +38,13 @@ Route::controller(WelcomeController::class)->middleware(['auth'])->group(functio
     Route::get('inicio', '__invoke')->name('welcome');
 });
 
+Route::controller(RepresentativeController::class)->group(function () {
+     Route::post('gestion-de-cuentas/representante-y-profesionale/crear', 'create')->name('representative.create');
+    });
+
 Route::controller(RepresentativeController::class)->middleware(['auth'])->group(function () {
     Route::get('gestion-de-cuentas/representantes-y-profesionales', 'index')->name('representative.index');
-    Route::post('gestion-de-cuentas/representante-y-profesionale/crear', 'create')->name('representative.create');
-    Route::get('gestion-de-cuentas/representantes-y-profesionales/{search}/filtrar', 'filter')->name('representative.filter');
+     Route::get('gestion-de-cuentas/representantes-y-profesionales/{search}/filtrar', 'filter')->name('representative.filter');
     Route::get('gestion-de-cuentas/representante-y-profesionale/{slug}/editar-informacion', 'edit')->name('representative.edit');
     Route::put('gestion-de-cuentas/representante-y-profesionale/{slug}', 'update')->name('representative.update');
     Route::get('gestion-de-cuentas/representante-y-profesionale/{slug}/eliminar', 'delete')->name('representative.delete');
@@ -114,6 +120,17 @@ Route::controller(EducationalPlatformController::class)->middleware(['auth'])->g
     Route::get('bienvenida', 'welcome')->name('educational-platform.welcome-m');
     Route::get('bienvenido', 'welcome')->name('educational-platform.welcome-f');
     Route::get('niveles/{slugCurrentLevel}', 'index')->name('educational-platform.index');
+    Route::post('current-level-by-the-player/{levelID}', 'currentLevelUpdate')->name('educational-platform.current-level-update');
+});
+
+Route::get('niveles/{slugCurrentLevel}/ranking-global', GlobalRankingController::class)->middleware(['auth'])->name('ranking-global.index');
+
+Route::controller(PlayerController::class)->middleware(['auth'])->group(function () {
+    Route::get('niveles/{level}/{module}/{topic}/{lesson}', 'gamingExperience')->name('player.gaming-experience');
+});
+
+Route::controller(ProgressController::class)->middleware(['auth'])->group(function () {
+    Route::get('niveles/{slugCurrentLevel}/progreso', 'player')->name('progress.index');
 });
 
 

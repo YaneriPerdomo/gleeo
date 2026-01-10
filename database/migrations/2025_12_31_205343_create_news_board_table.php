@@ -15,8 +15,7 @@ return new class extends Migration
             $table->id('news_board_id');
             $table->string('subject');
             $table->text('description');
-            $table->date('start_date');
-            $table->date('end_date');
+
             $table->string('pdf_path')->nullable();
         });
     }

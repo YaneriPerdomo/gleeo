@@ -23,13 +23,19 @@ class Player extends Model
         'slug',
         'representative_id',
         'level_assigned_id',
-        'validated'
+        'validated',
+        'current_level_id'
     ];
 
     public function level_assigned()
     {
         //class - llave foranea - llave primera;
-       return $this->belongsTo(Level::class, 'level_assigned_id', 'level_id');
+        return $this->belongsTo(Level::class, 'level_assigned_id', 'level_id');
+    }
+    public function current_level()
+    {
+        //class - llave foranea - llave primera;
+        return $this->belongsTo(Level::class, 'current_level_id', 'level_id');
     }
 
     public function gender()
