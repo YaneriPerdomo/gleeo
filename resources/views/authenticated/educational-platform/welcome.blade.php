@@ -22,6 +22,11 @@
     <link rel="stylesheet" href="{{ asset('css/components/study-plan.css') }}">
     <link rel="stylesheet" href="{{ asset('css/components/ranking.css') }}">
     <link rel="stylesheet" href="{{ asset('css/components/level.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+
     <link rel="icon" type="image/x-icon" href="{{ asset('img/logo.ico') }}">
     @php
         $bodyCSS = '';
@@ -77,6 +82,14 @@
             background: {{ $theme->topic_color ?? 'white' }} !important;
         }
 
+
+
+        body {
+            font-family: "Montserrat", sans-serif;
+            font-optical-sizing: auto;
+            font-weight: <weight>;
+            font-style: normal;
+        }
     </style>
 </head>
 

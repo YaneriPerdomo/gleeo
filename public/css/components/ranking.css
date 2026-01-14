@@ -8,7 +8,18 @@
     border-radius: 0rem 0.5rem 0.5rem 0rem;
     color: white;
 }
+.ranking__score--player-other {
+    color: color-mix(in srgb, var(--orange), gray 80%);
+    background: none;
+}
 
+.ranking__username--player-other {
+    color: color-mix(in srgb, var(--black), gray 60%);
+}
+
+.ranking__avatar--player-other {
+    filter: grayscale(100%);
+}
 .ranking__number-one > span {
     position: relative;
     bottom: 0.3rem;
@@ -26,7 +37,7 @@
 }
 
 .ranking__item--highlight {
-    border-bottom: solid var(--black);
+  /*  border-bottom: solid var(--black);*/
 }
 
 .ranking__header--the-best {
@@ -42,4 +53,11 @@
     color: white;
 }
 
+.ranking__number-one-me {
+    background: var(--orange);
+}
+
+.ranking__item--other {
+    background: none;
+}
 

@@ -12,8 +12,19 @@
 
 .height-full {
     height: 100%;
+    min-height: 100vh
+}
+
+
+@font-face {
+    font-family: 'MiFuentePersonalizada';
+    src: url('../../font/Montserrat-VariableFont_wght.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
 }
 
 body {
     background: #dbdbdb;
+    font-family:   'MiFuentePersonalizada', sans-serif !important;
 }
+

@@ -98,6 +98,14 @@
             padding: 0.6rem 1rem;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
+
+        .ranking__item--me {
+            background: {{ $theme->secondary_color ?? ' #ef7440' }}80;
+            border-radius: 0.5rem;
+        }
+
+
+
     </style>
 </head>
 
@@ -128,7 +136,7 @@
                                 class="ranking__avatar">
                             <span class="ranking__username">{{ $player->user->user }}</span>
                         </div>
-                        <span class="ranking__score"><b>{{ $player->diamonds ?? 0 }} <i
+                        <span class="ranking__score"><b>{{ $progress->diamonds ?? 0 }} <i
                                     class="bi bi-gem"></i></b></span>
                     </div>
                 </div>
@@ -140,7 +148,8 @@
                         <div class=" ranking__number ranking__number-two">
                             <span class="fs-2">2</span>
                         </div>
-                        <div class=" ranking__number ranking__number-one">
+                        <div
+                            class=" ranking__number ranking__number-one {{ $bestRanking[0]->player->player_id == $player->player_id ? 'ranking__number-one-me' : '' }}">
                             <span class="fs-1">1</span>
                         </div>
                         <div class=" ranking__number ranking__number-then">
@@ -149,16 +158,21 @@
                     </div>
 
                     <div class="ranking__body">
-                        @forelse ($bestRanking as $theBest)
-                            <div
-                                class="rankink__item ranking__item--i mt-2 flex-and-direction-row flex-content-space-between {{ $theBest->player->player_id == $player->player_id ? 'ranking__item--highlight' : '' }}">
+                        @forelse ($bestRanking as $key =>  $theBest)
+                            <div data-key="{{ $key + 1 }}"
+                                class="rankink__item   mt-2 flex-and-direction-row flex-content-space-between
+                                                {{ $theBest->player->player_id == $player->player_id ? 'ranking__item--highlight ranking__item--me' : 'ranking__item--other' }}">
                                 <div class="ranking__user-info">
                                     <img src="{{ asset('img/avatars/' . $theBest->player->avatar->url) }}"
-                                        alt="Avatar" class="ranking__avatar">
-                                    <span class="ranking__username">{{ $theBest->player->user->user }}</span>
+                                        alt="Avatar"
+                                        class="ranking__avatar {{ $theBest->player->player_id != $player->player_id ? 'ranking__avatar--player-other' : '' }}"
+                                        draggable="false">
+                                    <span
+                                        class="ranking__username {{ $theBest->player->player_id != $player->player_id ? 'ranking__username--player-other' : '' }}  ">{{ $theBest->player->user->user }}</span>
                                 </div>
-                                <span class="ranking__score"><b>{{ $theBest->diamonds }} <i
-                                            class="bi bi-gem"></i></b></span>
+                                <span
+                                    class="ranking__score  {{ $theBest->player->player_id != $player->player_id ? 'ranking__score--player-other' : 'ranking__score--player-me' }}  "><b>{{ $theBest->diamonds }}
+                                        <i class="bi bi-gem"></i></b></span>
                             </div>
                         @empty
                         @endforelse

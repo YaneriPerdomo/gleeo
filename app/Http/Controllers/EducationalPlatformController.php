@@ -4,20 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Models\Lesson;
 use App\Models\Level;
-use App\Models\Module;
 use App\Models\NewsBoard;
 use App\Models\Player;
 use App\Models\PlayerLesson;
-use App\Models\PlayerLessons;
 use App\Models\Progress;
-use App\Models\Theme;
 use Illuminate\Http\Request;
-
-use function Symfony\Component\Translation\t;
+use Illuminate\Support\Facades\DB as FacadesDB;
+use Illuminate\Support\Facades\Log;
 
 class EducationalPlatformController extends Controller
 {
-
     public function welcome(Request $request)
     {
 
@@ -27,33 +23,23 @@ class EducationalPlatformController extends Controller
             ->where('player_id', $playerID)
             ->firstOrFail();
 
-
-
         $data = NewsBoard::select('subject', 'news_board_id', 'description')->where('news_board_id', 1)->first();
+
         return view('authenticated.educational-platform.welcome', [
             'data' => $data,
             'player'         => $player,
             'theme'          => $player->theme,
-
         ]);
     }
-
     public function index(Request $request, $slugCurrentLevel)
     {
-
         $playerID = $request->session()->get('player_id');
 
-        // 1. Obtenemos el nivel actual con sus módulos, temas y lecciones de un solo golpe (Eager Loading)
-        $currentLevel = Level::where('slug', $slugCurrentLevel)
-            ->with(['module.topics.lessons'])
-            ->firstOrFail(); // Usa firstOrFail para manejar errores 404 automáticamente
 
-
-        // 2. Módulos paginados (usando la relación del objeto ya cargado)
-        $CurrentModules = $currentLevel->module()->paginate(5);
-
+        $levelID = Level::where('slug', $slugCurrentLevel)->first();
+        $levelID = $levelID->level_id;
         // 3. Obtener el jugador con sus relaciones necesarias (Avatar y Tema)
-        $player = Player::with(['avatar', 'theme'])
+        $player = Player::with(['avatar', 'theme',])
             ->where('player_id', $playerID)
             ->firstOrFail();
 
@@ -63,13 +49,15 @@ class EducationalPlatformController extends Controller
             ->get();
 
         // 5. Ranking de diamantes (Top 5)
-        $bestRanking = Progress::where('level_id', $currentLevel->level_id)
+        $bestRanking = Progress::where('level_id', $levelID)
             ->with('player.avatar')
             ->orderByDesc('diamonds')
             ->limit(5)
             ->get();
 
-        $levelID = $currentLevel->level_id;
+
+
+
         $allLessons = Lesson::whereHas('topic.module.level', function ($q) use ($levelID) {
             return $q->where('level_id', $levelID);
         })->get();
@@ -86,14 +74,11 @@ class EducationalPlatformController extends Controller
             );
         }
 
-
-        // 1. Verificamos si ya hay alguna lección activa
         $hasActive = PlayerLesson::where('player_id', $playerID)
             ->where('state', 'En Espera')
             ->exists();
-
         if (!$hasActive) {
-            // 2. Buscamos SOLO la primera lección bloqueada de ese nivel
+            //  Buscamos SOLO la primera lección bloqueada de ese nivel
             $nextLesson = PlayerLesson::where('player_id', $playerID)
                 ->where('state', 'Bloqueada')
                 ->whereHas('lesson.topic.module.level', function ($query) use ($levelID) {
@@ -108,15 +93,84 @@ class EducationalPlatformController extends Controller
             }
         }
 
+        $lessonsQuery = PlayerLesson::where('player_id', $playerID)
+            ->whereHas('lesson.topic.module', function ($query) use ($levelID) {
+                $query->where('level_id', $levelID);
+            });
+
+        // 3. Obtenemos conteos usando clones de la consulta base
+        $countTotal = (clone $lessonsQuery)->count();
+        $countCompleted = (clone $lessonsQuery)->where('state', 'Completada')->count();
+
+        $levelUnlocked = ['state' => false, 'levelSlug' => null];
+
+        // 4. Verificamos si todas las lecciones del nivel están terminadas
+        if ($countTotal > 0 && $countTotal === $countCompleted) {
+
+            // Obtenemos el número del nivel actual para buscar el siguiente
+            $currentLevel = Level::find($levelID);
+            $nextLevelNumber = intval($currentLevel->number) + 1;
+
+            // 5. Buscamos si existe el siguiente nivel bloqueado para este jugador
+            $nextProgress = Progress::where('player_id', $playerID)
+                ->where('state', 'Bloqueado')
+                ->whereHas('level', function ($query) use ($nextLevelNumber) {
+                    $query->where('number', $nextLevelNumber);
+                })
+                ->first();
+
+            if ($nextProgress) {
+                try {
+                    // 6. Usamos una transacción para asegurar que no haya datos huérfanos
+                    FacadesDB::transaction(function () use ($nextProgress, $player) {
+                        // Actualizamos el estado del progreso del siguiente nivel
+                        $nextProgress->update([
+                            'state' => 'En Progreso'
+                        ]);
+
+                        // Actualizamos el puntero del jugador al nuevo nivel
+                        $player->update([
+                            'level_assigned_id' => $nextProgress->level_id,
+                            'current_level_id'  => $nextProgress->level_id
+                        ]);
+                    });
+
+                    $levelUnlocked = [
+                        'state' => true,
+                        'levelSlug' => $nextProgress->level->slug
+                    ];
+                } catch (\Exception $e) {
+                    Log::error("Error al desbloquear nivel: " . $e->getMessage());
+                    return response()->json(['error' => 'No se pudo actualizar el progreso'], 500);
+                }
+            } else {
+            }
+        }
+
+        $progress = Progress::where('player_id', $playerID)->where('level_id', $levelID)->first();
+
+        $currentLevel = Level::where('slug', $slugCurrentLevel)->firstOrFail();
+
+        $currentModules = $currentLevel->module()
+            ->with(['topics.lessons.playerProgress' => function ($query) use ($playerID) {
+                $query->where('player_id', $playerID);
+            }])
+            ->paginate(5);
+
+        // 3. Importante: Para que el JSON final incluya todo, adjuntamos los módulos al objeto level
+        $currentLevel->setRelation('module', $currentModules);
+
 
         return view('authenticated.educational-platform.index', [
             'currentLevel'   => $currentLevel,
-            'CurrentModules' => $CurrentModules,
+            'CurrentModules' => $currentModules,
             'levels'         => $levels,
             'player'         => $player,
             'theme'          => $player->theme,
             'bestRanking'    => $bestRanking,
-            'slugCurrentLevel' => $slugCurrentLevel
+            'levelUnlocked' => $levelUnlocked,
+            'slugCurrentLevel' => $slugCurrentLevel,
+            'progress' => $progress
         ]);
     }
 

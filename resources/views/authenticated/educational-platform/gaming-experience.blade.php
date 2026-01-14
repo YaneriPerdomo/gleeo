@@ -24,6 +24,12 @@
     <link rel="stylesheet" href="{{ asset('css/components/ranking.css') }}">
     <link rel="stylesheet" href="{{ asset('css/components/level.css') }}">
     <link rel="icon" type="image/x-icon" href="{{ asset('img/logo.ico') }}">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+
     @php
         $bodyCSS = '';
         if ($theme->background_path != null) {
@@ -40,6 +46,13 @@
         :root {
             --purple: {{ $theme->main_color ?? '#7052c2' }};
             --orange: {{ $theme->secondary_color ?? '#ef7440' }};
+        }
+
+         body {
+            font-family: "Montserrat", sans-serif;
+            font-optical-sizing: auto;
+            font-weight: <weight>;
+            font-style: normal;
         }
 
         .ranking__item--i {
@@ -618,7 +631,7 @@
 
                     <button style="border: none">
                         <b>
-                            <a href="{{ route('educational-platform.index', ['slugCurrentLevel' => Auth::user()->player->level_assigned->slug]) }}"
+                            <a href="{{ route('educational-platform.index', ['slugCurrentLevel' => Auth::user()->player->current_level->slug]) }}"
                                 class="button button__color-black lesson-modal__link-play">
                                 ¡CONTINUAR MI RUTA!
                             </a>
@@ -1099,7 +1112,14 @@
                 element.disabled = true;
 
             });
+
             gameContentAttemptsText.textContent = 'Intentos: ';
+            let lesson = @js($lesson);
+            console.info(lesson);
+            let playerId = @js(Auth::user()->player->player_id);
+            getData(
+                '/' + lesson.lesson_id + '/complete-lesson/' + playerId
+            )
             if (gameState.diamonds == 0) {
                 return lessonStatsBadge.textContent = 'AY NO...';
             }
@@ -1108,6 +1128,39 @@
             } else {
                 return lessonStatsBadge.textContent = 'EPICO';
             }
+        }
+    }
+
+
+    async function getData(urlData) {
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        const url = urlData;
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": csrfToken,
+                    'Accept': 'application/json',
+                },
+                body: JSON.stringify({ // Enviando datos del juego - Convertir objeto js a JSON
+                    reward_diamonds: gameState.diamonds,
+                    estimated_time: timeDom.textContent,
+                    success_rate: (gameState.correctAnswers / gameState.totalPractices) * 100,
+                    motivational_message: lessonStatsBadge.textContent,
+                    // total que fallo
+                    total_number_incorrect: gameState.incorrectAnswers,
+                    total_number_correct: gameState.correctAnswers
+                })
+            });
+            if (!response.ok) {
+                throw new Error(`Response status: ${response.status}`);
+            }
+
+            const result = await response.json();
+            console.log(result);
+        } catch (error) {
+            console.error(error.message);
         }
     }
 

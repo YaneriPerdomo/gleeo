@@ -22,12 +22,13 @@ class GlobalRankingController extends Controller
             ->limit(5)
             ->get();
 
+        $progress = Progress::where('player_id', $playerID)->where('level_id', $player->current_level_id)->first();
 
         return view('authenticated.educational-platform.global-ranking', [
             'bestRanking' => $bestRanking,
             'player'         => $player,
             'theme'          => $player->theme,
-
+            'progress' => $progress
         ]);
     }
 }

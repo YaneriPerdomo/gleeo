@@ -12,11 +12,14 @@ class PlayerLesson extends Model
         'player_lesson_id',
         'player_id',
         'lesson_id',
-        'duration',
+        'estimated_time',
+        'success_rate',
+        'motivational_message',
         'diamonds',
         'total_number_correct',
         'total_number_incorrect',
-        'state'
+        'state',
+        'reward_diamonds'
     ];
 
     public function lesson()

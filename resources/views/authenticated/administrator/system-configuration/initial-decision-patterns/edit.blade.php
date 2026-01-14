@@ -106,10 +106,10 @@
                                     <select id="pattern_status" name="pattern_status"
                                         class="form-control form__input-select @error('pattern_status') is-invalid @enderror">
                                         <option disabled selected>Seleccione una opción</option>
-                                        <option value="activo" @if ( $data->decision_pattern->is_active == 1)
+                                        <option value="activo" @if ( $data->is_active == 1)
                                             selected
                                             @endif >Activo</option>
-                                        <option value="inactivo" @if ( $data->decision_pattern->is_active == 0)
+                                        <option value="inactivo" @if ( $data->is_active == 0)
                                             selected
                                             @endif
                                             >Inactivo</option>

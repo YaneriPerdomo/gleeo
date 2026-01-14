@@ -21,7 +21,9 @@ class Lesson extends Model
         'order'
     ];
 
-
+    public function playerProgress(){
+        return $this->hasOne(PlayerLesson::class, 'lesson_id', 'lesson_id');
+    }
 
     public function topic()
     {

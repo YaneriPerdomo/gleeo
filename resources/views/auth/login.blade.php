@@ -64,7 +64,7 @@
                         class=" img-fluid" style="width: 100px;" draggable="false">
                 </figure>@csrf
                 @method('POST')
-                <legend class="form__title fs-4 text-center ">
+                <legend class="form__title fs-4 text-center  ">
                     <b>
                         Iniciar Sesión
                     </b>

@@ -14,6 +14,7 @@ use App\Http\Controllers\NewsBoardController;
 use App\Http\Controllers\PlayerController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProgressController;
+use App\Http\Controllers\ReinforcementFailureLimitController;
 use App\Http\Controllers\RepresentativeController;
 use App\Http\Controllers\StudyPlanController;
 use App\Http\Controllers\ThemeController;
@@ -21,6 +22,7 @@ use App\Http\Controllers\TopicController;
 use App\Http\Controllers\WelcomeController;
 use App\Models\Children;
 use App\Models\NewsBoard;
+use App\Models\ReinforcementFailureLimit;
 use Illuminate\Support\Facades\Route;
 
 Route::controller(LoginController::class)->group(function () {
@@ -51,7 +53,7 @@ Route::controller(RepresentativeController::class)->middleware(['auth'])->group(
     Route::delete('gestion-de-cuentas/representante-y-profesionale/{slug}/eliminar', 'destroy')->name('representative.destroy');
 });
 
-Route::controller(InitialDecisionPatternsController::class)->middleware(['auth'])->group(function () {
+Route::controller(ReinforcementFailureLimitController::class)->middleware(['auth'])->group(function () {
     Route::get('configuracion-del-tutor/patrones-de-decision-iniciales', 'index')->name('initial-decision-patterns.index');
     Route::get('configuracion-del-tutor/patrones-de-decision-iniciales/configurar', 'edit')->name('initial-decision-patterns.edit');
     Route::put('configuracion-del-tutor/patrones-de-decision-iniciales/configurar', 'update')->name('initial-decision-patterns.update');
@@ -127,6 +129,7 @@ Route::get('niveles/{slugCurrentLevel}/ranking-global', GlobalRankingController:
 
 Route::controller(PlayerController::class)->middleware(['auth'])->group(function () {
     Route::get('niveles/{level}/{module}/{topic}/{lesson}', 'gamingExperience')->name('player.gaming-experience');
+    Route::post('{lesson}/complete-lesson/{playerId}', 'endLesson')->name('player.end-lesson');
 });
 
 Route::controller(ProgressController::class)->middleware(['auth'])->group(function () {

@@ -17,9 +17,13 @@ return new class extends Migration
                 ->constrained('players', 'player_id')->cascadeOnDelete();
              $table->foreignId('lesson_id')
                 ->constrained('lessons', 'lesson_id')->cascadeOnDelete();
-            $table->time('duration')->nullable()->default(NULL);
-            $table->integer('diamonds')->default(0);
+            $table->time('estimated_time')->nullable()->default(NULL);
+            $table->integer('reward_diamonds')->default(0);
+            $table->integer('success_rate')->default(0);
+            $table->integer('total_number_incorrect')->default(0);
+            $table->integer('total_number_correct')->default(0);
             $table->enum('state', ['Bloqueada', 'En Espera', 'Completada'])->default('Bloqueada');
+            $table->enum('motivational_message', ['¡COMIENZA TU AVENTURA!', 'ERES CAPAZ', 'AY NO...', 'EPICO', 'EXELENTE'])->default('');
             $table->timestamps();
         });
     }

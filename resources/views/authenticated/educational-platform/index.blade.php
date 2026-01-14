@@ -25,6 +25,10 @@
     <link rel="stylesheet" href="{{ asset('css/components/lesson-modal.css') }}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
 
     <link rel="icon" type="image/x-icon" href="{{ asset('img/logo.ico') }}">
     @php
@@ -45,7 +49,7 @@
             --orange: {{ $theme->secondary_color ?? '#ef7440' }};
         }
 
-        .ranking__item--i {
+        .ranking__item--me {
             background: {{ $theme->secondary_color ?? ' #ef7440' }}80;
             border-radius: 0.5rem;
         }
@@ -100,14 +104,14 @@
         }
 
         .level-item--current {
-            border: solid var(--purple) 2px;
+            border: solid var(--orange) 2px;
             margin-top: 0.5rem;
-            filter: drop-shadow(1px 1px 0px var(--purple));
+            filter: drop-shadow(1px 1px 0px var(--orange));
             background: white;
         }
 
         .progress-bar {
-            background-color: var(--orange);
+            background-color: var(--purple);
         }
 
 
@@ -124,6 +128,38 @@
 
         .lesson__button {
             border: none;
+        }
+
+        .level-item--current-icon {
+            color: var(--orange);
+        }
+
+        .level-item--current-prograss-bar {
+            background-color: var(--orange);
+        }
+
+        [ data-state="Completada"] {
+            outline: solid var(--purple) 5px;
+            background: var(--purple);
+        }
+
+        [ data-state="En Espera"] {
+            outline: solid var(--orange) 5px;
+            background: var(--orange);
+        }
+
+        [ data-state="Bloqueada"] {
+            background:
+                color-mix(in srgb, var(--purple), gray 80%);
+            outline: solid 5px color-mix(in srgb, var(--purple), gray 80%);
+        }
+
+
+        body {
+            font-family: "Montserrat", sans-serif;
+            font-optical-sizing: auto;
+            font-weight: <weight>;
+            font-style: normal;
         }
     </style>
 </head>
@@ -147,9 +183,10 @@
                                 data-key = "{{ $key }}"
                                 data-link-deactivated="{{ $level->progress->state == 'Completado' || $level->progress->state == 'En Progreso' ? 'false' : 'true' }}"
                                 class="level-item level-item-link  flex-and-direction-row {{ $level->level_id === $currentLevel->level_id ? 'level-item--current' : '' }}">
-                                <div class="level-item__icon">
+                                <div class="level-item__icon {{ $level->progress->state }}">
                                     <i
                                         class="bi fs-1
+                                        {{ $level->level_id === $currentLevel->level_id ? 'level-item--current-icon' : '' }}
                                         @php
 if ($level->progress->state == 'Completado') { //ENUM ['Bloqueado','Completado', 'En Progreso']
                                                                 //Completado
@@ -163,9 +200,7 @@ if ($level->progress->state == 'Completado') { //ENUM ['Bloqueado','Completado',
                                                                 }
                                                             } @endphp
                                                     "></i>
-                                </div><!---    border: solid var(--purple) 2px;
-                    filter: drop-shadow(1px 1px 6px black);
-                    background: white;-->
+                                </div>
                                 <div class="level-item__content flex-grow-2">
                                     <span class="level-item__name">
                                         <b>
@@ -177,7 +212,7 @@ if ($level->progress->state == 'Completado') { //ENUM ['Bloqueado','Completado',
                                         <div class="progress level-item__progress-fill" role="progressbar"
                                             aria-label="Animated striped example" aria-valuenow="75" aria-valuemin="0"
                                             aria-valuemax="100">
-                                            <div class="progress-bar progress-bar-striped progress-bar-animated"
+                                            <div class="progress-bar progress-bar-striped progress-bar-animated {{ $level->level_id === $currentLevel->level_id ? 'level-item--current-prograss-bar' : '' }}"
                                                 style="width: {{ $level->progress->percentage_bar ?? '' }}%">
 
                                             </div>
@@ -202,33 +237,57 @@ if ($level->progress->state == 'Completado') { //ENUM ['Bloqueado','Completado',
 
 
                 <div class="mt-2">
-                    @forelse ($CurrentModules->items() as $module)
+                    @forelse ($CurrentModules->items() as $keyModule =>  $module)
                         <section class="study-plan">
                             <div class="study-plan__module flex-and-direction-row flex-content-space-between">
                                 <b class="study-plan__module-title">
                                     Módulo {{ $loop->iteration ?? '' }}: {{ $module->title }}
                                 </b>
                             </div>
-                            @forelse ($module->topics ?? [] as $topic)
+                            @forelse ($module->topics ?? [] as $keyTopic =>  $topic)
                                 <div class="study-plan__topic flex-and-direction-row flex-content-space-between">
                                     <div class="study-plan__topic-info">
                                         <b>Tema {{ $loop->iteration ?? '' }}: {{ $topic->title ?? 'NADA' }}</b>
                                     </div>
                                 </div>
                                 <div class="flex-and-direction-row ">
-                                    @forelse ($topic->lessons as $key => $lesson)
-                                        <button data-key="{{ $key }}" data-bs-toggle="modal"
-                                            data-lesson-slug = "{{ $lesson->slug }}" data-name="{{ $lesson->title }}"
-                                            data-route="{{ route('player.gaming-experience', [
-                                                'level' => $slugCurrentLevel,
-                                                'module' => $module->slug,
-                                                'topic' => $topic->slug,
-                                                'lesson' => $lesson->slug,
-                                            ]) }}"
+                                    @forelse ($topic->lessons as $keyLesson => $lesson)
+                                        <button
+                                            data-key="{{ $keyModule }}, {{ $keyTopic }}, {{ $keyLesson }}"
+                                            data-open-modal-window="{{ $lesson->playerProgress->state == 'Bloqueada' ? 'False' : 'True' }}"
                                             class="flex-center-full flex-and-direction-column lesson__button  px-4 my-3 px-4 my-3"
-                                            data-bs-target="#inforlessonModal">
-                                            <div class="level-card__circle">
-                                                <i class="bi bi-check fs-1"></i>
+                                            @if ($lesson->playerProgress->state != 'Bloqueada') data-bs-target="#inforlessonModal"
+                                                data-bs-toggle="modal"
+                                                data-lesson-slug = "{{ $lesson->slug }}"
+                                                data-name="{{ $lesson->title }}"
+                                                data-route="{{ route('player.gaming-experience', [
+                                                    'level' => $slugCurrentLevel,
+                                                    'module' => $module->slug,
+                                                    'topic' => $topic->slug,
+                                                    'lesson' => $lesson->slug,
+                                                ]) }}" @endif>
+                                            <div class="level-card__circle"
+                                                data-state="{{ $lesson->playerProgress->state }}">
+                                                <i
+                                                    class="bi
+                                                    @php
+$stateIconLesson = $lesson->playerProgress->state;
+                                                        switch ($stateIconLesson) {
+                                                            case 'Completada':
+                                                                echo 'bi-check';
+                                                            break;
+                                                            case 'En Espera':
+                                                                //Un reloj de arena
+                                                                echo 'bi-hourglass-split';
+                                                            break;
+                                                            case 'Bloqueada':
+                                                                echo 'bi-lock-fill';
+                                                            break;
+                                                            default:
+                                                                echo 'bi-lock-fill';
+                                                            break;
+                                                        } @endphp
+                                                bi-check fs-1"></i>
                                             </div>
                                             <div class="level-card__title">
                                                 <i class="text__gray">{{ $lesson->title }}</i>
@@ -262,13 +321,13 @@ if ($level->progress->state == 'Completado') { //ENUM ['Bloqueado','Completado',
                     <div class="ranking__body">
                         <div class="ranking__i mt-3">
                             <div
-                                class="ranking__item ranking__item--i flex-and-direction-row flex-content-space-between ranking__item--highlight">
+                                class="ranking__item ranking__item--me flex-and-direction-row flex-content-space-between ranking__item--highlight">
                                 <div class="ranking__user-info">
                                     <img src="{{ asset('img/avatars/' . $player->avatar->url) }}" alt="Avatar"
                                         class="ranking__avatar " draggable="false">
                                     <span class="ranking__username">{{ $player->user->user }}</span>
                                 </div>
-                                <span class="ranking__score"><b>{{ $player->diamonds ?? 0 }} <i
+                                <span class="ranking__score"><b>{{ $progress->diamonds ?? 0 }} <i
                                             class="bi bi-gem"></i></b></span>
                             </div>
                         </div>
@@ -280,7 +339,9 @@ if ($level->progress->state == 'Completado') { //ENUM ['Bloqueado','Completado',
                                 <div class=" ranking__number ranking__number-two">
                                     <span class="fs-2">2</span>
                                 </div>
-                                <div class=" ranking__number ranking__number-one">
+                                <div
+                                    class=" ranking__number ranking__number-one
+                                    {{ $bestRanking[0]->player->player_id == $player->player_id ? 'ranking__number-one-me' : '' }}">
                                     <span class="fs-1">1</span>
                                 </div>
                                 <div class=" ranking__number ranking__number-then">
@@ -289,16 +350,21 @@ if ($level->progress->state == 'Completado') { //ENUM ['Bloqueado','Completado',
                             </div>
 
                             <div class="ranking__body">
-                                @forelse ($bestRanking as $theBest)
-                                    <div
-                                        class="rankink__item ranking__item--i mt-2 flex-and-direction-row flex-content-space-between {{ $theBest->player->player_id == $player->player_id ? 'ranking__item--highlight' : '' }}">
+                                @forelse ($bestRanking as $key =>  $theBest)
+                                    <div data-key="{{ $key + 1 }}"
+                                        class="rankink__item   mt-2 flex-and-direction-row flex-content-space-between
+                                                {{ $theBest->player->player_id == $player->player_id ? 'ranking__item--highlight ranking__item--me' : 'ranking__item--other' }}">
                                         <div class="ranking__user-info">
                                             <img src="{{ asset('img/avatars/' . $theBest->player->avatar->url) }}"
-                                                alt="Avatar" class="ranking__avatar" draggable="false">
-                                            <span class="ranking__username">{{ $theBest->player->user->user }}</span>
+                                                alt="Avatar"
+                                                class="ranking__avatar {{ $theBest->player->player_id != $player->player_id ? 'ranking__avatar--player-other' : '' }}"
+                                                draggable="false">
+                                            <span
+                                                class="ranking__username {{ $theBest->player->player_id != $player->player_id ? 'ranking__username--player-other' : '' }}  ">{{ $theBest->player->user->user }}</span>
                                         </div>
-                                        <span class="ranking__score"><b>{{ $theBest->diamonds }} <i
-                                                    class="bi bi-gem"></i></b></span>
+                                        <span
+                                            class="ranking__score  {{ $theBest->player->player_id != $player->player_id ? 'ranking__score--player-other' : 'ranking__score--player-me' }}  "><b>{{ $theBest->diamonds }}
+                                                <i class="bi bi-gem"></i></b></span>
                                     </div>
                                 @empty
                                 @endforelse
@@ -340,7 +406,7 @@ if ($level->progress->state == 'Completado') { //ENUM ['Bloqueado','Completado',
                                     </div>
                                 </div>
                             </div>
-                            <div class="lesson-stats__badge">EPICO</div>
+                            <div class="lesson-stats__badge lesson-stats__motivational-message text-center">EPICO</div>
                         </div>
                         <div class="lesson-stats__grid flex-and-direction-row flex-center-full flex-gap-1 mt-3">
                             <div class="lesson-stats__item lesson-stats__item--secondary">
@@ -393,7 +459,7 @@ if ($level->progress->state == 'Completado') { //ENUM ['Bloqueado','Completado',
                 <div class="modal-header skip-previous-lessons-modal__header bg__color-purple text-white">
                     <h1 class="modal-title skip-previous-lessons-modal__title fs-5  "
                         id="skip-previous-lessonsModalTitle">
-                         <b>Omitir lecciones anteriores</b>
+                        <b>Omitir lecciones anteriores</b>
                     </h1>
                     <button type="button" class="btn-close skip-previous-lessons-modal__close text-white"
                         data-bs-dismiss="modal" aria-label="Close"></button>
@@ -426,67 +492,7 @@ if ($level->progress->state == 'Completado') { //ENUM ['Bloqueado','Completado',
         </div>
     </div>
 
-    <script>
-        document.addEventListener('click', e => {
-            const trigger = e.target.closest('[data-bs-target="#inforlessonModal"]');
-            if (trigger) {
-                const linkPlay = document.querySelector('.lesson-modal__link-play');
-                const lessonModalName = document.querySelector('.lesson-modal__title');
-                const lessonName = trigger.dataset.name;
-                const lessonRoute = trigger.dataset.route;
-                console.info('Cargando lección:', lessonName);
-                if (lessonModalName) {
-                    lessonModalName.textContent = lessonName || 'Lección sin nombre';
-                }
-                if (linkPlay) {
-                    linkPlay.href = lessonRoute || '#';
-                }
-                console.info('Ruta asignada:', linkPlay ? linkPlay.href : 'No encontrada');
-            }
-        });
 
-
-
-        let levelItemLinks = document.querySelectorAll('.level-item-link');
-        let allLevel = @js($levels);
-        console.info(allLevel);
-        document.addEventListener('click', e => {
-            let trigger = e.target.closest('.level-item-link');
-            if (trigger) {
-                let key = trigger.getAttribute('data-key');
-                //desactivar el link
-                e.preventDefault();
-                let level = allLevel[key]['level_id'];
-                console.info('id Nivel:', level);
-                getData(level) ?
-                    window.location.href = trigger.href :
-                    console.warn('Nivel bloqueado');
-            }
-        })
-
-        async function getData(levelID) {
-            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-            const url = `../current-level-by-the-player/${levelID}`;
-            try {
-                const response = await fetch(url, {
-                    method: 'POST',
-                    headers: {
-                        "Content-Type": "application/json",
-                        "X-CSRF-TOKEN": csrfToken,
-                        'Accept': 'application/json',
-                    },
-                });
-                if (!response.ok) {
-                    throw new Error(`Response status: ${response.status}`);
-                }
-
-                const result = await response.json();
-                console.log(result);
-            } catch (error) {
-                console.error(error.message);
-            }
-        }
-    </script>
 
 </body>
 <script src="https://unpkg.com/typed.js@2.1.0/dist/typed.umd.js"></script>
@@ -494,6 +500,118 @@ if ($level->progress->state == 'Completado') { //ENUM ['Bloqueado','Completado',
     integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous">
 </script>
 </body>
+<script>
+    let levelUnlocked = @js($levelUnlocked);
+    if (levelUnlocked.state == true) {
+        console.info(levelUnlocked);
+        alert('Felicitaciones! Has desbloqueado un nuevo nivel.');
+        window.location.href = `/niveles/${levelUnlocked.levelSlug}`;
+    }
+
+    let allLevel = @js($levels);
+    let $allModule = @js($CurrentModules->items());
+
+    function getTimeUnit(timeText) {
+        let parts = timeText.split(':');
+
+        if (parts.length !== 3) return "Formato inválido";
+        const [hour, minute, second] = parts;
+        if (hour != '00') {
+            return hour == '01' ? 'hor' : 'hors';
+        }
+        if (minute != '00') {
+            return 'min';
+        }
+        if (second != '00') {
+            return 'seg';
+        }
+    }
+    console.info('Todos los modulos:', $allModule);
+    document.addEventListener('click', e => {
+        const trigger = e.target.closest('[data-bs-target="#inforlessonModal"]');
+        if (trigger) {
+            if (trigger.dataset.openModalWindow === 'False') {
+                alert('La leccion esta bloqueada.');
+                return console.info(trigger);
+            }
+            // indexes to access the lesson
+            const indexes = trigger.dataset.key.split(',');
+            let lessonStatsValueModal = document.querySelectorAll('.lesson-stats__value');
+            let lessonStatsUnit = document.querySelectorAll('.lesson-stats__unit');
+            let lessonKeyword = document.querySelector('.lesson-stats__motivational-message');
+            let estimated_time = $allModule[parseInt(indexes[0])].topics[parseInt(indexes[1])].lessons[parseInt(
+                indexes[2])].player_progress.estimated_time || '00:00:00';
+            let diamondsReward = $allModule[parseInt(indexes[0])].topics[parseInt(indexes[1])].lessons[parseInt(
+                indexes[2])].player_progress.reward_diamonds || '0';
+            let wordDiamonds = $allModule[parseInt(indexes[0])].topics[parseInt(indexes[1])].lessons[parseInt(
+                indexes[2])].player_progress.motivational_message;
+            lessonKeyword.innerHTML = wordDiamonds == '¡COMIENZA TU AVENTURA!' ? '¡COMIENZA TU <br> AVENTURA!' :
+                wordDiamonds || 'HUBO UN ERROR';
+            lessonStatsValueModal[0].textContent = diamondsReward;
+            lessonStatsUnit[0].textContent = diamondsReward == '0' ? 'Diamante' : 'Diamantes';
+            lessonStatsValueModal[1].textContent = estimated_time;
+            lessonStatsUnit[1].textContent = getTimeUnit(estimated_time);
+            lessonStatsValueModal[2].textContent = $allModule[parseInt(indexes[0])].topics[parseInt(indexes[1])]
+                .lessons[parseInt(indexes[2])].player_progress.success_rate + '%' || '0%';
+            console.info('Datos de La leccion seleccionada:', $allModule[parseInt(indexes[0])].topics[parseInt(
+                indexes[1])].lessons[parseInt(indexes[2])].player_progress);
+            const linkPlay = document.querySelector('.lesson-modal__link-play');
+            const lessonModalName = document.querySelector('.lesson-modal__title');
+            const lessonName = trigger.dataset.name;
+            const lessonRoute = trigger.dataset.route;
+            console.info('Cargando lección:', lessonName);
+            if (lessonModalName) {
+                lessonModalName.textContent = lessonName || 'Lección sin nombre';
+            }
+            if (linkPlay) {
+                linkPlay.href = lessonRoute || '#';
+            }
+            console.info('Ruta asignada:', linkPlay ? linkPlay.href : 'No encontrada');
+        }
+    });
+
+
+
+    let levelItemLinks = document.querySelectorAll('.level-item-link');
+
+    console.info(allLevel);
+    document.addEventListener('click', e => {
+        let trigger = e.target.closest('.level-item-link');
+        if (trigger) {
+            let key = trigger.getAttribute('data-key');
+            //desactivar el link
+            e.preventDefault();
+            let level = allLevel[key]['level_id'];
+            console.info('id Nivel:', level);
+            getData(level) ?
+                window.location.href = trigger.href :
+                console.warn('Nivel bloqueado');
+        }
+    })
+
+    async function getData(levelID) {
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        const url = `../current-level-by-the-player/${levelID}`;
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": csrfToken,
+                    'Accept': 'application/json',
+                },
+            });
+            if (!response.ok) {
+                throw new Error(`Response status: ${response.status}`);
+            }
+
+            const result = await response.json();
+            console.log(result);
+        } catch (error) {
+            console.error(error.message);
+        }
+    }
+</script>
 <script>
     let player = @js(Auth::user()->player->validated);
     console.info('El jugador requiere validacion para omitir niveles anteriores:', player ? 'SI' : 'NO');

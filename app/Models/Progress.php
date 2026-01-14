@@ -19,9 +19,14 @@ class Progress extends Model
         'state'
     ];
 
-     public function player(){
+    public function player(){
         //tabla //llave foranea - hija
         return $this->belongsTo(Player::class, 'player_id');
+    }
+
+    public function level(){
+        //tabla //llave foranea - hija
+        return $this->belongsTo(Level::class, 'level_id');
     }
 
 

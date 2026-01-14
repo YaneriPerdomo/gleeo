@@ -60,7 +60,7 @@
                         'two_column_title_2' => 'para Refuerzo',
                         'value' =>  $data->refuerzo_fail_limit ?? 0  ,
                         'thre_column_title' => 'Estado',
-                        'thre_column_title_value' =>   $data->decision_pattern->is_active == 1 ? 'Activo' : 'Inactivo' ,
+                        'thre_column_title_value' =>   $data->is_active == 1 ? 'Activo' : 'Inactivo' ,
                         'icon' => 'bi-x-octagon',
                     ],
                 ]"></x-tutor-configuration-content>

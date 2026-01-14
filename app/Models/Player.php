@@ -27,6 +27,10 @@ class Player extends Model
         'current_level_id'
     ];
 
+    public function progress(){
+        return $this->hasOne(Progress::class, 'player_id');
+    }
+
     public function level_assigned()
     {
         //class - llave foranea - llave primera;

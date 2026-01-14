@@ -15,6 +15,9 @@
     align-items: center;
 }
 
+.flex-aligh-items-end {
+    align-items: end;
+}
 
 
 .flex-gap-0-5 {
