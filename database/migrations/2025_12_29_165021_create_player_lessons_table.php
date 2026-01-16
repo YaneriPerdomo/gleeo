@@ -23,7 +23,7 @@ return new class extends Migration
             $table->integer('total_number_incorrect')->default(0);
             $table->integer('total_number_correct')->default(0);
             $table->enum('state', ['Bloqueada', 'En Espera', 'Completada'])->default('Bloqueada');
-            $table->enum('motivational_message', ['¡COMIENZA TU AVENTURA!', 'ERES CAPAZ', 'AY NO...', 'EPICO', 'EXELENTE'])->default('');
+            $table->enum('motivational_message', ['¡COMIENZA TU AVENTURA!', 'ERES CAPAZ', 'AY NO...', 'EPICO', 'EXELENTE'])->default('¡COMIENZA TU AVENTURA!');
             $table->timestamps();
         });
     }

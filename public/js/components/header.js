@@ -66,11 +66,11 @@ else if (url.href.includes("/plataforma-educativa")) {
         tutorSettingsListIcons[3].classList.add("item-selected");
     }
 } else if(url.href.includes("/niveles") && !tutorSettingsListIcons.length){
-    if (url.href.includes("/ranking-global")
+    if (url.href.includes("/ranking-por-nivel")
     ) {
         return headerNavigationBarListItem[1].classList.add("item-selected--nav");
     }
-    if (url.href.includes("/progreso")
+    if (url.href.includes("/progreso-por-nivel")
     ) {
         return headerNavigationBarListItem[2].classList.add("item-selected--nav");
     }

@@ -154,7 +154,11 @@
                                                 {{ formatting_date($value->user->created_at ?? '') }}
                                             </td>
                                             <td class='table__operations'>
-                                                <a href=" ">
+                                                <a href="@if ($value->user->player->gender_id == 1)
+                                                    {{ route('children.progress-m' ,  $value->slug ) }}
+                                                @else
+                                                    {{ route('children.progress-f' ,  $value->slug ) }}
+                                                @endif">
                                                     <button type="button" class="button button__color-gold ">
                                                         <i class="bi bi-card-list"></i>
                                                     </button>
@@ -164,7 +168,11 @@
                                                         <i class="bi bi-pencil-square"></i>
                                                     </button>
                                                 </a>
-                                                <a href="">
+                                                <a href="@if ($value->user->player->gender_id == 1)
+                                                    {{ route('children.delete-m' ,  $value->slug ) }}
+                                                @else
+                                                    {{ route('children.delete-f' ,  $value->slug ) }}
+                                                @endif">
                                                     <button type="button" class="button button__color-red ">
                                                         <i class="bi bi-trash-fill"></i>
                                                     </button>

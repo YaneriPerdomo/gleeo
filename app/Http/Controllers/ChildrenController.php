@@ -91,7 +91,7 @@ class ChildrenController extends Controller
             $newChildren->save();
 
             $countLevels = Level::count();
-            for ($i=1; $i <= $countLevels; $i++) {
+            for ($i = 1; $i <= $countLevels; $i++) {
                 $newProgress = new Progress();
                 $newProgress->player_id = $newChildren->player_id;
                 $levelProgress = Level::where('number', $i)->first();
@@ -123,6 +123,55 @@ class ChildrenController extends Controller
             FacadesDB::rollBack();
 
             return redirect()->route('children.create');
+        }
+    }
+
+    public function delete($slug)
+    {
+        $data = Player::where('slug', $slug)->first();
+
+        if (! $data) {
+            return back()->with('alert-danger', 'Sucedio un error: Registro no encontrado');
+        }
+
+        return view('authenticated.adult.account.children.delete', ['data' => $data]);
+    }
+
+    public function destroy(Request $request, $slug)
+    {
+        $data = Player::where('slug', $slug)->first();
+
+        if (! $data) {
+            return back()->with('alert-danger', 'Sucedio un error: Registro no encontrado');
+        }
+        $user_id = $data->user_id;
+        $nombreCompleto = $data->names . ' ' .  $data->surnames;
+        $es_masculino = ($data->gender_id == 1);
+
+        $message = !$es_masculino ? 'La jugadora <b>' . $nombreCompleto . ' </b>ha sido eliminada correctamente.' :
+            'El jugador <b>' . $nombreCompleto . ' </b> ha sido elimado correctamente. ';
+        try {
+            FacadesDB::beginTransaction();
+            $data->delete();
+            User::where('user_id', $user_id)->delete();
+            FacadesDB::commit();
+            $request->session()->flash('alert-success', $message);
+            return redirect()->route('children.index');
+        } catch (QueryException $ex) {
+            $request->session()->flash('alert-danger', 'Sucedio un error: ' . $ex->getMessage());
+            FacadesDB::rollBack();
+
+            return redirect()->route('children.delete-' . $es_masculino ? 'm' : 'f', $data->slug);
+        } catch (PDOException $ex) {
+            $request->session()->flash('alert-danger', 'Sucedio un error: ' . $ex->getMessage());
+            FacadesDB::rollBack();
+
+            return redirect()->route('children.delete' . $es_masculino ? 'm' : 'f', $data->slug);
+        } catch (Exception $ex) {
+            $request->session()->flash('alert-danger', 'Sucedio un error: ' . $ex->getMessage());
+            FacadesDB::rollBack();
+
+            return redirect()->route('children.delete' . $es_masculino ? 'm' : 'f', $data->slug);
         }
     }
 }

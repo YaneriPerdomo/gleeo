@@ -16,7 +16,7 @@
 }
 
 .flex-aligh-items-end {
-    align-items: end;
+    align-items: end !important;
 }
 
 

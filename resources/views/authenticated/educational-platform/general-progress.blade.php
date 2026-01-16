@@ -353,37 +353,31 @@
     <x-header isPlayer="1" img="{{ $player->avatar->url }}"></x-header>
 
     <main class="flex-grow-2 w-100 flex-and-direction-column flex-center-full flex-center-full-start">
-        <section class="your-progress bg-white-border flex-and-direction-column ">
+        <section class="your-progress mt-2  bg-white-border flex-and-direction-column ">
             <div class="your-progress__top flex-and-direction-row flex-content-space-between">
                 <section class="your-progress__user-info">
                     <h1 class="fs-2 your-progress__title mb-0">
-                        {{ ucfirst(Auth::user()->user) }}
+                        {{ ucfirst($player->user->user) }}
                     </h1>
                     <span class="your-progress__full-name">
-                        {{ ucfirst(Auth::user()->player->names) }} {{ ucfirst(Auth::user()->player->surnames) }}
-                    </span>
-                    <br>
-                    <span class="your-progress__selected-access-level--description ">
-                        Nivel de Acceso: {{ ucfirst(Auth::user()->player->level_assigned->name || '232')  }}
-                    </span>
-                    <br>
-                    <span class="your-progress__selected-access-level--description ">
-                        Descripción del Nivel: {{ ucfirst(Auth::user()->player->level_assigned->description) }}
+                        {{ ucfirst($player->names) }} {{ ucfirst($player->surnames) }}
                     </span>
                     <br>
                     <span class="your-progress_account-registration-date">
-                        Fecha de Registro: {{ formatting_date(Auth::user()->player->created_at ?? '') }}
+                        Fecha de Registro: {{ formatting_date($player->user->created_at) }}
                     </span>
+                    <br>
+
                 </section>
                 <div class="your-progress__avatar">
                     <figure>
-                        <img src="{{ asset('img/avatars/' . Auth::user()->player->avatar->url) }}"
+                        <img src="{{ asset('img/avatars/' . $player->avatar->url) }}"
                             class="profile__avatar--progress img-fluid  " draggable="false" alt="">
                     </figure>
                 </div>
             </div>
             <div class="your-progress__title-orange flex-and-direction-row flex-content-space-between">
-                <h2 class="fs-4 m-0"> Progreso por Nivel
+                <h2 class="fs-4 m-0"> Resumen General
                 </h2>
                 <span class="you-progress__lessons-completed">
                     <b>{{ $totalNumberLessonsCompleted }}/{{ $totalNumberLessons }} Lecciones</b>
@@ -396,35 +390,32 @@
                             <i
                                 class="bi fs-1
                                         @php
-if ($progress->state == 'Completado') { //ENUM ['Bloqueado','Completado', 'En Progreso']
-                                                                //Completado
-                                                                echo 'bi bi-check';
-                                                            }else{
-                                                                //Bloqueado
-                                                                if($progress->state == 'En Progreso'){
-                                                                    echo 'bi-hourglass-bottom';
-                                                                }  else{
-                                                                    echo 'bi-lock-fill';
-                                                                }
-                                                            } @endphp
+                if ($percentage_bar == 100) {
+                                                    echo 'bi bi-check';
+                                            }else{
+                                                if($percentage_bar != 0){
+                                                    echo 'bi-hourglass-bottom';
+                                                }  else{
+                                                    echo 'bi-lock-fill';
+                                                }
+                                            } @endphp
                                         "></i>
                         </div>
                         <div class="flex-grow-2 level-item__content">
                             <div class="level-item__name">
                                 <b>
-                                    Nivel {{ Auth::user()->player->level_assigned->number }} -
-                                    {{ Auth::user()->player->level_assigned->name }}
+                                    Trayectoria: Nivel {{ $min }} al {{ $max }}
                                 </b>
                             </div>
                             <div class="progress level-item__progress-fill " role="progressbar"
                                 aria-label="Animated striped example" aria-valuenow="75" aria-valuemin="0"
                                 aria-valuemax="100">
                                 <div class="progress-bar progress-bar-striped progress-bar-animated "
-                                    style="width: {{ $progress->percentage_bar }}%">
+                                    style="width: {{ $percentage_bar }}%">
                                 </div>
                             </div>
                             <small class="text__gray">
-                                {{ $progress->percentage_bar }}%
+                                {{ $percentage_bar }}%
                             </small>
                         </div>
                     </div>
@@ -476,10 +467,10 @@ if ($progress->state == 'Completado') { //ENUM ['Bloqueado','Completado', 'En Pr
                                                     <span
                                                         class="topic-stats__value text__gray">{{ $error->value }}</span>
                                                     <div class="topic-stats__bar topic-stats__bar--{{ $rank }}"
-                                                        title="{{ $error->title }}">
+                                                        title="Error en el tema {{ $error->topic_title }} del módulo {{ $error->module_title }} - del nivel {{ $error->level_title }}">
                                                     </div>
                                                     <span
-                                                        class="topic-stats__label text__gray">{{ $error->title }}</span>
+                                                        class="topic-stats__label text__gray">{{ $error->topic_title }}</span>
                                                 </div>
                                             @endforeach
                                         </div>
@@ -503,7 +494,7 @@ if ($progress->state == 'Completado') { //ENUM ['Bloqueado','Completado', 'En Pr
                                             </div>
                                         @endif
                                         <div
-                                            class="topic-stats__towers flex-and-direction-row flex-align-items-end gap-3">
+                                            class="topic-stats__towers flex-and-direction-row flex-aligh-items-end gap-3">
                                             @foreach ($totalPointsObtainedTopic as $index => $error)
                                                 @php
                                                     $ranks = ['purple', 'blue', 'orange', 'green'];
@@ -514,10 +505,10 @@ if ($progress->state == 'Completado') { //ENUM ['Bloqueado','Completado', 'En Pr
                                                     <span
                                                         class="topic-stats__value text__gray">{{ $error->value }}</span>
                                                     <div class="topic-stats__bar topic-stats__bar--{{ $rank }}"
-                                                        title="{{ $error->title }}">
+                                                        title="Error en el tema {{ $error->topic_title }} del módulo {{ $error->module_title }} - del nivel {{ $error->level_title }}">
                                                     </div>
                                                     <span
-                                                        class="topic-stats__label text__gray">{{ $error->title }}</span>
+                                                        class="topic-stats__label text__gray">{{ $error->topic_title }}</span>
                                                 </div>
                                             @endforeach
                                         </div>
@@ -630,8 +621,11 @@ if ($progress->state == 'Completado') { //ENUM ['Bloqueado','Completado', 'En Pr
                             </div>
 
                         </div>
+
                     </div>
                 </div>
+                <hr>
+
             </section>
         </section>
     </main>

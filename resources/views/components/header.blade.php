@@ -2,7 +2,8 @@
      <div class="header__content
      {{ $isPlayer == '1' ? 'header__content--rol-player' : 'container-xl ' }}
      ">
-         <section class="header__top-bar flex-and-direction-row flex-content-space-between" style="{{ $splashScreen == 'true' ? 'margin-bottom: 0rem; !important' : '' }}">
+         <section class="header__top-bar flex-and-direction-row flex-content-space-between"
+             style="{{ $splashScreen == 'true' ? 'margin-bottom: 0rem; !important' : '' }}">
              <div class="header__logo">
                  <section class="header__logo-section flex-and-direction-row">
                      <span class="header__logo-text text-white fs-4">
@@ -23,18 +24,30 @@
                          <div class="profile__greeting dropdown flex-and-direction-row">
 
                              @if ($img != 'null')
-                                 <img src="{{ asset('img/avatars/' . $img ) }}" class="profile__avatar"
-                                     alt="">
+                                 <img src="{{ asset('img/avatars/' . $img) }}" class="profile__avatar" alt="">
                              @endif <button class="btn btn-secondary dropdown-toggle" type="button"
                                  data-bs-toggle="dropdown" aria-expanded="false">
                                  ¡Hola, {{ ucfirst(Auth::user()->user) }}!
                              </button>
 
                              <ul class="dropdown-menu dropdown-menu-dark">
-                                @if($splashScreen != 'true')
-                                    <li><a class="dropdown-item active" href="{{ route('account-profile.index') }}">Perfil</a>
-                                    </li>
-                                @endif
+                                 @if ($splashScreen != 'true')
+                                     @if (Auth::user()->rol_id == 3)
+                                         <li><a class="dropdown-item "
+                                                 href="
+                                        {{ route(Auth::user()->rol_id == 2 ? 'account-profile.index' : 'children.general-progress') }}">Resumen
+                                                 General</a>
+                                         </li>
+                                         <li><a class="dropdown-item " href="{{ route('ranking.global') }}">Ranking
+                                                 Global</a>
+                                         </li>
+                                     @else
+                                         <li><a class="dropdown-item "
+                                                 href="
+                                        {{ route(Auth::user()->rol_id == 2 ? 'account-profile.index' : 'children.general-progress') }}">Perfil</a>
+                                         </li>
+                                     @endif
+                                 @endif
                                  @if (Auth::user()->rol_id == 3)
                                  @else
                                      <li><a class="dropdown-item" href="{{ route('change-password.edit') }}">Cambiar
@@ -64,28 +77,28 @@
                  <ul class="header__navigation-bar__list flex-and-direction-row">
                      @if (Auth::user()->rol_id == 3 && $splashScreen != 'true')
                          <li class="header__navigation-bar__list-item">
-                             <a href="{{ route('educational-platform.index' , ['slugCurrentLevel' => Auth::user()->player->current_level->slug]) }}" class="header__navigation-bar__link">
+                             <a href="{{ route('educational-platform.index', ['slugCurrentLevel' => Auth::user()->player->current_level->slug]) }}"
+                                 class="header__navigation-bar__link">
                                  <i class="bi bi-house-door-fill"></i> Inicio
                              </a>
                          </li>
-
-                        <!--
+                         <!--
                          <li class="header__navigation-bar__list-item">
                              <a href="#" class="header__navigation-bar__link">
                                  <i class="bi bi-layers-fill"></i> Mis Niveles
                              </a>
                          </li>
                         -->
-
                          <li class="header__navigation-bar__list-item">
-                             <a href="{{ route('ranking-global.index' , ['slugCurrentLevel' => Auth::user()->player->current_level->slug]) }}" class="header__navigation-bar__link">
-                                 <i class="bi bi-award-fill"></i> Ranking Global
+                             <a href="{{ route('ranking-global.index', ['slugCurrentLevel' => Auth::user()->player->current_level->slug]) }}"
+                                 class="header__navigation-bar__link">
+                                 <i class="bi bi-award-fill"></i> Ranking por Nivel
                              </a>
                          </li>
-
                          <li class="header__navigation-bar__list-item">
-                             <a href="{{ route('progress.index', ['slugCurrentLevel' => Auth::user()->player->current_level->slug ]) }}" class="header__navigation-bar__link">
-                                 <i class="bi bi-graph-up-arrow"></i> Progreso
+                             <a href="{{ route('progress.index', ['slugCurrentLevel' => Auth::user()->player->current_level->slug]) }}"
+                                 class="header__navigation-bar__link">
+                                 <i class="bi bi-graph-up-arrow"></i> Progreso por Nivel
                              </a>
                          </li>
                      @endif

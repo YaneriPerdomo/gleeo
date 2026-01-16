@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="{{ asset('css/components/level.css') }}">
     <link rel="icon" type="image/x-icon" href="{{ asset('img/logo.ico') }}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-      <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
         rel="stylesheet">
@@ -48,7 +48,7 @@
             --orange: {{ $theme->secondary_color ?? '#ef7440' }};
         }
 
-         body {
+        body {
             font-family: "Montserrat", sans-serif;
             font-optical-sizing: auto;
             font-weight: <weight>;
@@ -110,7 +110,7 @@
 
 
         .statistics__value {
-            margin-left: 0.4rem
+            margin:0rem 0.8rem;
         }
 
         .game-header__stat-badge,
@@ -501,9 +501,11 @@
                 <div class="game-content__type-dynamics flex-and-direction-row  " style="gap:1rem;"
                     data-total-practices="{{ $totalExercises }}">
                 </div>
+
                 <div class="game-content__attempts mt-3">
                     <span class="game-content__attempts-text">Intentos: </span>
-                    <span class="game-content__attempts-number">3</span>
+                    <span
+                        class="game-content__attempts-number">{{ $reinforcementFailureLimit->refuerzo_fail_limit || 3 }}</span>
                 </div>
             </section>
 
@@ -517,8 +519,8 @@
                     <h1 class="modal-title refuerzo-modal__header-title   fs-4 " id="levelModalTitle">
                         <b>¡Refuerza tus conocimientos!</b>
                     </h1>
-                    <button type="button" class="btn-close refuerzo-modal__close r  text-white" data-bs-dismiss="modal"
-                        aria-label="Close"></button>
+                    <button type="button" class="btn-close refuerzo-modal__close r  text-white"
+                        data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body refuerzo-modal__body">
 
@@ -577,7 +579,6 @@
                 </div>
                 <div class="modal-body lesson-modal__body">
                     <div class="lesson-modal__header text-center mb-4">
-                        <h2 class="lesson-modal__title fs-4 p-0 m-0 text__black"></h2>
                         <p class="lesson-modal__description"></p>
                     </div>
                     <section class="lesson-stats">
@@ -627,13 +628,15 @@
                         </div>
                     </section>
                 </div>
-                <div class="modal-footer lesson-modal__footer flex-and-direction-row flex-center-full">
-
+                <div class="modal-footer lesson-modal__footer flex-and-direction-row flex-content-space-between ">
+                    <button class="button text__gray" onclick="location.reload();">
+                        Repetir Lección
+                    </button>
                     <button style="border: none">
                         <b>
                             <a href="{{ route('educational-platform.index', ['slugCurrentLevel' => Auth::user()->player->current_level->slug]) }}"
                                 class="button button__color-black lesson-modal__link-play">
-                                ¡CONTINUAR MI RUTA!
+                                ¡Ir a la ruta!
                             </a>
                         </b>
                     </button>
@@ -762,18 +765,39 @@
                             <i class="bi bi-gem    fs-2 statistics-icon statistics-icon--gem"></i>
                         </div>
                         <div class="statistics__value fs-2 flex-and-direction-row" style="flex-wrap: nowrap">
-                            <div><b>+</b></div>
-                            <b>0</b>
+                            <b>+ {{ $playerLessonInfo->reward_diamonds || 0 }}</b>
                         </div>
                     </div>
-                    <div class="introduction__stat  statistics statistics-time">
+                    <div class="introduction__stat  statistics statistics-time w-auto">
                         <div clas="introduction__stats-icon  ">
                             <i class="bi bi-speedometer2  fs-2 statistics-icon--time statistics-icon "></i>
                         </div>
-                        <div class="statistics__value fs-2 flex-and-direction-row" style="flex-wrap: nowrap">
-                            <div><b>+</b></div>
-                            <b>0</b>
+                        <div class="statistics__value  fs-2 flex-and-direction-row" style="flex-wrap: nowrap">
+                            <b class="statistics__value--time">0</b>
+                            <span class="statistics__time-unit " style="margin-left: 0.3rem;"></span>
                         </div>
+                        <script>
+                            let statisticsValueTime = document.querySelector('.statistics__value--time');
+                            let statisticsTimeUnit = document.querySelector('.statistics__time-unit');
+                            function getTimeUnit(timeText) {
+                                let parts = timeText.split(':');
+
+                                if (parts.length !== 3) return "Formato inválido";
+                                const [hour, minute, second] = parts;
+                                if (hour != '00') {
+                                    return hour == '01' ? 'hor' : 'hors';
+                                }
+                                if (minute != '00') {
+                                    return 'min';
+                                }
+                                if (second != '00') {
+                                    return 'seg';
+                                }
+                            }
+                            let estimated_time = @js($playerLessonInfo->estimated_time) || '00:00:00';
+                            statisticsValueTime.innerHTML = estimated_time ;
+                            statisticsTimeUnit.innerHTML =  getTimeUnit(estimated_time) != undefined ?  getTimeUnit(estimated_time)  : '' ;
+                        </script>
                     </div>
                     <div class="introduction__stat  statistics statistics-success-rate">
                         <div clas="introduction__stats-icon  ">
@@ -781,8 +805,7 @@
                                 class="bi bi-rocket-takeoff-fill statistics-icon    fs-2 statistics-icon--success-rate"></i>
                         </div>
                         <div class="statistics__value fs-2 flex-and-direction-row" style="flex-wrap: nowrap">
-                            <div><b>+</b></div>
-                            <b>0</b>
+                            <b>{{ $playerLessonInfo->success_rate || 0 }}%</b>
                         </div>
                     </div>
                 </div>
@@ -844,6 +867,7 @@
             audioBackgroundMusic.loop = true;
             audioBackgroundMusic.play().catch(err => console.log("Esperando interacción..."));
         }, 2000);
+
         introductionSection.remove();
         setTimeout(() => {
             start();
@@ -934,14 +958,16 @@
     let gameContentScreen = document.querySelector('.game-content__screen');
     console.log(practices[1]);
     const totalPractices = @js($totalExercises);
+    console.clear();
+    console.info(@js($reinforcementFailureLimit->refuerzo_fail_limit))
     let refuerzoFailLimit = 3;
     // 1. Centralizamos el estado en un objeto
     const gameState = {
         currentPracticeIndex: 0,
         totalFailuresPractice: 0,
         failLimit: {
-            fixed: 3,
-            playerDom: 3
+            fixed: @js($reinforcementFailureLimit->refuerzo_fail_limit) || 3,
+            playerDom: @js($reinforcementFailureLimit->refuerzo_fail_limit) || 3
         },
         correctAnswers: 0,
         incorrectAnswers: 0,
@@ -951,6 +977,8 @@
         currentProgressBar: 0,
 
     };
+
+    gameContentAttemptsNumber.innerHTML = gameState.failLimit.fixed;
 
     // 2. Delegación de eventos limpia
     document.addEventListener('click', e => {
@@ -1114,12 +1142,23 @@
             });
 
             gameContentAttemptsText.textContent = 'Intentos: ';
-            let lesson = @js($lesson);
-            console.info(lesson);
-            let playerId = @js(Auth::user()->player->player_id);
-            getData(
-                '/' + lesson.lesson_id + '/complete-lesson/' + playerId
-            )
+            const score = (gameState.correctAnswers / gameState.totalPractices) * 100;
+            let lessonModalTitle = document.querySelector('.lesson-modal__title > b');
+            let lessonModalButtonBack = document.querySelector('.lesson-modal__footer > button');
+            let lessonModalButtonContinue = document.querySelector('.lesson-modal__footer > button > b > a');
+            let lessonModalMsg = document.querySelector('.lesson-modal__description')
+            if (score > 0) {
+                const lesson = @js($lesson);
+                const playerId = @js(Auth::user()->player->player_id);
+                console.info("Completando lección:", lesson);
+                getData(`/${lesson.lesson_id}/complete-lesson/${playerId}`);
+            } else {
+                lessonModalTitle.textContent = '¡Sigue practicando!';
+                lessonModalButtonBack.textContent = 'Mejorar puntaje';
+                lessonModalButtonContinue.textContent = 'Volver al inicio';
+                lessonModalMsg.textContent = 'Necesitas al menos un acierto para completar esta lección.';
+            }
+
             if (gameState.diamonds == 0) {
                 return lessonStatsBadge.textContent = 'AY NO...';
             }
@@ -1180,7 +1219,7 @@
         }
     }
 
-    // 3. Función de renderizado única (DRY - Don't Repeat Yourself)
+
     function renderPractice(practice) {
         audioStart.play();
         GAME_CONTENT_TYPE_DYNAMICS.innerHTML = '';
@@ -1188,7 +1227,6 @@
             variables,
             correct_variable
         } = practice.practice_option;
-
         GAME_CONTENT_TYPE_DYNAMICS.setAttribute('data-correct-variable', correct_variable);
         gameContentScreen.textContent = practice.screen;
         const options = variables.split(",");

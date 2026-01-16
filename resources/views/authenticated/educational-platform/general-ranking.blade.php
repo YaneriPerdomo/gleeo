@@ -103,6 +103,9 @@
             background: {{ $theme->secondary_color ?? ' #ef7440' }}80;
             border-radius: 0.5rem;
         }
+
+
+
     </style>
 </head>
 
@@ -114,11 +117,12 @@
             <div class="ranking__header">
                 <h2 class="ranking__title fs-4 m-0">
                     <i class="bi bi-award-fill"></i>
-                    <b>Ranking Global</b>
+                    <b>Ranking por Nivel</b>
                 </h2>
                 <div class="ranking__selected-access-level">
                     <span>
-                        Del Nivel {{ $min }} al {{ $max }}
+                        Nivel de Acceso: Nivel {{ Auth::user()->player->level_assigned->number }} -
+                        {{ Auth::user()->player->level_assigned->name }}
                     </span>
                 </div>
             </div>

@@ -41,12 +41,12 @@ Route::controller(WelcomeController::class)->middleware(['auth'])->group(functio
 });
 
 Route::controller(RepresentativeController::class)->group(function () {
-     Route::post('gestion-de-cuentas/representante-y-profesionale/crear', 'create')->name('representative.create');
-    });
+    Route::post('gestion-de-cuentas/representante-y-profesionale/crear', 'create')->name('representative.create');
+});
 
 Route::controller(RepresentativeController::class)->middleware(['auth'])->group(function () {
     Route::get('gestion-de-cuentas/representantes-y-profesionales', 'index')->name('representative.index');
-     Route::get('gestion-de-cuentas/representantes-y-profesionales/{search}/filtrar', 'filter')->name('representative.filter');
+    Route::get('gestion-de-cuentas/representantes-y-profesionales/{search}/filtrar', 'filter')->name('representative.filter');
     Route::get('gestion-de-cuentas/representante-y-profesionale/{slug}/editar-informacion', 'edit')->name('representative.edit');
     Route::put('gestion-de-cuentas/representante-y-profesionale/{slug}', 'update')->name('representative.update');
     Route::get('gestion-de-cuentas/representante-y-profesionale/{slug}/eliminar', 'delete')->name('representative.delete');
@@ -116,7 +116,13 @@ Route::controller(ChildrenController::class)->middleware(['auth'])->group(functi
     Route::get('gestion-de-cuentas/jugadores', 'index')->name('children.index');
     Route::get('gestion-de-cuentas/jugador/agregar', 'create')->name('children.create');
     Route::post('gestion-de-cuentas/jugador/agregar', 'store')->name('children.store');
+    Route::get('gestion-de-cuentas/jugador/{slug}/eliminar', 'delete')->name('children.delete-m');
+    Route::get('gestion-de-cuentas/jugadora/{slug}/agregar', 'delete')->name('children.delete-f');
+    Route::delete('gestion-de-cuentas/jugador-a/{slug}/agregar', 'destroy')->name('children.destroy');
 });
+
+
+
 
 Route::controller(EducationalPlatformController::class)->middleware(['auth'])->group(function () {
     Route::get('bienvenida', 'welcome')->name('educational-platform.welcome-m');
@@ -125,7 +131,10 @@ Route::controller(EducationalPlatformController::class)->middleware(['auth'])->g
     Route::post('current-level-by-the-player/{levelID}', 'currentLevelUpdate')->name('educational-platform.current-level-update');
 });
 
-Route::get('niveles/{slugCurrentLevel}/ranking-global', GlobalRankingController::class)->middleware(['auth'])->name('ranking-global.index');
+Route::controller(GlobalRankingController::class)->middleware(['auth'])->group(function () {
+    Route::get('niveles/{slugCurrentLevel}/ranking-por-nivel', 'byLevel')->name('ranking-global.index');
+    Route::get('ranking-global', 'global')->name('ranking.global');
+});
 
 Route::controller(PlayerController::class)->middleware(['auth'])->group(function () {
     Route::get('niveles/{level}/{module}/{topic}/{lesson}', 'gamingExperience')->name('player.gaming-experience');
@@ -133,7 +142,10 @@ Route::controller(PlayerController::class)->middleware(['auth'])->group(function
 });
 
 Route::controller(ProgressController::class)->middleware(['auth'])->group(function () {
-    Route::get('niveles/{slugCurrentLevel}/progreso', 'player')->name('progress.index');
+    Route::get('niveles/{slugCurrentLevel}/progreso-por-nivel', 'player')->name('progress.index');
+    Route::get('gestion-de-cuentas/jugador/{slug}/progreso', 'general')->name('children.progress-m');
+    Route::get('gestion-de-cuentas/jugadora/{slug}/progreso-general', 'general')->name('children.progress-f');
+    Route::get('progreso-general', 'general')->name('children.general-progress');
 });
 
 
@@ -144,7 +156,6 @@ Route::controller(ThemeController::class)->middleware(['auth'])->group(function 
     Route::post('plataforma-educativa/temas-de-interfaz/agregar', 'store')->name('theme.store');
     Route::get('plataforma-educativa/temas-de-interfaz/{slug}/eliminar ', 'delete')->name('theme.delete');
     Route::delete('plataforma-educativa/temas-de-interfaz/{slug}/eliminar', 'destroy')->name('theme.destroy');
-
 });
 
 Route::controller(AvatarController::class)->middleware(['auth'])->group(function () {

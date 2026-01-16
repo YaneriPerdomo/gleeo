@@ -47,6 +47,8 @@ class PlayerController extends Controller
             ->first();
 
         $totalExercises = $lessonExercises->count();
+        $playerLessonInfo = PlayerLesson::where('lesson_id', $lesson->lesson_id)->where('player_id', $playerID)->first();
+
         return view(
             'authenticated.educational-platform.gaming-experience',
             [
@@ -56,7 +58,8 @@ class PlayerController extends Controller
                 'lesson' => $lesson,
                 'totalExercises' => $totalExercises,
                 'refuerzoFailLimit' => $alertThreshold->refuerzo_fail_limit,
-                'reinforcementFailureLimit' => $reinforcementFailureLimit
+                'reinforcementFailureLimit' => $reinforcementFailureLimit,
+                'playerLessonInfo' => $playerLessonInfo
 
             ]
         );
@@ -75,12 +78,17 @@ class PlayerController extends Controller
             ->where('lesson_id', $lessonID)
             ->where('player_id', $playerID)
             ->firstOrFail();
-
+        $lessonPlayerInfo->total_number_correct = /*$lessonPlayerInfo->total_number_correct + */ $request->total_number_correct || 0;
+        $lessonPlayerInfo->total_number_incorrect = /*$lessonPlayerInfo->total_number_incorrect +*/ $request->total_number_incorrect || 0;
+        $lessonPlayerInfo->estimated_time = $request->estimated_time;
+        $lessonPlayerInfo->reward_diamonds = $request->reward_diamonds;
+        $lessonPlayerInfo->success_rate = $request->success_rate;
+        $lessonPlayerInfo->save();
         $levelID = $lessonPlayerInfo->lesson->topic->module->level_id;
+        Progress::where('level_id', $levelID)
+            ->where('player_id', $playerID)
+            ->increment('diamonds', intval($request->reward_diamonds));
         if ($lessonPlayerInfo->state === 'Completada') {
-            Progress::where('level_id', $levelID)
-                ->where('player_id', $playerID)
-                ->increment('diamonds', intval($request->reward_diamonds));
             return response()->json(['message' => 'Lección ya completada anteriormente'], 200);
         }
 
@@ -92,13 +100,18 @@ class PlayerController extends Controller
             ->where('player_id', $playerID)->first();
         $incrementoProgreso = $totalLecciones > 0  ? (100 / $totalLecciones) : 0;
 
-        if ($progressLevelPlayer->percentage_bar < 100) {
-            Progress::where('level_id', $levelID)
-                ->where('player_id', $playerID)
-                ->update([
-                    'percentage_bar' => DB::raw("LEAST(percentage_bar + $incrementoProgreso, 100)"),
-                    'diamonds' => DB::raw("diamonds + " . intval($request->reward_diamonds))
-                ]);
+        $progress = Progress::where('level_id', $levelID)
+            ->where('player_id', $playerID)
+            ->first();
+
+        if ($progress && $progress->percentage_bar < 100) {
+            $nuevoPorcentaje = min($progress->percentage_bar + $incrementoProgreso, 100);
+            $progress->percentage_bar = $nuevoPorcentaje;
+            $progress->diamonds += intval($request->reward_diamonds);
+            if ($nuevoPorcentaje >= 100) {
+                $progress->state = 'Completado';
+            }
+            $progress->save();
         }
 
         $lessonPlayerInfo->update([

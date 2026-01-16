@@ -314,7 +314,7 @@ $stateIconLesson = $lesson->playerProgress->state;
                     <div class="ranking__header">
                         <h2 class="ranking__title fs-4">
                             <i class="bi bi-award-fill"></i>
-                            <b>Ranking Global</b>
+                            <b>Ranking Por Nivel</b>
                         </h2>
                     </div>
 
@@ -420,8 +420,7 @@ $stateIconLesson = $lesson->playerProgress->state;
                                 </div>
                             </div>
 
-                            <!-- Elemento: Tasa de éxito -->
-                            <div class="lesson-stats__item lesson-stats__item--secondary">
+                             <div class="lesson-stats__item lesson-stats__item--secondary">
                                 <i
                                     class="bi bi-rocket-takeoff-fill lesson-stats__icon lesson-stats__icon--success fs-2"></i>
                                 <div class="lesson-stats__text">

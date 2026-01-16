@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Player;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Auth;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth as FacadesAuth;
 
 class LoginController extends Controller
@@ -34,12 +36,15 @@ class LoginController extends Controller
             if (FacadesAuth::user()->rol_id == 3) {
                 $request->session()->put('user_id', FacadesAuth::user()->user_id);
                 $player = Player::where('user_id', FacadesAuth::user()->user_id)->first();
+                $user = User::where('user_id',  FacadesAuth::user()->user_id)->first();
+                $user->last_session = Carbon::now();
+                $user->save();
                 if ($player) {
                     $request->session()->put('player_id', $player->player_id);
                 }
                 $request->session()->put('current_level_id', $player->level_assigned_id);
-                return $player->gender_id == 1 ? redirect()->route('educational-platform.welcome-m') :  redirect()->route('educational-platform.welcome-f') ;
-             }
+                return $player->gender_id == 1 ? redirect()->route('educational-platform.welcome-m') :  redirect()->route('educational-platform.welcome-f');
+            }
             return redirect()->intended('/inicio');
         } else {
             return back()->withErrors([

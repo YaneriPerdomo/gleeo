@@ -20,6 +20,10 @@
     background: var(--gold) !important;
 }
 
+.button__color-gray {
+    background: var(--gray) !important;
+}
+
 .button {
     background: none;
     border: none;
