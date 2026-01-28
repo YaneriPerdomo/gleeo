@@ -23,7 +23,7 @@
 </head>
 
 <body class="flex-and-direction-column height-full">
-    <x-header></x-header>
+    <x-header notificationIsActiveCount="{{ $notificationIsActiveCount }}"></x-header>
     <main class="flex-grow-2 w-100 flex-and-direction-column flex-center-full flex-center-full-start">
         <article class="row main__article container-xl w-100">
             @php
@@ -49,7 +49,7 @@
             @endphp
 
             <x-aside-admin :items="$sidebarItems"></x-aside-admin>
-            <div class="col-10 main__content bg-white-border profile">
+            <div class="col-lg-10 col-12 main__content bg-white-border profile">
                 <small class="text__gray">
                     <a href="{{ route('account-profile.index') }}" class="text__gray"> Perfil > </a>
                     <a href="{{ route('account-profile.index') }}" class="text__gray">

@@ -101,8 +101,7 @@
         .profile__avatar--progress {
             /*filter: drop-shadow(0px 4px 0px rgb(47, 47, 47));*/
             color: rgb(47, 47, 47);
-            transform: perspective(2rem) translateZ(1rem);
-            transform: perspective(500px) translateZ(20px);
+
             transform-style: preserve-3d;
             transition: all 0.5s linear;
             width: 90px;
@@ -316,6 +315,19 @@
             color: var(--red) !important;
             border-color: var(--red) !important;
         }
+
+
+        @media screen and (max-width: 992px) {
+            .your-progress__title {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .you-progress__pointer-statistics {
+                flex-wrap: wrap !important;
+                gap: 0.5rem;
+            }
+        }
     </style>
 </head>
 
@@ -330,7 +342,7 @@
                     'icon' => 'bi bi-person-video3',
                 ],
             ]"></x-aside-admin>
-            <div class="col-10 main__content bg-white-border ">
+            <div class="col-lg-10 col-12 main__content bg-white-border ">
                 <small class="text__gray">
                     <a href="{{ route('study-plan.index') }}" class="text__gray">Gestión de Contenido</a> >
                     <a href="{{ route('study-plan.index') }}" class="text__gray">Plan de Estudio</a> >
@@ -357,11 +369,13 @@
                         <div class="your-progress__avatar">
                             <figure>
                                 <img src="{{ asset('img/avatars/' . $player->avatar->url) }}"
-                                    class="profile__avatar--progress img-fluid  " draggable="false" alt="">
+                                    class="profile__avatar--progress img-fluid profile__avatar  " draggable="false"
+                                    alt="">
                             </figure>
                         </div>
                     </div>
-                    <div class="your-progress__title-orange flex-and-direction-row flex-content-space-between">
+                    <div
+                        class="your-progress__title your-progress__title-orange flex-and-direction-row flex-content-space-between">
                         <h2 class="fs-4"> Progreso General
                         </h2>
                         <span class="you-progress__lessons-completed">
@@ -375,7 +389,7 @@
                                     <i
                                         class="bi fs-1
                                         @php
-                            if ($percentage_bar == 100) {
+                        if ($percentage_bar == 100) {
                                                     echo 'bi bi-check';
                                             }else{
                                                 if($percentage_bar != 0){
@@ -409,7 +423,7 @@
                     <hr class="mt-0 you-progress__divider">
                     <section class="you-progress__statistics flex-and-direction-row flex-content-center gap-2 p-2">
                         <div class="row w-100">
-                            <div class="col-5">
+                            <div class="col-lg-5 col-12">
                                 <section class="topic-stats ">
                                     <div class="chart-controls flex-and-direction-row"
                                         style="gap: 1rem; margin-bottom: 1rem;">
@@ -523,7 +537,7 @@
                                     </div>
                                 </section>
                             </div>
-                            <div class="col-7">
+                            <div class="col-lg-7 col-12">
                                 <div class="row mb-3">
                                     <div class="col-6 total-diamonds flex-and-direction-row flex-start-full gap-2">
                                         <div class="total-diamonds__icon  ">
@@ -619,7 +633,11 @@
                     <hr class=" you-progress__divider">
 
                     <div class="you-progress__button    flex-and-direction-row flex-center-full   w-100">
-                        <button class="button__color-gray button">Descargar <b>PDF</b></button>
+                        <form action="{{ route('children.progress-reportPDF', $player->slug) }}" method="POST">
+                            @csrf
+                            @method('POST')
+                            <button class="button__color-gray button">Descargar <b>PDF</b></button>
+                        </form>
                     </div>
                 </section>
             </div>

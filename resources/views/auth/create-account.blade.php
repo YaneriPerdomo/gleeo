@@ -36,9 +36,7 @@
            */
         }
 
-        .login__form {
-            width: clamp(230px, 60vw, 900px);
-        }
+
 
         .carousel-item>img {
             height: 100vh
@@ -49,7 +47,7 @@
         }
 
         .border-top-purple {
-            border-top: 2px solid var(--purple);
+            border-top: 4px solid var(--purple);
         }
 
         .form__item {
@@ -58,13 +56,15 @@
     </style>
 </head>
 
-<body class="h-100">
-    <main class="row border-top-purple login h-100 login login__row p-0 m-0 flex-and-direction-row  flex-center-full">
+<body class="h-100 height-full ">
+    <main class="row height-full  border-top-purple login h-100 login login__row p-0 m-0 flex-and-direction-row  flex-center-full">
         <section class="flex-and-direction-column  flex-center-full">
-            <figure> <img src="{{ asset('img/logo.png') }}" alt="Imagen de inicio de sesion" class=" img-fluid"
-                    style="width: 100px;" draggable="false">
-            </figure>
-            <form action="{{ route('representative.create') }}" class="form login__form" method="POST">
+
+            <form action="{{ route('representative.create') }}" class="form form--create-account " method="POST">
+                <figure class="text-center">
+                    <img src="{{ asset('img/logo.png') }}" alt="Imagen de inicio de sesion" class=" img-fluid"
+                        style="width: 100px;" draggable="false">
+                </figure>
                 @csrf
                 @method('POST')
                 @if (session('alert-success'))

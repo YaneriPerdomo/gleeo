@@ -96,9 +96,59 @@ class ThemeController extends Controller
             return redirect()->route('theme.create');
         }
     }
-    public function edit() {}
 
-    public function update() {}
+    public function update(Request $request, $slug)
+    {
+        $data = Theme::where('slug', $slug)->first();
+        if (! $data) {
+            return back()->with('alert-danger', 'Sucedio un error: Registro no encontrado');
+        }
+
+        try {
+            FacadesDB::beginTransaction();
+            $slugNew = Str::slug($request->theme_title);
+            $data->name = $request->theme_title;
+            $data->main_color = $request->main_color;
+            $data->secondary_color = $request->secondary_color;
+            $data->topic_color = $request->topic_color;
+            $data->slug = $slugNew;
+            if ($request->solid_background == '#ffffff') {
+                if ($request->hasFile('background_path')) {
+                    $file = $request->file('background_path');
+                    $fileName = time() . '_' . Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)) . '.' . $file->getClientOriginalExtension();
+                    $destinationPath = public_path('img/themes');
+                    if (!empty($data->background_path)) {
+                        $oldImagePath = $destinationPath . '/' . $data->background_path;
+                        if (File::exists($oldImagePath)) {
+                            File::delete($oldImagePath);
+                        }
+                    }
+                    $file->move($destinationPath, $fileName);
+                    $data->background_path = $fileName;
+                    $data->solid_background = null;
+                }
+            }else{
+                $data->solid_background = $request->solid_background;
+                $data->background_path = null;
+            }
+            $data->save();
+            FacadesDB::commit();
+            $request->session()->flash('alert-success', 'El tema de la interfaz se ha actualizado correctamente.');
+            return redirect()->route('theme.edit', $slugNew);
+        } catch (QueryException $ex) {
+            $request->session()->flash('alert-danger', 'Sucedio un error: ' . $ex->getMessage());
+            FacadesDB::rollBack();
+            return redirect()->route('theme.edit', $slug);
+        } catch (PDOException $ex) {
+            $request->session()->flash('alert-danger', 'Sucedio un error: ' . $ex->getMessage());
+            FacadesDB::rollBack();
+            return redirect()->route('theme.edit', $slug);
+        } catch (Exception $ex) {
+            $request->session()->flash('alert-danger', 'Sucedio un error: ' . $ex->getMessage());
+            FacadesDB::rollBack();
+            return redirect()->route('theme.edit', $slug);
+        }
+    }
 
 
     public function delete($slug)
@@ -153,5 +203,20 @@ class ThemeController extends Controller
 
             return redirect()->route('theme.delete');
         }
+    }
+
+    public function edit(Request $request, $slug)
+    {
+        $data = Theme::where('slug', $slug)->first();
+        if (! $data) {
+            return back()->with('alert-danger', 'Sucedio un error: Registro no encontrado');
+        }
+        return view(
+            'authenticated.administrator.study-plan.theme.edit',
+            [
+                'data' => $data,
+
+            ]
+        );
     }
 }

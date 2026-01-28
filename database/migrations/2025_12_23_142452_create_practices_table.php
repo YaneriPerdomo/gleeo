@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('lesson_id')->constrained('lessons', 'lesson_id')->cascadeOnDelete();
             $table->foreignId('reinforcement_id')->constrained('reinforcements', 'reinforcement_id')->cascadeOnDelete();
             $table->foreignId('practice_option_id')->constrained('practice_options', 'practice_option_id')->cascadeOnDelete();
-            $table->string('title' , 90);
+            $table->text('title');
             $table->enum('type_dynamic', ['Verdadero/Falso', 'Opción Múltiple', 'Autocompletar'])->nullable();
             $table->string('screen', 150);
             $table->integer('number');

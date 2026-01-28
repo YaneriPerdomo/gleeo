@@ -23,7 +23,7 @@ class ModuleController extends Controller
         return view(
             'authenticated.administrator.study-plan.level.module.create',
             [
-                'infoLevel' => [
+                    'infoLevel' => [
                     'slug' => $slug,
                     'name' => $level_->name,
                 ],

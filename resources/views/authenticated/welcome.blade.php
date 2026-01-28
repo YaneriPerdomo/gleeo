@@ -69,7 +69,8 @@
 </head>
 
 <body class="flex-and-direction-column height-full">
-    <x-header></x-header>
+
+    <x-header notificationIsActiveCount="{{ $notificationIsActiveCount }}"></x-header>
     <main class="flex-grow-2 w-100 flex-and-direction-column flex-center-full flex-center-full-start">
         <article class="row main__article   container-xl w-100">
             <x-aside-admin :items="[
@@ -84,7 +85,7 @@
                     'icon' => 'bi bi-question-circle-fill',
                 ],
             ]"></x-aside-admin>
-            <div class="  col-10 bg-white-border main__content">
+            <div class=" col-lg-10 col-12 bg-white-border main__content">
                 <div class="row ">
                     <div class="col-6 welcome ">
                         <small class="text__gray">
@@ -167,35 +168,43 @@
                             Acciones Rápidas y Configuración </b> </div>
                     <div class="rapid-actions__content flex-and-direction-row py-2" style="gap:1rem">
                         @if (Auth::user()->rol_id == 1)
-                            <div class="rapid-actions__card flex-and-direction-column  ">
-                                <i class="bi bi-gear-wide-connected text__blue fs-1"></i>
-                                <span class="rapid-actions__subtitle"><b>Patrones de Decisión</b></span>
-                                <p class="text__gray">
-                                    Define la lógica de intervención y las reglas del STI.
-                                </p>
-                            </div>
-                            <div class="rapid-actions__card flex-and-direction-column   ">
-                                <i class="bi bi-bell-fill fs-1 text__red"></i>
-                                <span class="rapid-actions__subtitle fs-5"><b>Umbrales de Alerta</b></span>
-                                <p class="text__gray">
-                                    Establece los límites para activar las alertas de refuerzo.
-                                </p>
-                            </div>
-                            <div class="rapid-actions__card flex-and-direction-column  ">
-                                <i class="bi bi-journals fs-1 text__green"></i>
-                                <span class="rapid-actions__subtitle"><b> Gestión de Contenido</b></span>
-                                <p class="text__gray">
-                                    Carga, organiza y clasifica los materiales de aprendizaje.
-                                </p>
-                            </div>
-                            <div class="rapid-actions__card flex-and-direction-column  ">
-                                <i class="bi bi-people-fill fs-1 text__gold"></i>
-                                <span class="rapid-actions__subtitle"><b>
-                                        Gestión de Cuentas</b></span>
-                                <p class="text__gray">
-                                    Administra estudiantes, profesores y sus roles/permisos.
-                                </p>
-                            </div>
+                            <a href="{{ route('initial-decision-patterns.index') }}">
+                                <div class="rapid-actions__card flex-and-direction-column  ">
+                                    <i class="bi bi-gear-wide-connected text__blue fs-1"></i>
+                                    <span class="rapid-actions__subtitle"><b>Patrones de Decisión</b></span>
+                                    <p class="text__gray">
+                                        Define la lógica de intervención <br> requeridad y las reglas del STI.
+                                    </p>
+                                </div>
+                            </a>
+                            <a href="{{ route('alert-thresholds.index') }}">
+                                <div class="rapid-actions__card flex-and-direction-column   ">
+                                    <i class="bi bi-bell-fill fs-1 text__red"></i>
+                                    <span class="rapid-actions__subtitle fs-5"><b>Umbrales de Alerta</b></span>
+                                    <p class="text__gray">
+                                        Establece los límites para activar <br> las alertas de refuerzo.
+                                    </p>
+                                </div>
+                            </a>
+                            <a href="{{ route('study-plan.index') }}">
+                                <div class="rapid-actions__card flex-and-direction-column  ">
+                                    <i class="bi bi-journals fs-1 text__green"></i>
+                                    <span class="rapid-actions__subtitle"><b> Gestión de Contenido</b></span>
+                                    <p class="text__gray">
+                                        Carga, organiza y clasifica los materiales de aprendizaje.
+                                    </p>
+                                </div>
+                            </a>
+                            <a href="{{ route('representative.index') }}">
+                                <div class="rapid-actions__card flex-and-direction-column  ">
+                                    <i class="bi bi-people-fill fs-1 text__gold"></i>
+                                    <span class="rapid-actions__subtitle"><b>
+                                            Gestión de Cuentas</b></span>
+                                    <p class="text__gray">
+                                        Administra estudiantes, profesores y sus roles/permisos.
+                                    </p>
+                                </div>
+                            </a>
                         @endif
                         @if (Auth::user()->rol_id == 2)
                             <div class="rapid-actions__card flex-and-direction-column">

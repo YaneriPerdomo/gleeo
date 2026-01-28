@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\PasswordConfirmationRequest;
+use App\Models\InterventionNotification;
 use App\Models\Representative;
 use App\Models\User;
 use Exception;
@@ -23,13 +24,28 @@ class ProfileController extends Controller
             return $query;
         }])->where('user_id', FacadesAuth::user()->user_id)->first();
 
-        return view('authenticated.profile.personal-information.index', ['data' => $data]);
+        if (FacadesAuth::user()->rol_id == 2) {
+            $representativeID = FacadesAuth::user()->representative->representative_id;
+            $notificationIsActiveCount = InterventionNotification::where('representative_id', $representativeID)
+                ->where('is_read', 0)->count();
+        }
+
+        return view('authenticated.profile.personal-information.index', [
+            'data' => $data,
+            'notificationIsActiveCount' => $notificationIsActiveCount || 0
+        ]);
     }
 
     public function IndexAccount()
     {
         $data = User::select('user_id', 'user', 'email')->where('user_id', FacadesAuth::user()->user_id)->first();
-        return view('authenticated.profile.account-information.index', ['data' => $data]);
+
+        if (FacadesAuth::user()->rol_id == 2) {
+            $representativeID = FacadesAuth::user()->representative->representative_id;
+            $notificationIsActiveCount = InterventionNotification::where('representative_id', $representativeID)
+                ->where('is_read', 0)->count();
+        }
+        return view('authenticated.profile.account-information.index', ['data' => $data, 'notificationIsActiveCount' => $notificationIsActiveCount || 0]);
     }
 
 
@@ -40,8 +56,13 @@ class ProfileController extends Controller
             return $query;
         }])->where('user_id', FacadesAuth::user()->user_id)->first();
 
+        if (FacadesAuth::user()->rol_id == 2) {
+            $representativeID = FacadesAuth::user()->representative->representative_id;
+            $notificationIsActiveCount = InterventionNotification::where('representative_id', $representativeID)
+                ->where('is_read', 0)->count();
+        }
 
-        return view('authenticated.profile.personal-information.edit', ['data' => $data]);
+        return view('authenticated.profile.personal-information.edit', ['data' => $data, 'notificationIsActiveCount' => $notificationIsActiveCount]);
     }
 
     public function updatePersonal(Request $request)
@@ -78,7 +99,13 @@ class ProfileController extends Controller
     {
         $data = User::select('user_id', 'user', 'email')->where('user_id', FacadesAuth::user()->user_id)->first();
 
-        return view('authenticated.profile.account-information.edit', ['data' => $data]);
+
+         if (FacadesAuth::user()->rol_id == 2) {
+            $representativeID = FacadesAuth::user()->representative->representative_id;
+            $notificationIsActiveCount = InterventionNotification::where('representative_id', $representativeID)
+                ->where('is_read', 0)->count();
+        }
+        return view('authenticated.profile.account-information.edit', ['data' => $data, 'notificationIsActiveCount'=> $notificationIsActiveCount]);
     }
 
     public function updateAccount(Request $request)
@@ -138,7 +165,12 @@ class ProfileController extends Controller
 
     public function ChangePasswordEdit()
     {
-        return view('authenticated.profile.change-password');
+            if (FacadesAuth::user()->rol_id == 2) {
+            $representativeID = FacadesAuth::user()->representative->representative_id;
+            $notificationIsActiveCount = InterventionNotification::where('representative_id', $representativeID)
+                ->where('is_read', 0)->count();
+        }
+        return view('authenticated.profile.change-password', ['notificationIsActiveCount' => $notificationIsActiveCount]);
     }
 
     public function ChangePasswordUpdate(PasswordConfirmationRequest $request)

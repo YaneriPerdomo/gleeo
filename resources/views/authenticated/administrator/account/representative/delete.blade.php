@@ -37,7 +37,7 @@
             @php
                 $typeUser = $data->type != 'Profesional' ? 'Representante' : 'Profesional';
             @endphp
-            <div class="col-10 bg-white-border main__content">
+            <div class="col-lg-10 col-12 bg-white-border main__content">
                 <div class="delete-card">
                     <div class="delete-card__header">
                         <b class="delete-card__title">
@@ -61,7 +61,7 @@
 
                     <hr class="delete-card__divider">
 
-                    <div class="delete-card__actions flex-and-direction-row flex-content-space-between">
+                    <div class="delete-card__actions form-actions flex-and-direction-row flex-content-space-between">
                         <a href="{{ route('representative.index') }}" class="delete-card__link">
                             <button class="button button__color-green " type="button">
                                  <i class="bi bi-box-arrow-in-left"></i> Cancelar, conservar registro
@@ -69,7 +69,7 @@
                         </a>
 
                         <form action="{{ route('representative.destroy', $data->slug) }}" method="POST"
-                            class="delete-card__form">
+                            class="delete-card__form ">
                             @method('DELETE')
                             @csrf
 

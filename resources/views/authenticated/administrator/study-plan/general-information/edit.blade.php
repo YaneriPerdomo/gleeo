@@ -38,11 +38,6 @@
                     'icon' => 'bi bi-journal-check',
                 ],
                 [
-                    'title' => 'Insignias',
-                    'route' => 'initial-decision-patterns.index',
-                    'icon' => 'bi bi-patch-check-fill',
-                ],
-                [
                     'title' => 'Avatares',
                     'route' => 'avatar.index',
                     'icon' => 'bi bi-person-badge-fill',
@@ -53,7 +48,7 @@
                     'icon' => 'bi bi-palette-fill',
                 ],
             ]"></x-aside-admin>
-            <div class="col-10 main__content bg-white-border">
+            <div class="col-lg-10 col-12 main__content bg-white-border">
                 <small class="text__gray">
                     <a href="{{ route('account-profile.index') }}" class="text__gray"> Perfil
                         > </a>
@@ -75,38 +70,39 @@
                             {{ session('alert-danger') }}</div>
                     @endif
 
-                        <fieldset class=" ">
-                            <legend class="   "  >
-                                Información de la Materia
-                            </legend>
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <x-input-text :item="[
-                                        'form_input_name' => 'subject',
-                                        'form_title' => 'Materia/Asignatura:',
-                                        'type' => 'text',
-                                        'icon' => 'bi-book-half',
-                                        'aria_label' => 'Nombre de la materia',
-                                        'placeholder' => 'ej. Matemáticas Divertidas',
-                                        'form_input_value_default' => $data->subject ?? '',
-                                        'attribute_a' => 'required',
-                                        'form_help_text' => 'Nombre de la asignatura que verá el niño.',
-                                    ]"></x-input-text>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <div class="form__item">
-                                        <label for="description" class="form__label">Descripción:</label>
-                                        <div class="input-group">
-                                            <span class="form__icon input-group-text"><i
-                                                    class="bi bi-blockquote-left"></i></span>
-                                            <textarea name="description" id="description" rows="3" class="form-control"
-                                                placeholder="Escribe aquí el texto instructivo para la lección..." aria-label="Contenido de la guía">{{ $data->description ?? '' }}</textarea>
-                                        </div>
-                                        <small class="text-muted">Breve explicación para orientar al niño al entrar a la plataforma educativa.</small>
+                    <fieldset class=" ">
+                        <legend class="   ">
+                            Información de la Materia
+                        </legend>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <x-input-text :item="[
+                                    'form_input_name' => 'subject',
+                                    'form_title' => 'Materia/Asignatura:',
+                                    'type' => 'text',
+                                    'icon' => 'bi-book-half',
+                                    'aria_label' => 'Nombre de la materia',
+                                    'placeholder' => 'ej. Matemáticas Divertidas',
+                                    'form_input_value_default' => $data->subject ?? '',
+                                    'attribute_a' => 'required',
+                                    'form_help_text' => 'Nombre de la asignatura que verá el niño.',
+                                ]"></x-input-text>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="form__item">
+                                    <label for="description" class="form__label">Descripción:</label>
+                                    <div class="input-group">
+                                        <span class="form__icon input-group-text"><i
+                                                class="bi bi-blockquote-left"></i></span>
+                                        <textarea name="description" id="description" rows="3" class="form-control"
+                                            placeholder="Escribe aquí el texto instructivo para la lección..." aria-label="Contenido de la guía">{{ $data->description ?? '' }}</textarea>
                                     </div>
+                                    <small class="text-muted">Breve explicación para orientar al niño al entrar a la
+                                        plataforma educativa.</small>
                                 </div>
                             </div>
-                        </fieldset>
+                        </div>
+                    </fieldset>
 
                     <hr>
                     <div class="flex-and-direction-row flex-content-space-between  form-actions mt-4">

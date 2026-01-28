@@ -26,7 +26,7 @@
     <x-header></x-header>
     <main class="flex-grow-2 w-100 flex-and-direction-column flex-center-full flex-center-full-start">
         <article class="row main__article container-xl w-100">
-            <x-aside-admin :items="[
+           <x-aside-admin :items="[
                 [
                     'title' => 'Informacion General',
                     'route' => 'news-board.index',
@@ -36,11 +36,6 @@
                     'title' => 'Plan de Estudio',
                     'route' => 'study-plan.index',
                     'icon' => 'bi bi-journal-check',
-                ],
-                [
-                    'title' => 'Insignias',
-                    'route' => 'initial-decision-patterns.index',
-                    'icon' => 'bi bi-patch-check-fill',
                 ],
                 [
                     'title' => 'Avatares',
@@ -53,9 +48,7 @@
                     'icon' => 'bi bi-palette-fill',
                 ],
             ]"></x-aside-admin>
-
-
-            <div class="col-10 main__content bg-white-border">
+            <div class="col-lg-10 col-12 main__content bg-white-border">
                 <small class="text__gray">
                     <a href="{{ route('study-plan.index') }}" class="text__gray">Gestión de Contenido</a> >
                     <a href="{{ route('study-plan.index') }}" class="text__gray">Plan de Estudio</a> >

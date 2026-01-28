@@ -37,17 +37,17 @@
         <article class="row main__article container-xl w-100">
             <x-aside-admin :items="[
                 [
-                    'title' => 'Patrones de Decisión Iniciales del Tutor Inteligente',
+                    'title' => 'Contenido de Esfuerzo',
                     'route' => 'initial-decision-patterns.index',
                     'icon' => 'bi bi-gear-wide-connected',
                 ],
                 [
-                    'title' => 'Umbrales de Alerta Intervención Requerida',
+                    'title' => 'Intervención Requerida',
                     'route' => 'alert-thresholds.index',
                     'icon' => 'bi bi-bell-fill',
                 ],
             ]"></x-aside-admin>
-            <div class="col-10 main__content bg-white-border">
+            <div class="col-lg-10 col-12 main__content bg-white-border">
                 <small class="text__gray">
                     <a href="{{ route('initial-decision-patterns.index') }}" class="text__gray">
                         Configuración del Tutor  </a>
@@ -74,7 +74,7 @@
                         {{ session('alert-danger') }}</div>
                     @endif
                     <div class="row mt-4">
-                        <fieldset class="col-6">
+                        <fieldset class="col-lg-6 col-12">
                             <legend class="fs-5 mb-3">
                                 Umbral de Ayuda Inmediata (Contenido de
                                 Esfuerzo)
@@ -92,7 +92,7 @@
                                     'form_help_text' => 'Cantidad de errores consecutivos para que el sistema active automáticamente el Contenido de Esfuerzo (CE) remedial.'
                                 ]"></x-input-text>
                         </fieldset>
-                        <fieldset class="col-6">
+                        <fieldset class="col-lg-6 col-12">
                             <legend class="fs-5 mb-3">
                                 Estado y Umbral de Notificación (Profesor)
                             </legend>

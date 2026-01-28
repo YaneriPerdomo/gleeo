@@ -48,11 +48,6 @@
                     'icon' => 'bi bi-journal-check',
                 ],
                 [
-                    'title' => 'Insignias',
-                    'route' => 'initial-decision-patterns.index',
-                    'icon' => 'bi bi-patch-check-fill',
-                ],
-                [
                     'title' => 'Avatares',
                     'route' => 'avatar.index',
                     'icon' => 'bi bi-person-badge-fill',
@@ -63,8 +58,6 @@
                     'icon' => 'bi bi-palette-fill',
                 ],
             ]"></x-aside-admin>
-
-
             <div class="col-10 bg-white-border main__content">
                 <div class="delete-card">
                     <div class="delete-card__header">
@@ -101,13 +94,13 @@
                                     <div for="theme-show" class="theme-option__card">
                                         <div class="theme-option__figure">
                                             @if ($theme->background_path != null)
-                                                <img src="{{ asset('img/themes/' . $theme->background_path) }}"
-                                                    class="theme-option__bg-preview" alt="Fondo del tema">
+                                            <img src="{{ asset('img/themes/' . $theme->background_path) }}"
+                                                class="theme-option__bg-preview" alt="Fondo del tema">
                                             @else
-                                                <div class="theme-option__no-bg"
-                                                    style="background: {{ $theme->solid_background }}">
-                                                    <span style="filter: invert(1)">Fondo Solido</span>
-                                                </div>
+                                            <div class="theme-option__no-bg"
+                                                style="background: {{ $theme->solid_background }}">
+                                                <span style="filter: invert(1)">Fondo Solido</span>
+                                            </div>
                                             @endif
                                             <div class="theme-option__colors-badge">
                                                 <span class="theme-option__dot"

@@ -37,11 +37,6 @@
                     'icon' => 'bi bi-journal-check',
                 ],
                 [
-                    'title' => 'Insignias',
-                    'route' => 'initial-decision-patterns.index',
-                    'icon' => 'bi bi-patch-check-fill',
-                ],
-                [
                     'title' => 'Avatares',
                     'route' => 'avatar.index',
                     'icon' => 'bi bi-person-badge-fill',
@@ -52,9 +47,7 @@
                     'icon' => 'bi bi-palette-fill',
                 ],
             ]"></x-aside-admin>
-
-
-            <div class="col-10 bg-white-border main__content">
+            <div class="col-lg-10 col-12 bg-white-border main__content">
                 <small class="text__gray">
                     <a href="{{ route('study-plan.index') }}" class="text__gray">Plan de Estudio</a> >
                     <a href="#" class="text__gray">{{ $level[0]['name'] ?? 'Nivel' }}</a> >
@@ -91,7 +84,7 @@
 
                     <hr class="delete-card__divider">
 
-                    <div class="delete-card__actions flex-and-direction-row flex-content-space-between">
+                    <div class="delete-card__actions  form-actions flex-and-direction-row flex-content-space-between">
                         <a href="{{ route('study-plan.index') }}" class="delete-card__link">
                             <button class="button button__color-green" type="button">
                                 <i class="bi bi-box-arrow-in-left"></i> Cancelar, mantener Tema
@@ -100,7 +93,7 @@
 
                         <form
                             action="{{ route('topic.destroy', ['nivel' => $level[0]['slug'], 'slug' => $topic->slug]) }}"
-                            method="POST" class="delete-card__form">
+                            method="POST" class="delete-card__form ">
                             @method('DELETE')
                             @csrf
                             <button class="button button__color-red" type="submit">

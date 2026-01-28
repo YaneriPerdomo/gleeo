@@ -35,7 +35,7 @@
                     'icon' => 'bi bi-people-fill',
                 ],
             ]"></x-aside-admin>
-            <div class="  col-10 bg-white-border main__content">
+            <div class="  col-lg-10 col-12 bg-white-border main__content">
                 <div class="flex-and-direction-row flex-content-space-between p-0">
                     <div>
                         <legend><b>Listado de Representantes y Profesionales</b></legend>

@@ -78,11 +78,6 @@
                     'icon' => 'bi bi-journal-check',
                 ],
                 [
-                    'title' => 'Insignias',
-                    'route' => 'initial-decision-patterns.index',
-                    'icon' => 'bi bi-patch-check-fill',
-                ],
-                [
                     'title' => 'Avatares',
                     'route' => 'avatar.index',
                     'icon' => 'bi bi-person-badge-fill',
@@ -95,7 +90,7 @@
             ]"></x-aside-admin>
 
 
-            <div class="  col-10 bg-white-border main__content">
+            <div class="  col-lg-10 col-12 bg-white-border main__content">
                 <small class="text__gray">
                     <a href="{{ route('study-plan.index') }}" class="text__gray"> Gestion de Contenido > </a>
                     <a href="{{ route('study-plan.index') }}" class="text__gray">
@@ -103,7 +98,7 @@
                     </a>
                 </small>
                 <br>
-                <div class="flex-and-direction-row flex-content-space-between p-0">
+                <div class="flex-and-direction-row flex-content-space-between p-0  flex-gap-0-5">
                     <div>
                         <legend><b>Listado de Temas de Interfaz</b></legend>
                         <div class="search ">
@@ -197,12 +192,12 @@
                                         </td>
                                         @if ($value->theme_id != 1)
                                             <td class='table__operations'>
-                                                <a href=" ">
+                                                <a href="{{ './temas-de-interfaz/'.$value->slug.'/editar' }}">
                                                     <button class="button button__color-green">
                                                         <i class="bi bi-pencil-square"></i>
                                                     </button>
                                                 </a>
-                                                <a href="{{ route('theme.delete', $value->slug) }}">
+                                                <a href="{{ './temas-de-interfaz/'.$value->slug.'/eliminar' }}">
                                                     <button type="button" class="button button__color-red ">
                                                         <i class="bi bi-trash-fill"></i>
                                                     </button>

@@ -1,6 +1,5 @@
 <!doctype html>
 <html lang="es" class="height-full">
-
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -21,9 +20,8 @@
     <link rel="stylesheet" href="{{ asset('css/components/text.css') }}">
     <link rel="icon" type="image/x-icon" href="{{ asset('img/logo.ico') }}">
 </head>
-
 <body class="flex-and-direction-column height-full">
-    <x-header></x-header>
+    <x-header notificationIsActiveCount="{{ $notificationIsActiveCount }}"></x-header>
     <main class="flex-grow-2 w-100 flex-and-direction-column flex-center-full flex-center-full-start">
         <article class="row main__article container-xl w-100">
             @php
@@ -47,9 +45,8 @@
                     'icon' => 'bi bi-person-lock',
                 ];
             @endphp
-
             <x-aside-admin :items="$sidebarItems"></x-aside-admin>
-            <div class="col-10 main__content bg-white-border">
+            <div class="col-lg-10 col-12 main__content bg-white-border">
                 <small class="text__gray">
                     <a href="{{ route('account-profile.index') }}" class="text__gray"> Perfil
                         > </a>
@@ -108,7 +105,6 @@
 
                 </form>
             </div>
-
         </article>
         <script src="{{ asset('js/components/header.js') }}" type="module"></script>
     </main>
@@ -117,5 +113,4 @@
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous">
     </script>
 </body>
-
 </html>

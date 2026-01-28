@@ -38,11 +38,6 @@
                     'icon' => 'bi bi-journal-check',
                 ],
                 [
-                    'title' => 'Insignias',
-                    'route' => 'initial-decision-patterns.index',
-                    'icon' => 'bi bi-patch-check-fill',
-                ],
-                [
                     'title' => 'Avatares',
                     'route' => 'avatar.index',
                     'icon' => 'bi bi-person-badge-fill',
@@ -53,13 +48,12 @@
                     'icon' => 'bi bi-palette-fill',
                 ],
             ]"></x-aside-admin>
-
-
-            <div class="col-10 main__content bg-white-border">
+            <div class="col-lg-10 col-12 main__content bg-white-border">
                 <small class="text__gray">
                     <a href="{{ route('study-plan.index') }}" class="text__gray">Gestión de Contenido</a> >
-                    <a href="{{ route('study-plan.index') }}" class="text__gray">Plan de Estudio</a>   >
-                    <a href="{{ route('study-plan.index') }}" class="text__gray"> {{ convertSlugToTitle($slug_level) }} </a>>
+                    <a href="{{ route('study-plan.index') }}" class="text__gray">Plan de Estudio</a> >
+                    <a href="{{ route('study-plan.index') }}" class="text__gray">
+                        {{ convertSlugToTitle($slug_level) }} </a>>
                     <span>Editar Módulo</span>
                 </small>
 
@@ -104,7 +98,8 @@
                     <div class="flex-and-direction-row flex-content-space-between form-actions mt-4">
                         <a href=" {{ route('study-plan.level-index', ['nivel' => $slug_level ?? '']) }}
 
-                        " class="button text__gray" style="text-decoration: none;">
+                        "
+                            class="button text__gray" style="text-decoration: none;">
                             <i class="bi bi-box-arrow-in-left"></i> Regresar
                         </a>
 

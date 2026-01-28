@@ -83,9 +83,6 @@
             border-radius: 0.5rem;
         }
 
-        .ranking {
-            width: 830px;
-        }
 
 
         .ranking__header--the-best {

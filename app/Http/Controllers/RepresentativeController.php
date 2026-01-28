@@ -68,7 +68,7 @@ class RepresentativeController extends Controller
         }])->with(['gender' => function ($query) {
             return $query;
         }])->whereHas('user', function ($query) use ($search_l) {
-            return $query->where('email',  'like', $search_l)
+            return $query->where('email',  'like', '%'.$search_l.'%')
                     ->orWhere('user',  'like', '%'.$search_l.'%');
         })->with(['user' => function ($query) {
             return $query->select('user_id', 'user', 'email', 'last_session', 'state', 'rol_id');

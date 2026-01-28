@@ -28,28 +28,36 @@
         <article class="row main__article container-xl w-100">
             <x-aside-admin :items="[
                 [
-                    'title' => 'Plan de Estudio',
-                    'route' => 'study-plan.index',
-                    'icon' => 'bi bi-book-half',
+                    'title' => 'Informacion General',
+                    'route' => 'news-board.index',
+                    'icon' => 'bi bi-info-square-fill',
                 ],
                 [
-                    'title' => 'Insignias',
-                    'route' => 'initial-decision-patterns.index',
-                    'icon' => 'bi bi-award-fill',
+                    'title' => 'Plan de Estudio',
+                    'route' => 'study-plan.index',
+                    'icon' => 'bi bi-journal-check',
+                ],
+                [
+                    'title' => 'Avatares',
+                    'route' => 'avatar.index',
+                    'icon' => 'bi bi-person-badge-fill',
+                ],
+                [
+                    'title' => 'Temas de Interfaz',
+                    'route' => 'theme.index',
+                    'icon' => 'bi bi-palette-fill',
                 ],
             ]"></x-aside-admin>
-
-
-            <div class="col-10 bg-white-border main__content">
+            <div class="col-lg-10 col-12 bg-white-border main__content">
                 <small class="text__gray">
                     <a href="{{ route('study-plan.index') }}" class="text__gray">Plan de Estudio</a> >
                     <a href="#" class="text__gray">Nivel {{ $infoLevel->number }}</a> >
                     <span>Confirmar Eliminación</span>
                 </small>
-                    @if (session('alert-danger'))
-                        <div class="alert alert-danger" role="alert"><i class="bi bi-x-octagon-fill"></i>
-                            {{ session('alert-danger') }}</div>
-                    @endif
+                @if (session('alert-danger'))
+                    <div class="alert alert-danger" role="alert"><i class="bi bi-x-octagon-fill"></i>
+                        {{ session('alert-danger') }}</div>
+                @endif
 
                 <div class="delete-card mt-4">
                     <div class="delete-card__header">
@@ -88,14 +96,15 @@
 
                     <hr class="delete-card__divider">
 
-                    <div class="delete-card__actions d-flex justify-content-between align-items-center">
+                    <div class="delete-card__actions form-actions d-flex justify-content-between align-items-center">
                         <a href="{{ route('study-plan.index') }}" class="delete-card__link">
                             <button class="button button__color-green" type="button">
                                 <i class="bi bi-arrow-left-short"></i> Cancelar, conservar nivel
                             </button>
                         </a>
 
-                        <form action="{{ route('study-plan.level-destroy' , ['nivel' => $slugLevel]) }}" method="POST" class="delete-card__form">
+                        <form action="{{ route('study-plan.level-destroy', ['nivel' => $slugLevel]) }}" method="POST"
+                            class="delete-card__form">
                             @method('DELETE')
                             @csrf
                             <button class="button button__color-red" type="submit">

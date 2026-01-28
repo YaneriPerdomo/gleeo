@@ -120,11 +120,6 @@
                     'icon' => 'bi bi-journal-check',
                 ],
                 [
-                    'title' => 'Insignias',
-                    'route' => 'initial-decision-patterns.index',
-                    'icon' => 'bi bi-patch-check-fill',
-                ],
-                [
                     'title' => 'Avatares',
                     'route' => 'avatar.index',
                     'icon' => 'bi bi-person-badge-fill',
@@ -135,8 +130,7 @@
                     'icon' => 'bi bi-palette-fill',
                 ],
             ]"></x-aside-admin>
-
-            <div class="  col-10 bg-white-border main__content">
+            <div class="  col-lg-10 col-12 bg-white-border main__content">
                 <small class="text__gray">
                     <a href="{{ route('study-plan.index') }}" class="text__gray"> Gestion de Contenido > </a>
                     <a href="{{ route('study-plan.index') }}" class="text__gray">

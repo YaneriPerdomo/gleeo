@@ -24,7 +24,7 @@
 </head>
 
 <body class="flex-and-direction-column height-full">
-    <x-header></x-header>
+    <x-header  notificationIsActiveCount="{{ $notificationIsActiveCount }}"></x-header>
     <main class="flex-grow-2 w-100 flex-and-direction-column flex-center-full flex-center-full-start">
         <article class="row main__article   container-xl w-100">
             <x-aside-admin :items="[
@@ -34,7 +34,7 @@
                     'icon' => 'bi bi-people-fill',
                 ],
             ]"></x-aside-admin>
-            <div class="col-10 bg-white-border main__content">
+            <div class="col-lg-10 col-12 bg-white-border main__content">
                 <div class="delete-card">
                     <div class="delete-card__header">
                         <b class="delete-card__title">
@@ -60,7 +60,7 @@
                     </div>
 
                     <hr class="delete-card__divider">
-                    <div class="delete-card__actions flex-and-direction-row flex-content-space-between">
+                    <div class="delete-card__actions form-actions flex-and-direction-row flex-content-space-between">
                         <a href="{{ route('children.index') }}" class="delete-card__link">
                             <button class="button button__color-green " type="button">
                                 <i class="bi bi-box-arrow-in-left"></i> Cancelar, conservar registro

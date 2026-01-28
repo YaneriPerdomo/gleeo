@@ -45,21 +45,31 @@
         }
 
         .border-top-purple {
-            border-top: 2px solid var(--purple);
+            border-top: 4px solid var(--purple);
         }
 
         .form__item {
             margin-bottom: 1rem;
         }
+
+        .form--login, .form--create-account{
+            border-radius: 2rem;
+            background: white;
+            padding: 2rem;
+        }
+
+        .h-100{
+            height: 100%;
+        }
     </style>
 </head>
 
-<body class="h-100">
+<body class="h-100 height-full ">
 
-    <main class="row border-top-purple login h-100 login login__row p-0 m-0 flex-and-direction-row  flex-center-full">
+    <main class="row border-top-purple login  height-full login login__row p-0 m-0 flex-and-direction-row  flex-center-full">
         <section class="flex-and-direction-column  flex-center-full">
 
-            <form action="{{ route('login.auth') }}" class="form login__form" method="POST">
+            <form action="{{ route('login.auth') }}" class="form form--login" method="POST">
                 <figure class="text-center"> <img src="{{ asset('img/logo.png') }}" alt="Imagen de inicio de sesion"
                         class=" img-fluid" style="width: 100px;" draggable="false">
                 </figure>@csrf

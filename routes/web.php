@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AlertConfigurationController;
 use App\Http\Controllers\AlertThresholdsController;
 use App\Http\Controllers\AvatarController;
 use App\Http\Controllers\ChildrenController;
@@ -7,6 +8,7 @@ use App\Http\Controllers\CreateAccountController;
 use App\Http\Controllers\EducationalPlatformController;
 use App\Http\Controllers\GlobalRankingController;
 use App\Http\Controllers\InitialDecisionPatternsController;
+use App\Http\Controllers\InterventionNotificationController;
 use App\Http\Controllers\LessonController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ModuleController;
@@ -20,6 +22,7 @@ use App\Http\Controllers\StudyPlanController;
 use App\Http\Controllers\ThemeController;
 use App\Http\Controllers\TopicController;
 use App\Http\Controllers\WelcomeController;
+use App\Models\AlertConfiguration;
 use App\Models\Children;
 use App\Models\NewsBoard;
 use App\Models\ReinforcementFailureLimit;
@@ -54,12 +57,12 @@ Route::controller(RepresentativeController::class)->middleware(['auth'])->group(
 });
 
 Route::controller(ReinforcementFailureLimitController::class)->middleware(['auth'])->group(function () {
-    Route::get('configuracion-del-tutor/patrones-de-decision-iniciales', 'index')->name('initial-decision-patterns.index');
-    Route::get('configuracion-del-tutor/patrones-de-decision-iniciales/configurar', 'edit')->name('initial-decision-patterns.edit');
-    Route::put('configuracion-del-tutor/patrones-de-decision-iniciales/configurar', 'update')->name('initial-decision-patterns.update');
+    Route::get('configuracion-del-tutor/contenido-de-esfuerzo', 'index')->name('initial-decision-patterns.index');
+    Route::get('configuracion-del-tutor/contenido-de-esfuerzo/configurar', 'edit')->name('initial-decision-patterns.edit');
+    Route::put('configuracion-del-tutor/contenido-de-esfuerzo/configurar', 'update')->name('initial-decision-patterns.update');
 });
 
-Route::controller(AlertThresholdsController::class)->middleware(['auth'])->group(function () {
+Route::controller(AlertConfigurationController::class)->middleware(['auth'])->group(function () {
     Route::get('configuracion-del-tutor/alerta-intervencion-requerida', 'index')->name('alert-thresholds.index');
     Route::get('configuracion-del-tutor/alerta-intervencion-requerida/configurar', 'edit')->name('alert-thresholds.edit');
     Route::put('configuracion-del-tutor/alerta-intervencion-requerida/configurar', 'update')->name('alert-thresholds.update');
@@ -114,7 +117,11 @@ Route::controller(TopicController::class)->middleware(['auth'])->group(function 
 
 Route::controller(ChildrenController::class)->middleware(['auth'])->group(function () {
     Route::get('gestion-de-cuentas/jugadores', 'index')->name('children.index');
+    Route::get('gestion-de-cuentas/jugadores/{search}/filtrar', 'filter')->name('children.filter');
     Route::get('gestion-de-cuentas/jugador/agregar', 'create')->name('children.create');
+    Route::get('gestion-de-cuentas/jugador/{slug}/editar', 'edit')->name('children.edit-m');
+    Route::get('gestion-de-cuentas/jugadora/{slug}/editar', 'edit')->name('children.edit-f');
+    Route::put('gestion-de-cuentas/jugadora/{slug}/update', 'update')->name('children.update');
     Route::post('gestion-de-cuentas/jugador/agregar', 'store')->name('children.store');
     Route::get('gestion-de-cuentas/jugador/{slug}/eliminar', 'delete')->name('children.delete-m');
     Route::get('gestion-de-cuentas/jugadora/{slug}/agregar', 'delete')->name('children.delete-f');
@@ -141,10 +148,19 @@ Route::controller(PlayerController::class)->middleware(['auth'])->group(function
     Route::post('{lesson}/complete-lesson/{playerId}', 'endLesson')->name('player.end-lesson');
 });
 
+Route::controller(InterventionNotificationController::class)->middleware(['auth'])->group(function () {
+    Route::get('notificaciones-de-intervencion', 'index')->name('invervention-notification.index');
+    Route::get('notificaciones-de-intervencion/{search}/filtrar', 'filter')->name('invervention-notification.filter');
+    Route::put('notificacion-de-intervencion/{id}/actualizar', 'update')->name('invervention-notification.update');
+    Route::put('notificacion-de-intervencion/actualizar', 'updateAll')->name('invervention-notification.update-all');
+    Route::delete('notificacion-de-intervencion/{id}/elimnar', 'destroy')->name('invervention-notification.destroy');
+});
+
 Route::controller(ProgressController::class)->middleware(['auth'])->group(function () {
     Route::get('niveles/{slugCurrentLevel}/progreso-por-nivel', 'player')->name('progress.index');
-    Route::get('gestion-de-cuentas/jugador/{slug}/progreso', 'general')->name('children.progress-m');
+    Route::get('gestion-de-cuentas/jugador/{slug}/progreso-general', 'general')->name('children.progress-m');
     Route::get('gestion-de-cuentas/jugadora/{slug}/progreso-general', 'general')->name('children.progress-f');
+    Route::post('gestion-de-cuentas/jugador/{slug}/progreso-general', 'reportPDF')->name('children.progress-reportPDF');
     Route::get('progreso-general', 'general')->name('children.general-progress');
 });
 
@@ -154,7 +170,9 @@ Route::controller(ThemeController::class)->middleware(['auth'])->group(function 
     Route::get('plataforma-educativa/temas-de-interfaz/{search}/filtrar', 'filter')->name('theme.filter');
     Route::get('plataforma-educativa/temas-de-interfaz/agregar', 'create')->name('theme.create');
     Route::post('plataforma-educativa/temas-de-interfaz/agregar', 'store')->name('theme.store');
-    Route::get('plataforma-educativa/temas-de-interfaz/{slug}/eliminar ', 'delete')->name('theme.delete');
+    Route::get('plataforma-educativa/temas-de-interfaz/{slug}/editar', 'edit')->name('theme.edit');
+    Route::put('plataforma-educativa/temas-de-interfaz/{slug}/editar', 'update')->name('theme.update');
+    Route::get('plataforma-educativa/temas-de-interfaz/{slug}/eliminar', 'delete')->name('theme.delete');
     Route::delete('plataforma-educativa/temas-de-interfaz/{slug}/eliminar', 'destroy')->name('theme.destroy');
 });
 
@@ -164,6 +182,8 @@ Route::controller(AvatarController::class)->middleware(['auth'])->group(function
     Route::post('plataforma-educativa/avatar/agregar', 'store')->name('avatar.store');
     Route::get('plataforma-educativa/avatar/agregar', 'create')->name('avatar.create');
     Route::get('plataforma-educativa/avatar/{slug}/eliminar', 'delete')->name('avatar.delete');
+    Route::get('plataforma-educativa/avatar/{slug}/editar', 'edit')->name('avatar.edit');
+    Route::put('plataforma-educativa/avatar/{slug}/actualizar', 'update')->name('avatar.update');
     Route::delete('plataforma-educativa/avatar/{slug}/eliminar', 'destroy')->name('avatar.destroy');
 });
 

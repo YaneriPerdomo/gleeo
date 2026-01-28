@@ -35,9 +35,9 @@
         if ($theme->background_path != null) {
             $urlAsset = asset('img/themes/' . $theme->background_path);
             $bodyCSS = "background-image: url('$urlAsset');
-        background-repeat: repeat;
-    background-attachment: fixed;
-    background-size: auto;";
+            background-repeat: repeat;
+            background-attachment: fixed;
+            background-size: cover;";
         } else {
             $bodyCSS = "background-color: {$theme->solid_background};";
         }
@@ -70,6 +70,10 @@
         }
 
         body {
+            {!! $bodyCSS !!}
+        }
+
+        .lesson-modal {
             {!! $bodyCSS !!}
         }
 
@@ -110,7 +114,7 @@
 
 
         .statistics__value {
-            margin:0rem 0.8rem;
+            margin: 0rem 0.8rem;
         }
 
         .game-header__stat-badge,
@@ -180,7 +184,7 @@
             padding-right: 0rem;
             padding-top: 0.3rem;
             padding-bottom: 0.3rem;
-            padding-left: 0.4rem;
+
         }
 
         .game-header__description {
@@ -224,7 +228,8 @@
         }
 
 
-        .game-content__type-dynamics>button {
+        .game-content__type-dynamics>button,
+        .game-select {
 
             background: var(--purple);
             color: white;
@@ -454,7 +459,8 @@
 </head>
 
 <body class="flex-and-direction-column height-full">
-    <main class="flex-grow-2 w-100 flex-and-direction-column flex-center-full flex-center-full-start">
+    <main class="flex-grow-2 w-100 flex-and-direction-column flex-center-full  flex-center-full-start"
+        style="height: 100vh;">
         <div class="main__top flex-and-direction-row flex-content-space-between">
             <button class="main__top-background-music  button p-0 ">
                 <i class="bi bi-volume-up-fill"></i>
@@ -760,7 +766,7 @@
             </div>
             <div class="introduction__body">
                 <div class="introduction__content  flex-center-full flex-and-direction-row" style="gap: 1rem">
-                    <div class="introduction__stat  statistics statistics-diamonds">
+                    <div class="introduction__stat  statistics statistics-diamonds" title="Diamantes">
                         <div clas="introduction__stats-icon  ">
                             <i class="bi bi-gem    fs-2 statistics-icon statistics-icon--gem"></i>
                         </div>
@@ -772,13 +778,14 @@
                         <div clas="introduction__stats-icon  ">
                             <i class="bi bi-speedometer2  fs-2 statistics-icon--time statistics-icon "></i>
                         </div>
-                        <div class="statistics__value  fs-2 flex-and-direction-row" style="flex-wrap: nowrap">
+                        <div class="statistics__value  fs-2 flex-and-direction-row" title="Tiempo" style="flex-wrap: nowrap">
                             <b class="statistics__value--time">0</b>
                             <span class="statistics__time-unit " style="margin-left: 0.3rem;"></span>
                         </div>
                         <script>
                             let statisticsValueTime = document.querySelector('.statistics__value--time');
                             let statisticsTimeUnit = document.querySelector('.statistics__time-unit');
+
                             function getTimeUnit(timeText) {
                                 let parts = timeText.split(':');
 
@@ -795,11 +802,11 @@
                                 }
                             }
                             let estimated_time = @js($playerLessonInfo->estimated_time) || '00:00:00';
-                            statisticsValueTime.innerHTML = estimated_time ;
-                            statisticsTimeUnit.innerHTML =  getTimeUnit(estimated_time) != undefined ?  getTimeUnit(estimated_time)  : '' ;
+                            statisticsValueTime.innerHTML = estimated_time;
+                            statisticsTimeUnit.innerHTML = getTimeUnit(estimated_time) != undefined ? getTimeUnit(estimated_time) : '';
                         </script>
                     </div>
-                    <div class="introduction__stat  statistics statistics-success-rate">
+                    <div class="introduction__stat  statistics statistics-success-rate" title="Tasa de Exito">
                         <div clas="introduction__stats-icon  ">
                             <i
                                 class="bi bi-rocket-takeoff-fill statistics-icon    fs-2 statistics-icon--success-rate"></i>
@@ -886,6 +893,8 @@
             instanciaPopover.hide();
         }, 5000);
     })
+        let gameContentAttemptsNumber = document.querySelector('.game-content__attempts-number');
+
     let gleoIndicatesPopover = document.querySelector('[data-bs-toggle="popover"]')
     const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
     const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl));
@@ -953,20 +962,21 @@
     let refuerzoModalTextTarea = document.querySelector('.refuerzo-modal__text-tarea');
     let refuerzoModalVideo = document.querySelector('.refuerzo-modal__video');
     const VALUE_DIAMONTD = document.querySelector('.game-header__value > b');
-    let gameContentAttemptsNumber = document.querySelector('.game-content__attempts-number');
     let lessonStatsBadge = document.querySelector('.lesson-stats__badge');
     let gameContentScreen = document.querySelector('.game-content__screen');
     console.log(practices[1]);
     const totalPractices = @js($totalExercises);
     console.clear();
-    console.info(@js($reinforcementFailureLimit->refuerzo_fail_limit))
+    console.info('hola');
+    console.info(@js($reinforcementFailureLimit->is_active))
     let refuerzoFailLimit = 3;
-    // 1. Centralizamos el estado en un objeto
+
     const gameState = {
         currentPracticeIndex: 0,
         totalFailuresPractice: 0,
+        originalScreenText: '',
         failLimit: {
-            fixed: @js($reinforcementFailureLimit->refuerzo_fail_limit) || 3,
+            fixed: @js($reinforcementFailureLimit->is_active) == 1 ? @js($reinforcementFailureLimit->refuerzo_fail_limit) || 3 : null,
             playerDom: @js($reinforcementFailureLimit->refuerzo_fail_limit) || 3
         },
         correctAnswers: 0,
@@ -978,7 +988,14 @@
 
     };
 
-    gameContentAttemptsNumber.innerHTML = gameState.failLimit.fixed;
+
+    let gameContentAttempts = document.querySelector('.game-content__attempts');
+    if (@js($reinforcementFailureLimit->is_active) == 0) {
+        gameContentAttempts.remove();
+    } else {
+        gameContentAttemptsNumber.innerHTML = gameState.failLimit.fixed;
+
+    }
 
     // 2. Delegación de eventos limpia
     document.addEventListener('click', e => {
@@ -987,8 +1004,19 @@
             const selectedValue = trigger.textContent.trim();
             verifyAnswer(selectedValue, trigger);
         }
+
+        if (e.target.closest('.tutor__img')) {
+            hablar(e.target.getAttribute('data-voice'));
+            e.target.getAttribute('data-is-he-talking',  true);
+        }
     });
 
+    document.addEventListener('change', e => {
+        if (e.target.matches('.game-select') || e.target.classList.contains('game-select')) {
+            const selectedValue = e.target.value.trim();
+            verifyAnswer(selectedValue, selectedValue, true);
+        }
+    });
 
     document.addEventListener('mouseover', (e) => {
         const trigger = e.target.closest('.game-content__type-dynamics button');
@@ -1001,38 +1029,58 @@
         }
     });
 
-    function verifyAnswer(value, button) {
+    function verifyAnswer(value, button, autoComplete) {
         const currentPractice = practices[gameState.currentPracticeIndex];
-        const isCorrect = GAME_CONTENT_TYPE_DYNAMICS.dataset.correctVariable === value;
 
+        const isCorrect = GAME_CONTENT_TYPE_DYNAMICS.dataset.correctVariable === value;
         if (isCorrect) {
             audioCorrect.play();
-            handleSuccess(button);
+            handleSuccess(button, autoComplete);
         } else {
             audioIncorrect.play();
-
-            handleFailure(button, currentPractice.reinforcement, GAME_CONTENT_TYPE_DYNAMICS.dataset.correctVariable);
+            handleFailure(button, currentPractice.reinforcement, GAME_CONTENT_TYPE_DYNAMICS.dataset.correctVariable,
+                autoComplete);
         }
     }
 
-    function handleSuccess(button) {
+    function handleSuccess(button, autoComplete) {
         gameState.correctAnswers = gameState.correctAnswers + 1;
         gameState.diamonds = gameState.diamonds + 1;
         VALUE_DIAMONTD.innerHTML = gameState.diamonds;
-        gameContentScreen.classList.add('button__correct');
-        button.classList.add('button__correct');
-        pause();
-        setTimeout(() => {
-            gameContentScreen.classList.remove('button__correct');
-            button.classList.remove('button__correct');
-            nextLevel();
-            start();
-        }, 1500);
+        if (autoComplete) {
+            let gameSelect = document.querySelector('.game-select');
+            gameSelect.classList.add('button__correct');
+            pause();
+            gameContentScreen.classList.add('button__correct');
+            gameContentScreen.textContent = practices[gameState.currentPracticeIndex].screen.replace('__', button);
+            setTimeout(() => {
+                gameContentScreen.classList.remove('button__correct');
+                gameSelect.classList.remove('button__correct');
+                nextLevel();
+                start();
+            }, 1500);
+        } else {
+            gameContentScreen.classList.add('button__correct');
+            button.classList.add('button__correct');
+            pause();
+            setTimeout(() => {
+                gameContentScreen.classList.remove('button__correct');
+                button.classList.remove('button__correct');
+                nextLevel();
+                start();
+            }, 1500);
+        }
     }
 
-    function handleFailure(button, reinforcement, correctVariable) {
+    function handleFailure(button, reinforcement, correctVariable, autoComplete) {
         gameState.totalFailuresPractice += 1;
-        button.classList.add('button__incorrect');
+        const gameSelect = '';
+        if (autoComplete) {
+            const gameSelect = document.querySelector('.game-select');
+            gameSelect.classList.add('button__incorrect');
+        } else {
+            button.classList.add('button__incorrect');
+        }
         pause()
         let showCorrect = gameState.totalFailuresPractice > gameState.failLimit.fixed;
         let showReinforcementDialogue = gameState.totalFailuresPractice == gameState.failLimit.fixed;
@@ -1042,20 +1090,28 @@
                 '¡Mira! He preparado un refuerzo especial para ayudarte en este paso.');
 
         }
-
-        document.querySelectorAll('.game-content__type-dynamics > button').forEach(element => {
-            element.classList.add('is-locked');
+        if (autoComplete) {
             if (showCorrect) {
-                if (element.textContent == correctVariable) {
-                    element.classList.add('button__correct');
-                }
+                gameContentScreen.classList.add('button__correct');
+                document.querySelector('.game-select').classList.add('is-locked')
+                gameContentScreen.textContent = practices[gameState.currentPracticeIndex].screen.replace('__',
+                    correctVariable);
             }
-        });
+        } {
+            document.querySelectorAll('.game-content__type-dynamics > button').forEach(element => {
+                element.classList.add('is-locked');
+                if (showCorrect) {
+                    if (element.textContent == correctVariable) {
+                        element.classList.add('button__correct');
+                    }
+                }
+            });
+        }
         gameState.incorrectAnswers = gameState.incorrectAnswers += 1;
         gameState.failLimit.playerDom = gameState.failLimit.playerDom -= 1;
         gameContentAttemptsNumber.innerHTML = gameState.failLimit.playerDom;
 
-        if (gameState.totalFailuresPractice == gameState.failLimit.fixed - 1) {
+        if (gameState.totalFailuresPractice == gameState.failLimit.fixed - 1 && gameState.failLimit.fixed != null) {
             gameContentAttemptsText.textContent = 'Intento: ';
             updateTutor('.tutor__img', '¡Gleeo dice!',
                 '¡Cuidado! Nos queda una última oportunidad, antes de activar el modo de refuerzo. ¡Concéntrate, tú puedes hacerlo!.'
@@ -1066,10 +1122,22 @@
         }
         setTimeout(() => {
             start();
-            button.classList.remove('button__incorrect')
-            document.querySelectorAll('.game-content__type-dynamics > button').forEach(element => {
-                element.classList.remove('is-locked');
-            });
+            if (autoComplete) {
+                const gameSelect = document.querySelector('.game-select');
+                gameSelect.classList.remove('button__incorrect');
+                document.querySelector('.game-select').classList.remove('is-locked')
+            } else {
+                button.classList.remove('button__incorrect');
+                document.querySelectorAll('.game-content__type-dynamics > button').forEach(element => {
+                    element.classList.remove('is-locked');
+                });
+            }
+
+            if (gameState.failLimit.fixed == null) {
+                gameState.totalFailuresPractice = 0;
+                return nextLevel();
+            }
+
             // Si alcanza el límite, mostramos refuerzo
             if (gameState.totalFailuresPractice == gameState.failLimit.fixed) {
                 instanciaPopover.hide();
@@ -1138,7 +1206,6 @@
             myModalEndGame.show();
             document.querySelectorAll('.game-content__type-dynamics > button').forEach(element => {
                 element.disabled = true;
-
             });
 
             gameContentAttemptsText.textContent = 'Intentos: ';
@@ -1234,18 +1301,44 @@
         setTimeout(() => {
             instanciaPopover.hide();
         }, 5000);
-        options.forEach((text, index) => {
-            // Limitar a 2 si es Verdadero/Falso (según tu lógica original)
-            if (practice.type_dynamic === 'Verdadero/Falso' && index > 1) return;
+        if (practice.type_dynamic == 'Autocompletar') {
+            const select = document.createElement('select');
+            select.className = 'game-select';
+            GAME_CONTENT_TYPE_DYNAMICS.appendChild(select);
+            const selectGame = document.querySelector('.game-select');
+            let option = document.createElement('option');
+            option.textContent = 'Seleccione una respuesta';
+            selectGame.appendChild(option)
+            options.forEach((text, index) => {
+                let option = document.createElement('option');
+                option.textContent = text.trim();
+                option.className = 'game-button';
+                selectGame.appendChild(option);
+            })
+        } else {
+            options.forEach((text, index) => {
+                // Limitar a 2 si es Verdadero/Falso (según tu lógica original)
+                if (practice.type_dynamic === 'Verdadero/Falso' && index > 1) return;
+                const button = document.createElement('button');
+                button.textContent = text.trim();
+                button.className = 'game-button';
+                GAME_CONTENT_TYPE_DYNAMICS.appendChild(button);
+            });
+        }
 
-            const button = document.createElement('button');
-            button.textContent = text.trim();
-            button.className = 'game-button'; // Clase base
-            GAME_CONTENT_TYPE_DYNAMICS.appendChild(button);
-        });
 
 
     }
+
+    const hablar = (mensaje) => {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(mensaje);
+        utterance.lang = 'es-ES';
+        utterance.pitch = 1.1;
+        utterance.rate = 1;
+        window.speechSynthesis.speak(utterance);
+    };
+
 
     function updateTutor(element, header, body) {
         const el = document.querySelector(element);
@@ -1258,6 +1351,10 @@
             '.popover-header': header
         });
         instancia.show();
+        const tutorImg = document.querySelector('.tutor__img')
+        console.info('holas')
+        console.info(tutorImg);
+        tutorImg.setAttribute('data-voice', header + '...' + body);
     }
 </script>
 </body>

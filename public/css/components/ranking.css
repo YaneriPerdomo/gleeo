@@ -1,3 +1,6 @@
+.ranking {
+       width: clamp(300px, 90vw, 850px) ;
+}
 .ranking__avatar {
     width: 40px;
 }
@@ -37,7 +40,7 @@
 }
 
 .ranking__item--highlight {
-  /*  border-bottom: solid var(--black);*/
+    /*  border-bottom: solid var(--black);*/
 }
 
 .ranking__header--the-best {
@@ -60,4 +63,3 @@
 .ranking__item--other {
     background: none;
 }
-

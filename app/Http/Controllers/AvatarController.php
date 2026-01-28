@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\DB as FacadesDB;
 use Illuminate\Support\Str;
 use PDOException;
 use Illuminate\Support\Facades\File;
-
+use Illuminate\Support\Facades\Hash;
 
 class AvatarController extends Controller
 {
@@ -134,8 +134,8 @@ class AvatarController extends Controller
             ]);
             $nameAvatar = $data->name;
 
-            $oldImagePath = public_path('img/avatars/'. $data->url);
-             if (File::exists($oldImagePath)) {
+            $oldImagePath = public_path('img/avatars/' . $data->url);
+            if (File::exists($oldImagePath)) {
                 File::delete($oldImagePath);
             }
             $data->delete();
@@ -159,6 +159,64 @@ class AvatarController extends Controller
             FacadesDB::rollBack();
 
             return redirect()->route('avatar.delete');
+        }
+    }
+
+    public function edit(Request $request, $slug)
+    {
+        $data = Avatar::where('slug', $slug)->first();
+        if (! $data) {
+            return back()->with('alert-danger', 'Sucedio un error: Registro no encontrado');
+        }
+        return view(
+            'authenticated.administrator.study-plan.avatar.edit',
+            [
+                'data' => $data,
+
+            ]
+        );
+    }
+
+    public function update(Request $request, $slug)
+    {
+        $data = Avatar::where('slug', $slug)->first();
+        if (! $data) {
+            return back()->with('alert-danger', 'Sucedio un error: Registro no encontrado');
+        }
+        try {
+            FacadesDB::beginTransaction();
+            $slugNew = Str::slug($request->name_avatar);
+            $data->name = $request->name_avatar;
+            $data->slug = $slugNew;
+            if ($request->hasFile('avatar_path')) {
+                $file = $request->file('avatar_path');
+                $fileName = time() . '_' . Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)) . '.' . $file->getClientOriginalExtension();
+                $destinationPath = public_path('img/avatars');
+                if (!empty($data->url)) {
+                    $oldImagePath = $destinationPath . '/' . $data->url;
+                    if (File::exists($oldImagePath)) {
+                        File::delete($oldImagePath);
+                    }
+                }
+                $file->move($destinationPath, $fileName);
+                $data->url = $fileName;
+            }
+            $data->save();
+            FacadesDB::commit();
+            $request->session()->flash('alert-success', 'El Avatar se ha actualizado correctamente.');
+            return redirect()->route('avatar.edit', $slugNew);
+        } catch (QueryException $ex) {
+            $request->session()->flash('alert-danger', 'Sucedio un error: ' . $ex->getMessage());
+            FacadesDB::rollBack();
+            return redirect()->route('avatar.edit', $slug);
+        } catch (PDOException $ex) {
+            $request->session()->flash('alert-danger', 'Sucedio un error: ' . $ex->getMessage());
+            FacadesDB::rollBack();
+            return redirect()->route('avatar.edit', $slug);
+        } catch (Exception $ex) {
+            $request->session()->flash('alert-danger', 'Sucedio un error: ' . $ex->getMessage());
+            FacadesDB::rollBack();
+            return redirect()->route('avatar.edit', $slug);
         }
     }
 }

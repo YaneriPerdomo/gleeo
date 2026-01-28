@@ -26,27 +26,27 @@
         <article class="row main__article container-xl w-100">
             <x-aside-admin :items="[
                 [
-                    'title' => 'Patrones de Decisión Iniciales del Tutor Inteligente',
+                    'title' => 'Contenido de Esfuerzo',
                     'route' => 'initial-decision-patterns.index',
                     'icon' => 'bi bi-gear-wide-connected',
                 ],
                 [
-                    'title' => 'Umbrales de Alerta Intervención Requerida',
+                    'title' => 'Intervención Requerida',
                     'route' => 'alert-thresholds.index',
                     'icon' => 'bi bi-bell-fill',
                 ],
             ]"></x-aside-admin>
             <x-tutor-configuration-content
-                description-parameters="Parametros de Activación del Contenido de Esfuerzo"
+                description-parameters="Contenido de Esfuerzo"
                 class="initial-decision-patterns"
-                title="Patrones de Decisión Iniciales del Tutor Inteligente"
+                title="Contenido de Esfuerzo"
                 url="initial-decision-patterns.edit"
                  :urls-beginning-end="[
                     [
                         'title' => 'Configuración del Tutor > ',
                         'url' => 'alert-thresholds.index'
                     ],
-                    ['title' => 'Patrones de Decisión Iniciales del Tutor Inteligente',
+                    ['title' => 'Contenido de Esfuerzo',
                     'url' => 'alert-thresholds.index']
                 ]"
                 paragraph="Este módulo configura los umbrales de alerta escalonada. Cuando el estudiante activa el Contenido de Esfuerzo (CE) un número predefinido de veces (ej., 3) dentro de un periodo específico (Día, Semana o Mes), el sistema genera una notificación de Intervención Requerida para el profesor."
@@ -62,6 +62,7 @@
                         'thre_column_title' => 'Estado',
                         'thre_column_title_value' =>   $data->is_active == 1 ? 'Activo' : 'Inactivo' ,
                         'icon' => 'bi-x-octagon',
+                        'state' => ''
                     ],
                 ]"></x-tutor-configuration-content>
         </article>

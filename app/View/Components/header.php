@@ -11,7 +11,10 @@ class header extends Component
     /**
      * Create a new component instance.
      */
-    public function __construct(public string $isPlayer = '0', public string $img = 'null', public string $splashScreen = 'false')
+    public function __construct(public string $isPlayer = '0',
+                                public string $img = 'null',
+                                public string $splashScreen = 'false',
+                                public string $notificationIsActiveCount = '0')
     {
         //
     }

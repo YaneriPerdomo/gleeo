@@ -396,7 +396,7 @@
                             <i
                                 class="bi fs-1
                                         @php
-if ($progress->state == 'Completado') { //ENUM ['Bloqueado','Completado', 'En Progreso']
+                                            if ($progress->state == 'Completado') { //ENUM ['Bloqueado','Completado', 'En Progreso']
                                                                 //Completado
                                                                 echo 'bi bi-check';
                                                             }else{
@@ -433,7 +433,7 @@ if ($progress->state == 'Completado') { //ENUM ['Bloqueado','Completado', 'En Pr
             <hr class="mt-0 you-progress__divider">
             <section class="you-progress__statistics flex-and-direction-row flex-content-center gap-2 p-2">
                 <div class="row w-100">
-                    <div class="col-5">
+                    <div class="col-lg-5 col-12">
                         <section class="topic-stats ">
                             <div class="chart-controls flex-and-direction-row" style="gap: 1rem; margin-bottom: 1rem;">
                                 <label class="control-option">
@@ -545,7 +545,7 @@ if ($progress->state == 'Completado') { //ENUM ['Bloqueado','Completado', 'En Pr
                             </div>
                         </section>
                     </div>
-                    <div class="col-7">
+                    <div class="col-lg-7 col-12">
                         <div class="row mb-3">
                             <div class="col-6 total-diamonds flex-and-direction-row flex-start-full gap-2">
                                 <div class="total-diamonds__icon  ">

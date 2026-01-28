@@ -27,12 +27,12 @@
         <article class="row main__article container-xl w-100">
             <x-aside-admin :items="[
                 [
-                    'title' => 'Patrones de Decisión Iniciales del Tutor Inteligente',
+                    'title' => 'Contenido de Esfuerzo',
                     'route' => 'initial-decision-patterns.index',
                     'icon' => 'bi bi-gear-wide-connected',
                 ],
                 [
-                    'title' => 'Umbrales de Alerta Intervención Requerida',
+                    'title' => 'Intervención Requerida',
                     'route' => 'alert-thresholds.index',
                     'icon' => 'bi bi-bell-fill',
                 ],
@@ -61,58 +61,44 @@
                     default => 'N/A',
                 };
             @endphp
+
+            @php
+                $allParameters = [];
+
+                foreach ($data as $value) {
+
+                    $allParameters[] = [
+                        'first_column_title' => $value->level->name ?? 'N/A',
+                        'first_column_title_2' => '',
+                        'first_column_title_3' => '',
+                        'two_column_title' => 'Activaciones de CE',
+                        'two_column_title_2' => 'para Alerta',
+                        'value' => $value->max_errors_allowed,
+                        'icon' => 'bi-bell-fill',
+                        'thre_column_title' => 'Ventana de Tiempo',
+                        'thre_column_title_value' => $value->time_frame,
+                        'additional_column' => true,
+                        'state' => $value->state
+                    ];
+                }
+            @endphp
+
+
             <x-tutor-configuration-content description-parameters="Parámetros de Notificación al Profesor"
                 class="alert-thresholds" title="Umbrales de Alerta Intervención Requerida" url="alert-thresholds.edit"
                 :urls-beginning-end="[
                     [
                         'title' => 'Configuración del Tutor > ',
-                        'url' => 'alert-thresholds.index'
+                        'url' => 'alert-thresholds.index',
                     ],
-                    ['title' => 'Umbrales de Alerta Intervención Requerida',
-                    'url' => 'alert-thresholds.index']
+                    ['title' => 'Umbrales de Alerta Intervención Requerida', 'url' => 'alert-thresholds.index'],
                 ]"
                 paragraph="Este módulo configura los umbrales de alerta escalonada.
                     Cuando el estudiante activa el Contenido de Esfuerzo (CE) un número predefinido de veces (ej., 3)
                     dentro de un periodo específico (Día, Semana o Mes), el sistema genera una notificación de
                     Intervención Requerida para el profesor."
-                :parameters="[
-                    [
-                        'additional_column' => true,
-                        'first_column_title' => ' Nivel de Acceso:',
-                        'first_column_title_2' => 'Pre',
-                        'first_column_title_3' => 'Numérico',
-                        'two_column_title' => 'Activaciones de CE',
-                        'two_column_title_2' => 'para Alerta',
-                        'value' => $data[0]->alert_ce_activations ?? 0,
-                        'thre_column_title' => 'Ventana de Tiempo',
-                        'thre_column_title_value' => $timeWindowDisplay_1,
-                        'icon' => 'bi-bell-fill',
-                    ],
-                    [
-                        'additional_column' => true,
-                        'first_column_title' => ' Nivel de Acceso:',
-                        'first_column_title_2' => 'Numérico',
-                        'first_column_title_3' => 'Emergente',
-                        'two_column_title' => 'Activaciones de CE',
-                        'two_column_title_2' => 'para Alerta',
-                        'value' => $data[1]->alert_ce_activations ?? 0,
-                        'thre_column_title' => 'Ventana de Tiempo',
-                        'thre_column_title_value' => $timeWindowDisplay_2,
-                        'icon' => 'bi-bell-fill',
-                    ],
-                    [
-                        'additional_column' => true,
-                        'first_column_title' => ' Nivel de Acceso:',
-                        'first_column_title_2' => 'Desarrollo',
-                        'first_column_title_3' => 'Emergente',
-                        'two_column_title' => 'Activaciones de CE',
-                        'two_column_title_2' => 'para Alerta',
-                        'value' => $data[2]->alert_ce_activations ?? 0,
-                        'thre_column_title' => 'Ventana de Tiempo',
-                        'thre_column_title_value' => $timeWindowDisplay_3,
-                        'icon' => 'bi-bell-fill',
-                    ],
-                ]"></x-tutor-configuration-content>
+                :parameters="$allParameters"
+                ></x-tutor-configuration-content>
             </div>
         </article>
         <script src="{{ asset('js/components/header.js') }}" type="module"></script>

@@ -49,7 +49,7 @@
                     'icon' => 'bi bi-people-fill',
                 ],
             ]"></x-aside-admin>
-            <div class="col-10 main__content bg-white-border">
+            <div class="col-lg-10 col-12 main__content bg-white-border">
                 <small class="text__gray">
                     <a href="{{ route('representative.index') }}" class="text__gray"> Gestión de Cuentas
                         > </a>
@@ -79,7 +79,7 @@
                     @endif
                     <fieldset>
                         <div class="row">
-                            <fieldset class="col-6">
+                            <fieldset class="col-lg-6 col-12">
                                 <legend class="fs-5 mb-3 ">Informacion Personal</legend>
 
                                 <!--<x-input-text :item="[
@@ -208,7 +208,7 @@
 
                             </fieldset>
 
-                            <fieldset class="col-6">
+                            <fieldset class="col-lg-6 col-12">
                                 <legend class="fs-5 mb-3 ">Informacion de la Cuenta</legend>
 
                                 <x-input-text :item="[
@@ -278,7 +278,7 @@
                                     'type' => 'password',
                                     'icon' => 'bi bi-key ',
                                     'aria_label' => 'Nueva contraseña (dejar vacío para no cambiar).',
-                                    'placeholder' => 'Ej: ********',
+                                    'placeholder' => '********',
                                     'form_input_value_default' => '',
                                     'attribute_a' => '',
                                     'form_help_text' => '',
@@ -290,7 +290,7 @@
                                     'type' => 'password',
                                     'icon' => 'bi bi-key ',
                                     'aria_label' => 'Confirme la nueva contraseña.',
-                                    'placeholder' => 'Ej: ********',
+                                    'placeholder' => '********',
                                     'form_input_value_default' => '',
                                     'attribute_a' => '',
                                     'form_help_text' => '',

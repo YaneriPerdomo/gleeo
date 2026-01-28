@@ -25,7 +25,7 @@
     <x-header></x-header>
     <main class="flex-grow-2 w-100 flex-and-direction-column flex-center-full flex-center-full-start">
         <article class="row main__article container-xl w-100">
-          <x-aside-admin :items="[
+            <x-aside-admin :items="[
                 [
                     'title' => 'Informacion General',
                     'route' => 'news-board.index',
@@ -35,11 +35,6 @@
                     'title' => 'Plan de Estudio',
                     'route' => 'study-plan.index',
                     'icon' => 'bi bi-journal-check',
-                ],
-                [
-                    'title' => 'Insignias',
-                    'route' => 'initial-decision-patterns.index',
-                    'icon' => 'bi bi-patch-check-fill',
                 ],
                 [
                     'title' => 'Avatares',
@@ -53,7 +48,7 @@
                 ],
             ]"></x-aside-admin>
 
-            <div class="col-10 bg-white-border main__content">
+            <div class="col-lg-10 col-12 bg-white-border main__content">
                 <small class="text__gray">
                     <a href="{{ route('study-plan.index') }}" class="text__gray">Gestion de Contenido </a> >
                     <a href="{{ route('study-plan.index') }}" class="text__gray">Plan de Estudio</a> >
@@ -86,7 +81,7 @@
 
                     <hr class="delete-card__divider">
 
-                    <div class="delete-card__actions flex-and-direction-row flex-content-space-between">
+                    <div class="delete-card__actions flex-and-direction-row form-actions flex-content-space-between">
                         <a href="{{ route('study-plan.level-index', ['nivel' => $slug_level]) }}" class="delete-card__link">
                             <button class="button button__color-green" type="button">
                                 <i class="bi bi-box-arrow-in-left"></i> Cancelar, mantener módulo

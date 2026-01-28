@@ -67,11 +67,6 @@
                     'icon' => 'bi bi-journal-check',
                 ],
                 [
-                    'title' => 'Insignias',
-                    'route' => 'initial-decision-patterns.index',
-                    'icon' => 'bi bi-patch-check-fill',
-                ],
-                [
                     'title' => 'Avatares',
                     'route' => 'avatar.index',
                     'icon' => 'bi bi-person-badge-fill',
@@ -82,9 +77,7 @@
                     'icon' => 'bi bi-palette-fill',
                 ],
             ]"></x-aside-admin>
-
-
-            <div class="col-10 main__content bg-white-border">
+            <div class="col-lg-10 main__content bg-white-border">
                 <small class="text__gray">
                     <a href="{{ route('study-plan.index') }}" class="text__gray">Gestión de Contenido</a> >
                     <a href="{{ route('study-plan.index') }}" class="text__gray">Plan de Estudio</a> >
@@ -117,7 +110,7 @@
                     <fieldset class="">
                         <legend class="">Información de la Lección</legend>
                         <div class="row">
-                            <div class="col-4">
+                            <div class="col-lg-4 col-12 ">
                                 <x-input-text :item="[
                                     'form_input_name' => 'modulo_nombre',
                                     'form_title' => 'Módulo:',
@@ -130,7 +123,7 @@
                                     'form_help_text' => '',
                                 ]"></x-input-text>
                             </div>
-                            <div class="col-4">
+                            <div class="col-lg-4 col-12">
                                 <x-input-text :item="[
                                     'form_input_name' => 'tema_nombre',
                                     'form_title' => 'Tema:',
@@ -143,7 +136,7 @@
                                     'form_help_text' => '',
                                 ]"></x-input-text>
                             </div>
-                            <div class="col-4">
+                            <div class="col-lg-4 col-12">
                                 <x-input-text :item="[
                                     'form_input_name' => 'leccion_titulo',
                                     'form_title' => 'Título de la Lección:',
@@ -267,7 +260,7 @@
                         <label for="tipo_dinamica_id" class="form__label form__label--required">
                             Tipo de Práctica
                         </label>
-                        <div class="form__item d-flex justify-content-between align-items-center">
+                        <div class="form__item d-flex justify-content-between align-items-center" style="flex-wrap: wrap">
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="tipoPregunta"
                                     value="Opción Múltiple" checked id="multiple">
@@ -307,7 +300,7 @@
                             Es obligatorio escribir el enunciado (Usa __ para el hueco)
                         </span>
                         <div class="row">
-                            <div class="col-6">
+                            <div class="col-lg-6 col-12">
                                 <x-input-text :item="[
                                     'form_input_name' => 'variable_1',
                                     'form_title' => 'Valor Variable 1:',
@@ -331,7 +324,7 @@
                                     'form_help_text' => '',
                                 ]"></x-input-text>
                             </div>
-                            <div class="col-6">
+                            <div class="col-lg-6 col-12">
                                 <x-input-text :item="[
                                     'form_input_name' => 'variable_3',
                                     'form_title' => 'Valor Variable 3:',
@@ -377,7 +370,7 @@
                     <fieldset class="">
                         <legend class=" border-bottom mb-3">Tutor Inteligente (Refuerzo)</legend>
                         <div class="row ">
-                            <div class="col-6">
+                            <div class="col-lg-6 col-12">
                                 <x-input-text :item="[
                                     'form_input_name' => 'refuerzo_titulo',
                                     'form_title' => 'Título del Refuerzo:',
@@ -418,7 +411,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-6">
+                            <div class="col-lg-6 col-12">
                                 <div class="form__item">
                                     <label for="refuerzo_parrafo" class="form__label">Explicación del Tutor</label>
                                     <div class="input-group">

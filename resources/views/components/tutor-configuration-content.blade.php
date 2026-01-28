@@ -1,4 +1,4 @@
-<div class="col-10 main__content bg-white-border {{ $class }}">
+<div class="col-lg-10 col-12 main__content bg-white-border {{ $class }}">
     <small class="text__gray">
         @foreach ($urlsBeginningEnd as $urlBeginningEnd)
             <a href="{{ route($urlBeginningEnd['url']) }}" class="text__gray">
@@ -33,8 +33,8 @@
                 @if ($parameter['additional_column'])
                     <span>
                         <b>
-                            {{ $parameter['first_column_title'] }} <br>
-                        </b>{{ $parameter['first_column_title_2'] }} <br>{{ $parameter['first_column_title_3'] }}
+                            {{ $parameter['first_column_title'] }}
+                        </b>
                     </span>
                 @endif
 
@@ -65,6 +65,16 @@
                         </span>
                     </div>
                 </div>
+                @if($parameter['state'] != '' )
+                    <div class="{{ $class }}__data-right flex-and-direction-row">
+                    <div>
+                        <b class="{{ $class }}__status-label">Estado</b><br>
+                        <span class="{{ $class }}__status-value">
+                            {{ $parameter['state'] == 1 ? 'Activo' :'Inactivo' }}
+                        </span>
+                    </div>
+                </div>
+                @endif
             </div>
             @if ($parameter['additional_column'])
                 <br>

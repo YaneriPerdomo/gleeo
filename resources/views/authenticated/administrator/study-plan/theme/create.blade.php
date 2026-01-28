@@ -38,11 +38,6 @@
                     'icon' => 'bi bi-journal-check',
                 ],
                 [
-                    'title' => 'Insignias',
-                    'route' => 'initial-decision-patterns.index',
-                    'icon' => 'bi bi-patch-check-fill',
-                ],
-                [
                     'title' => 'Avatares',
                     'route' => 'avatar.index',
                     'icon' => 'bi bi-person-badge-fill',
@@ -53,7 +48,7 @@
                     'icon' => 'bi bi-palette-fill',
                 ],
             ]"></x-aside-admin>
-            <div class="col-10 main__content bg-white-border">
+            <div class="col-lg-10 col-12 main__content bg-white-border">
                 <small class="text__gray">
                     <a href="{{ route('study-plan.index') }}" class="text__gray">Gestión de Contenido</a> >
                     <a href="{{ route('study-plan.index') }}" class="text__gray">Plan de Estudio</a> >
@@ -82,11 +77,11 @@
                     @endif
 
                     <div class="row">
-                        <fieldset class="col-md-12 mb-4">
+                        <fieldset class="col-lg-4 col-12">
                             <legend class="h5 ">Información
                                 General</legend>
                             <div class="row">
-                                <div class="col-md-6 mb-3">
+                                <div class="col-lg-6 mb-3">
                                     <x-input-text :item="[
                                         'form_input_name' => 'theme_title',
                                         'form_title' => 'Nombre del Tema:',
@@ -100,32 +95,18 @@
                                     ]"></x-input-text>
                                     <div class="form__item ">
 
-                                        <div class="form-check form-switch" style="padding: 0;">
-                                            <label for="">Con Borde Redondo:</label>
-                                            <div class="form-check form-switch">
-                                                <input class="form-check-input" type="checkbox" role="switch"
-                                                    name="border_radius" value="1" id="switchActive"
-                                                    {{ old('border_radius') == 1 ? 'checked' : '' }}>
-                                                <label class="form-check-label" for="switchActive">
-                                                    Activado
-                                                </label>
-                                                <br>
-                                                <small class="text__gray">
-                                                    Si no está activado, por defecto será cuadrado.
-                                                </small>
-                                            </div>
-                                        </div>
+
 
                                     </div>
                                 </div>
                             </div>
                         </fieldset>
 
-                        <fieldset class="col-md-12 mb-4">
+                        <fieldset class="col-lg-12 mb-4">
                             <legend class="h5 ">Configuración de
                                 Colores</legend>
                             <div class="row">
-                                <div class="col-md-6 mb-3">
+                                <div class="col-lg-6 mb-3">
                                     <x-input-text :item="[
                                         'form_input_name' => 'main_color',
                                         'form_title' => 'Color Principal:',
@@ -150,7 +131,7 @@
                                         'form_help_text' => 'Este color se verá en la barra horizontal del tema.',
                                     ]"></x-input-text>
                                 </div>
-                                <div class="col-md-6 mb-3">
+                                <div class="col-lg-6 mb-3">
                                     <x-input-text :item="[
                                         'form_input_name' => 'secondary_color',
                                         'form_title' => 'Color Secundario:',
@@ -167,11 +148,11 @@
                             </div>
                         </fieldset>
 
-                        <fieldset class="col-md-12 mb-4">
+                        <fieldset class="col-lg-12 mb-4">
                             <legend class="h5 ">Apariencia
                                 del Fondo</legend>
                             <div class="row">
-                                <div class="col-md-6 mb-3">
+                                <div class="col-lg-6 mb-3">
                                     <x-input-text :item="[
                                         'form_input_name' => 'solid_background',
                                         'form_title' => 'Color de Fondo Sólido:',
@@ -185,7 +166,7 @@
                                         'form_help_text' => 'Fondo base si no hay imagen activa.',
                                     ]"></x-input-text>
                                 </div>
-                                <div class="col-md-6 mb-3">
+                                <div class="col-lg-6 mb-3">
                                     <x-input-text :item="[
                                         'form_input_name' => 'background_path',
                                         'form_title' => 'Patrón o Imagen de Fondo:',

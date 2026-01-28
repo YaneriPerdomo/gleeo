@@ -28,18 +28,27 @@
         <article class="row main__article container-xl w-100">
             <x-aside-admin :items="[
                 [
-                    'title' => 'Plan de Estudio',
-                    'route' => 'study-plan.index',
-                    'icon' => 'bi bi-book-half',
+                    'title' => 'Informacion General',
+                    'route' => 'news-board.index',
+                    'icon' => 'bi bi-info-square-fill',
                 ],
                 [
-                    'title' => 'Insignias',
-                    'route' => 'initial-decision-patterns.index',
-                    'icon' => 'bi bi-award-fill',
+                    'title' => 'Plan de Estudio',
+                    'route' => 'study-plan.index',
+                    'icon' => 'bi bi-journal-check',
+                ],
+                [
+                    'title' => 'Avatares',
+                    'route' => 'avatar.index',
+                    'icon' => 'bi bi-person-badge-fill',
+                ],
+                [
+                    'title' => 'Temas de Interfaz',
+                    'route' => 'theme.index',
+                    'icon' => 'bi bi-palette-fill',
                 ],
             ]"></x-aside-admin>
-
-            <div class="col-10 main__content bg-white-border">
+            <div class="col-lg-10 col-12 main__content bg-white-border">
                 <small class="text__gray">
                     <a href="{{ route('study-plan.index') }}" class="text__gray">Gestión de Contenido</a> >
                     <a href="{{ route('study-plan.index') }}" class="text__gray">Plan de Estudio</a> >

@@ -161,6 +161,63 @@
             font-weight: <weight>;
             font-style: normal;
         }
+
+
+
+        .empty-state {
+            text-align: center;
+            background-color: #f9f9f9;
+            border-radius: 15px;
+            margin: 20px auto;
+        }
+
+
+        .empty-state__icon {
+            font-size: 60px;
+            margin-bottom: 15px;
+            animation: bounce 2s infinite;
+
+        }
+
+        .empty-state__title {
+            color: var(--purple);
+
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .empty-state__text {
+            color: var(--gray);
+            font-size: 1.1rem;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+
+
+        /* Animación simple para el cohete */
+        @keyframes bounce {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        @media screen and (max-width: 992px) {
+            .div__ranking {
+                display: none;
+
+            }
+        }
+
+        .ranking{
+            width: auto !important;
+        }
     </style>
 </head>
 
@@ -188,7 +245,7 @@
                                         class="bi fs-1
                                         {{ $level->level_id === $currentLevel->level_id ? 'level-item--current-icon' : '' }}
                                         @php
-if ($level->progress->state == 'Completado') { //ENUM ['Bloqueado','Completado', 'En Progreso']
+                    if ($level->progress->state == 'Completado') { //ENUM ['Bloqueado','Completado', 'En Progreso']
                                                                 //Completado
                                                                 echo 'bi bi-check';
                                                             }else{
@@ -232,7 +289,7 @@ if ($level->progress->state == 'Completado') { //ENUM ['Bloqueado','Completado',
 
                 </aside>
             </div>
-            <div class="col-6 bg-white-border main__content">
+            <div class="col-lg-6 col-12 bg-white-border main__content">
 
 
 
@@ -271,7 +328,7 @@ if ($level->progress->state == 'Completado') { //ENUM ['Bloqueado','Completado',
                                                 <i
                                                     class="bi
                                                     @php
-$stateIconLesson = $lesson->playerProgress->state;
+                    $stateIconLesson = $lesson->playerProgress->state;
                                                         switch ($stateIconLesson) {
                                                             case 'Completada':
                                                                 echo 'bi-check';
@@ -294,7 +351,16 @@ $stateIconLesson = $lesson->playerProgress->state;
                                             </div>
                                         </button>
                                     @empty
-                                        NO HAY LECCIONES
+                                        <div class="empty-state">
+                                            <div class="empty-state__icon">🚀</div>
+                                            <h3 class="empty-state__title fs-4">¡Estamos preparando algo genial!</h3>
+                                            <p class="empty-state__text">
+                                                Por ahora no hay lecciones aquí, pero nuestros profesionales están
+                                                trabajando
+                                                para traerte contenido divertido muy pronto.
+                                            </p>
+
+                                        </div>
                                     @endforelse
 
                                 </div>
@@ -309,7 +375,7 @@ $stateIconLesson = $lesson->playerProgress->state;
 
                 </div>
             </div>
-            <div class="col-3 bg-white-border">
+            <div class="col-3 bg-white-border div__ranking">
                 <section class="ranking">
                     <div class="ranking__header">
                         <h2 class="ranking__title fs-4">
@@ -420,7 +486,7 @@ $stateIconLesson = $lesson->playerProgress->state;
                                 </div>
                             </div>
 
-                             <div class="lesson-stats__item lesson-stats__item--secondary">
+                            <div class="lesson-stats__item lesson-stats__item--secondary">
                                 <i
                                     class="bi bi-rocket-takeoff-fill lesson-stats__icon lesson-stats__icon--success fs-2"></i>
                                 <div class="lesson-stats__text">

@@ -20,6 +20,13 @@ class Level extends Model
     public function module(){
         return $this->hasMany(Module::class, 'level_id');
     }
+
+     public function moduleOne(){
+        return $this->hasOne(Module::class, 'level_id');
+    }
+
+
+
     public function progress(){
         //tabla //llave foranea - hija
         return $this->hasOne(Progress::class, 'level_id');

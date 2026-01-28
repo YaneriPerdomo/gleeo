@@ -25,7 +25,7 @@
 </head>
 
 <body class="flex-and-direction-column height-full">
-    <x-header></x-header>
+    <x-header notificationIsActiveCount="{{ $notificationIsActiveCount }}"></x-header>
     <main class="flex-grow-2 w-100 flex-and-direction-column flex-center-full flex-center-full-start">
         <article class="row main__article   container-xl w-100">
             <x-aside-admin :items="[
@@ -35,8 +35,8 @@
                     'icon' => 'bi bi-person-video3',
                 ],
             ]"></x-aside-admin>
-            <div class="  col-10 bg-white-border main__content">
-                <div class="flex-and-direction-row flex-content-space-between p-0">
+            <div class="  col-lg-10 col-12 bg-white-border main__content">
+                <div class="flex-and-direction-row flex-content-space-between p-0 flex-gap-0-5">
                     <div>
                         <legend><b>Listado de Jugadores</b></legend>
                         <div class="search ">
@@ -46,7 +46,7 @@
                                 </span>
                                 <input type="text" name="name" id="name"
                                     class="search__input  search__input--text form-control"
-                                    data-url="/gestion-de-cuentas" placeholder="Ingrese usuario o correo electronico"
+                                    data-url="/gestion-de-cuentas/jugadores" placeholder="Ingrese usuario o correo electronico"
                                     aria-label="Ingrese usuario o correo electronico" autofocus
                                     data-name="{{ isset($searchValue) ? str_replace('-', ' ', $searchValue) : '' }}"
                                     value="{{ isset($searchValue) ? str_replace('-', ' ', $searchValue) : '' }}">
@@ -163,7 +163,11 @@
                                                         <i class="bi bi-card-list"></i>
                                                     </button>
                                                 </a>
-                                                <a href="">
+                                                <a href="@if ($value->user->player->gender_id == 1)
+                                                    {{ route('children.edit-m' ,  $value->slug ) }}
+                                                @else
+                                                    {{ route('children.edit-f' ,  $value->slug ) }}
+                                                @endif">
                                                     <button class="button button__color-green">
                                                         <i class="bi bi-pencil-square"></i>
                                                     </button>

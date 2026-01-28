@@ -1,24 +1,56 @@
+ @php
+     if (!isset($isPlayer)) {
+         $isPlayer = '0';
+     }
+     if (!isset($img)) {
+         $img = 'null';
+     }
+     if (!isset($splashScreen)) {
+         $splashScreen = 'null';
+     }
+
+     if (!isset($notificationIsActiveCount)) {
+         $notificationIsActiveCount = '';
+     }
+
+ @endphp
+
  <header class="header">
-     <div class="header__content
-     {{ $isPlayer == '1' ? 'header__content--rol-player' : 'container-xl ' }}
-     ">
+     <div class="header__content {{ $isPlayer == '1' ? 'header__content--rol-player' : 'container-xl ' }} ">
          <section class="header__top-bar flex-and-direction-row flex-content-space-between"
              style="{{ $splashScreen == 'true' ? 'margin-bottom: 0rem; !important' : '' }}">
              <div class="header__logo">
                  <section class="header__logo-section flex-and-direction-row">
-                     <span class="header__logo-text text-white fs-4">
-                         <strong>
-                             Gleeo
-                         </strong>
-                     </span>
+                     <a
+                         href="{{ Auth::user()->rol_id == 3 ? (Auth::user()->player->gender_id == 1 ? '/bienvenido' : '/bienvenida') : '/inicio' }}">
+                         <span class="header__logo-text text-white fs-4">
+                             <strong>
+                                 Gleeo
+                             </strong>
+                         </span>
+                     </a>
                  </section>
              </div>
              @auth
                  <div class="header__profile-container flex-and-direction-row flex-center-full ">
-                     @if (Auth::user()->rol_id == 2 || Auth::user()->rol_id == 3)
-                         <div class="notification">
-                             <i class="bi bi-bell-fill text-white"></i>
-                         </div>
+                     @if (Auth::user()->rol_id == 2)
+                         @if ($notificationIsActiveCount == 0)
+                             <div class="notification">
+                                 <i class="bi bi-bell-fill text-white"></i>
+                             </div>
+                         @else
+                             <div class="notification">
+                                 <a href="{{ route('invervention-notification.index') }}">
+                                     <i class="bi bi-bell-fill text-white"></i>
+                                     @if ($notificationIsActiveCount)
+                                         <span class="notification__is-active">
+
+                                         </span>
+                                     @endif
+                                 </a>
+                             </div>
+                         @endif
+
                      @endif
                      <div class="profile">
                          <div class="profile__greeting dropdown flex-and-direction-row">
@@ -44,7 +76,7 @@
                                      @else
                                          <li><a class="dropdown-item "
                                                  href="
-                                        {{ route(Auth::user()->rol_id == 2 ? 'account-profile.index' : 'children.general-progress') }}">Perfil</a>
+                                        {{ route(Auth::user()->rol_id == 1 || Auth::user()->rol_id == 2 ? 'account-profile.index' : 'children.general-progress') }}">Perfil</a>
                                          </li>
                                      @endif
                                  @endif
@@ -52,10 +84,10 @@
                                  @else
                                      <li><a class="dropdown-item" href="{{ route('change-password.edit') }}">Cambiar
                                              Contraseña</a></li>
-                                     <li>
-                                         <hr class="dropdown-divider">
-                                     </li>
                                  @endif
+                                 <li>
+                                     <hr class="dropdown-divider">
+                                 </li>
                                  <li>
                                      <form action="{{ route('login.logout') }}" method="POST" class="dropdown-menu__form">
                                          @csrf
@@ -82,13 +114,6 @@
                                  <i class="bi bi-house-door-fill"></i> Inicio
                              </a>
                          </li>
-                         <!--
-                         <li class="header__navigation-bar__list-item">
-                             <a href="#" class="header__navigation-bar__link">
-                                 <i class="bi bi-layers-fill"></i> Mis Niveles
-                             </a>
-                         </li>
-                        -->
                          <li class="header__navigation-bar__list-item">
                              <a href="{{ route('ranking-global.index', ['slugCurrentLevel' => Auth::user()->player->current_level->slug]) }}"
                                  class="header__navigation-bar__link">
@@ -135,7 +160,7 @@
                          <li class="header__navigation-bar__list-item">
                              <a href="{{ route('children.index') }}" class="header__navigation-bar__link"><i
                                      class="bi bi-person-video3"></i>
-                                 Gestión de Cuentas </a>
+                                 Gestión de Jugadores </a>
                          </li>
                      @endif
                  </ul>

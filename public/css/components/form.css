@@ -1,3 +1,19 @@
 .is-invalid--border {
     border: solid 1px var(--red);
 }
+.form--login,
+.form--create-account {
+    border-radius: 0.5rem;
+    background: white;
+    padding: 2rem;
+    width: clamp(300px, 90vw, 450px);
+}
+
+@media screen and (max-width: 992px) {
+    .form-actions {
+        gap: 0.4rem;
+        justify-content: center;
+        display: flex;
+        flex-direction: column;
+    }
+}

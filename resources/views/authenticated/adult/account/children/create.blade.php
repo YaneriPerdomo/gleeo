@@ -30,13 +30,13 @@
             width: 75px;
                 height: 95px;
             clip-path: circle(39% at 50% 50%);
-            object-fit: cover;
+            object-fit: contain;
         }
     </style>
 </head>
 
 <body class="flex-and-direction-column ">
-    <x-header></x-header>
+    <x-header  notificationIsActiveCount="{{ $notificationIsActiveCount }}"></x-header>
     <main class="flex-grow-2 w-100 flex-and-direction-column flex-center-full flex-center-full-start">
         <article class="row main__article container-xl w-100">
             <x-aside-admin :items="[
@@ -46,7 +46,7 @@
                     'icon' => 'bi bi-person-video3',
                 ],
             ]"></x-aside-admin>
-            <div class="col-10 main__content bg-white-border">
+            <div class="col-lg-10 col-12 main__content bg-white-border">
                 <small class="text__gray">
                     <a href="{{ route('study-plan.index') }}" class="text__gray">Gestión de Contenido</a> >
                     <a href="{{ route('study-plan.index') }}" class="text__gray">Plan de Estudio</a> >
@@ -67,7 +67,7 @@
                     <div class="row">
                         <div class="row">
                             {{-- Columna: Información Personal --}}
-                            <div class="col-6">
+                            <div class="col-lg-6 col-12">
                                 <fieldset>
                                     <legend>Información Personal</legend>
 
@@ -134,7 +134,7 @@
                                     </div>
                                 </fieldset>
                             </div>
-                            <div class="col-6">
+                            <div class="col-lg-6 col-12">
                                 <fieldset>
                                     <legend>Información de la Cuenta</legend>
                                     <div class="avatars-selector">
@@ -343,7 +343,7 @@
 
 
 
-                    <div class="flex-and-direction-row flex-content-space-between form-actions mt-4">
+                    <div class="flex-and-direction-row  form-actions flex-content-space-between form-actions mt-4">
                         <a href="{{ route('study-plan.index') }}" class="button text__gray"
                             style="text-decoration: none;">
                             <i class="bi bi-box-arrow-in-left"></i> Regresar

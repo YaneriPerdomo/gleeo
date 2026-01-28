@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AlertConfiguration;
+use App\Models\InterventionNotification;
 use App\Models\Lesson;
 use App\Models\Level;
 use App\Models\NewsBoard;
 use App\Models\Player;
 use App\Models\PlayerLesson;
+use App\Models\PlayerLessonHistory;
 use App\Models\Progress;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB as FacadesDB;
@@ -27,19 +30,28 @@ class EducationalPlatformController extends Controller
 
         return view('authenticated.educational-platform.welcome', [
             'data' => $data,
-            'player'         => $player,
-            'theme'          => $player->theme,
+            'player' => $player,
+            'theme' => $player->theme,
         ]);
     }
+
     public function index(Request $request, $slugCurrentLevel)
     {
         $playerID = $request->session()->get('player_id');
 
+        $level = Level::with(['moduleOne' => function ($query) {
+            return $query;
+        }])
+            ->where('slug', $slugCurrentLevel)
+            ->firstOrFail();
 
-        $levelID = Level::where('slug', $slugCurrentLevel)->first();
-        $levelID = $levelID->level_id;
+
+        $levelID = $level->level_id;
+
+
+
         // 3. Obtener el jugador con sus relaciones necesarias (Avatar y Tema)
-        $player = Player::with(['avatar', 'theme',])
+        $player = Player::with(['avatar', 'theme'])
             ->where('player_id', $playerID)
             ->firstOrFail();
 
@@ -55,9 +67,6 @@ class EducationalPlatformController extends Controller
             ->limit(5)
             ->get();
 
-
-
-
         $allLessons = Lesson::whereHas('topic.module.level', function ($q) use ($levelID) {
             return $q->where('level_id', $levelID);
         })->get();
@@ -69,7 +78,7 @@ class EducationalPlatformController extends Controller
                     'player_id' => $playerID,
                 ],
                 [
-                    'state' => 'Bloqueada'
+                    'state' => 'Bloqueada',
                 ]
             );
         }
@@ -77,7 +86,7 @@ class EducationalPlatformController extends Controller
         $hasActive = PlayerLesson::where('player_id', $playerID)
             ->where('state', 'En Espera')
             ->exists();
-        if (!$hasActive) {
+        if (! $hasActive) {
             //  Buscamos SOLO la primera lección bloqueada de ese nivel
             $nextLesson = PlayerLesson::where('player_id', $playerID)
                 ->where('state', 'Bloqueada')
@@ -98,13 +107,13 @@ class EducationalPlatformController extends Controller
                 $query->where('level_id', $levelID);
             });
 
-        // 3. Obtenemos conteos usando clones de la consulta base
         $countTotal = (clone $lessonsQuery)->count();
         $countCompleted = (clone $lessonsQuery)->where('state', 'Completada')->count();
 
         $levelUnlocked = ['state' => false, 'levelSlug' => null];
 
-        // 4. Verificamos si todas las lecciones del nivel están terminadas
+        $progress = Progress::where('player_id', $playerID)->where('level_id', $levelID)->first();
+
         if ($countTotal > 0 && $countTotal === $countCompleted) {
 
             // Obtenemos el número del nivel actual para buscar el siguiente
@@ -125,29 +134,36 @@ class EducationalPlatformController extends Controller
                     FacadesDB::transaction(function () use ($nextProgress, $player) {
                         // Actualizamos el estado del progreso del siguiente nivel
                         $nextProgress->update([
-                            'state' => 'En Progreso'
+                            'state' => 'En Progreso',
                         ]);
 
                         // Actualizamos el puntero del jugador al nuevo nivel
                         $player->update([
                             'level_assigned_id' => $nextProgress->level_id,
-                            'current_level_id'  => $nextProgress->level_id
+                            'current_level_id' => $nextProgress->level_id,
                         ]);
                     });
 
                     $levelUnlocked = [
                         'state' => true,
-                        'levelSlug' => $nextProgress->level->slug
+                        'levelSlug' => $nextProgress->level->slug,
                     ];
                 } catch (\Exception $e) {
-                    Log::error("Error al desbloquear nivel: " . $e->getMessage());
+                    Log::error('Error al desbloquear nivel: ' . $e->getMessage());
+
                     return response()->json(['error' => 'No se pudo actualizar el progreso'], 500);
                 }
             } else {
             }
+        } else {
+            $actualPercentage = ($countTotal > 0) ? (100 / $countTotal) : 0;
+            $hasNewContent = ($progress && $progress->percentage_bar == 100.00 && $countTotal != $countCompleted);
+            if ($hasNewContent) {
+                $progress->percentage_bar = number_format($actualPercentage, 2);
+                $progress->state = 'En Progreso';
+                $progress->save();
+            }
         }
-
-        $progress = Progress::where('player_id', $playerID)->where('level_id', $levelID)->first();
 
         $currentLevel = Level::where('slug', $slugCurrentLevel)->firstOrFail();
 
@@ -157,20 +173,18 @@ class EducationalPlatformController extends Controller
             }])
             ->paginate(5);
 
-        // 3. Importante: Para que el JSON final incluya todo, adjuntamos los módulos al objeto level
         $currentLevel->setRelation('module', $currentModules);
 
-
         return view('authenticated.educational-platform.index', [
-            'currentLevel'   => $currentLevel,
+            'currentLevel' => $currentLevel,
             'CurrentModules' => $currentModules,
-            'levels'         => $levels,
-            'player'         => $player,
-            'theme'          => $player->theme,
-            'bestRanking'    => $bestRanking,
+            'levels' => $levels,
+            'player' => $player,
+            'theme' => $player->theme,
+            'bestRanking' => $bestRanking,
             'levelUnlocked' => $levelUnlocked,
             'slugCurrentLevel' => $slugCurrentLevel,
-            'progress' => $progress
+            'progress' => $progress,
         ]);
     }
 
@@ -178,14 +192,14 @@ class EducationalPlatformController extends Controller
     {
         $playerID = $request->session()->get('player_id');
         $player = Player::where('player_id', $playerID)->first();
-        if (!$player) {
+        if (! $player) {
             return response()->json(['status' => 'error', 'message' => 'No autorizado'], 401);
         }
         $player->current_level_id = $levelId;
         $player->save();
 
         return response()->json([
-            'status' => 'success'
+            'status' => 'success',
         ]);
     }
 }

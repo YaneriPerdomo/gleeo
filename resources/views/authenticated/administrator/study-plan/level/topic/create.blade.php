@@ -26,7 +26,7 @@
     <x-header></x-header>
     <main class="flex-grow-2 w-100 flex-and-direction-column flex-center-full flex-center-full-start">
         <article class="row main__article container-xl w-100">
-             <x-aside-admin :items="[
+            <x-aside-admin :items="[
                 [
                     'title' => 'Informacion General',
                     'route' => 'news-board.index',
@@ -36,11 +36,6 @@
                     'title' => 'Plan de Estudio',
                     'route' => 'study-plan.index',
                     'icon' => 'bi bi-journal-check',
-                ],
-                [
-                    'title' => 'Insignias',
-                    'route' => 'initial-decision-patterns.index',
-                    'icon' => 'bi bi-patch-check-fill',
                 ],
                 [
                     'title' => 'Avatares',
@@ -53,18 +48,16 @@
                     'icon' => 'bi bi-palette-fill',
                 ],
             ]"></x-aside-admin>
-
-
-            <div class="col-10 main__content bg-white-border">
+            <div class="col-lg-10 col-12 main__content bg-white-border">
                 <small class="text__gray">
                     <a href="{{ route('study-plan.index') }}" class="text__gray">Gestión de Contenido</a> >
                     <a href="{{ route('study-plan.index') }}" class="text__gray">Plan de Estudio</a> >
-                    <a href="{{ route('study-plan.index') }}" class="text__gray">Nivel {{ $infoLevel->number ?? '' }} - {{ $infoLevel->name ?? '' }}</a> >
+                    <a href="{{ route('study-plan.index') }}" class="text__gray">Nivel {{ $infoLevel->number ?? '' }}
+                        - {{ $infoLevel->name ?? '' }}</a> >
                     <span>Registrar Nuevo Tema </span>
                 </small>
 
-                <form
-                    action="{{ route('topic.store', ['nivel' =>  $slugLevel ?? '', 'slug' => $slugModule]) }}"
+                <form action="{{ route('topic.store', ['nivel' => $slugLevel ?? '', 'slug' => $slugModule]) }}"
                     class="form" method="POST">
                     @csrf
                     @method('POST')
@@ -85,7 +78,7 @@
                         </div>
                     @endif
 
-                        <x-input-text :item="[
+                    <x-input-text :item="[
                         'form_input_name' => 'topic_title',
                         'form_title' => 'Nombre del Tema:',
                         'type' => 'text',
@@ -100,8 +93,9 @@
 
 
                     <hr>
-                     <div class="flex-and-direction-row flex-content-space-between form-actions mt-4">
-                        <a href=" {{ route('study-plan.level-index', ['nivel' => $slugLevel ?? '']) }}" class="button text__gray" style="text-decoration: none;">
+                    <div class="flex-and-direction-row flex-content-space-between form-actions mt-4">
+                        <a href=" {{ route('study-plan.level-index', ['nivel' => $slugLevel ?? '']) }}"
+                            class="button text__gray" style="text-decoration: none;">
                             <i class="bi bi-box-arrow-in-left"></i> Regresar
                         </a>
 

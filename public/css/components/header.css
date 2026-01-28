@@ -64,7 +64,8 @@ header {
 }
 
 [alt="Avatar"] {
-    width: 40px;
+    width: 34px !important;
+    margin-left: 0.5rem;
      clip-path: circle(39% at 50% 50%);
     object-fit: cover;
 }
