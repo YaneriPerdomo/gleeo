@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AlertThresholdUpdateRequest;
 use App\Models\AlertConfiguration;
 use App\Models\Level;
 use Illuminate\Http\Request;
@@ -64,7 +65,7 @@ class AlertConfigurationController extends Controller
         );
     }
 
-    public function update(Request $request)
+    public function update(AlertThresholdUpdateRequest $request)
     {
         try {
             DB::beginTransaction();

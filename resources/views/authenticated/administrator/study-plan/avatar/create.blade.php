@@ -61,7 +61,7 @@
                     @method('POST')
 
                     <legend class="form__title">
-                        <b><i class="bi bi-person-plus-fill me-2"></i> Agregar Nuevo Avatar</b>
+                        <b> Agregar Nuevo Avatar</b>
                     </legend>
 
                     @if (session('alert-success'))
@@ -85,7 +85,7 @@
                                 'icon' => 'bi-tag-fill',
                                 'aria_label' => 'Introduce el nombre del avatar',
                                 'form_input_value_default' => old('name_avatar'),
-                                'attribute_a' => 'required',
+                                'attribute_a' => '',
                                 'placeholder' => 'Súper Dustin',
                                 'form_help_text' => 'Asigna un nombre divertido para este personaje.',
                             ]"></x-input-text>
@@ -99,7 +99,7 @@
                                 'icon' => 'bi-person-bounding-box',
                                 'aria_label' => 'Sube la imagen del avatar',
                                 'form_input_value_default' => '',
-                                'attribute_a' => 'accept=image/* required',
+                                'attribute_a' => 'accept=image/* ',
                                 'placeholder' => '',
                                 'form_help_text' => 'Se recomienda una imagen cuadrada (PNG) sin fondo.',
                             ]"></x-input-text>
@@ -110,11 +110,11 @@
 
                     <div class="flex-and-direction-row flex-content-space-between form-actions mt-4">
                         <a href="{{ route('avatar.index') }}" class="button text__gray" style="text-decoration: none;">
-                            <i class="bi bi-arrow-left-circle"></i> Regresar a la lista
+                            <i class="bi bi-box-arrow-in-left"></i> Regresar a la lista
                         </a>
 
                         <button type="submit" class="button button__color-purple">
-                            <i class="bi bi-save-fill"></i> Guardar Nuevo Avatar
+                            <i class="bi bi-save"></i> Guardar Nuevo Avatar
                         </button>
                     </div>
                 </form>

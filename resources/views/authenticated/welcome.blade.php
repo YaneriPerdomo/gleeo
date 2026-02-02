@@ -207,15 +207,17 @@
                             </a>
                         @endif
                         @if (Auth::user()->rol_id == 2)
-                            <div class="rapid-actions__card flex-and-direction-column">
-                                <i class="bi bi-person-video3 fs-1 text__gold"></i>
-                                <span class="rapid-actions__subtitle"><b>
-                                        Gestión de Cuentas de Jugadores</b></span>
-                                <p class="text__gray">
-                                    Administra las cuentas de los niños y consulta el historial de decisiones del
-                                    tutor para cada uno.
-                                </p>
-                            </div>
+                            <a href="{{ route('children.index') }}">
+                                <div class="rapid-actions__card flex-and-direction-column">
+                                    <i class="bi bi-person-video3 fs-1 text__gold"></i>
+                                    <span class="rapid-actions__subtitle"><b>
+                                            Gestión de Cuentas de Jugadores</b></span>
+                                    <p class="text__gray">
+                                        Administra las cuentas de los niños y consulta el historial <br> de decisiones del
+                                        tutor para cada uno.
+                                    </p>
+                                </div>
+                            </a>
                         @endif
                     </div>
                 </div>

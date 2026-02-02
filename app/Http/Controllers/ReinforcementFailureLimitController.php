@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ContentEffortUpdateRequest;
 use App\Http\Requests\InitialDecisionPatternsRequest;
 use App\Models\ReinforcementFailureLimit;
 use Exception;
@@ -33,7 +34,7 @@ class ReinforcementFailureLimitController extends Controller
         );
     }
 
-    public function update(InitialDecisionPatternsRequest $request)
+    public function update(ContentEffortUpdateRequest $request)
     {
         $data = ReinforcementFailureLimit::firstOrFail();
         $decisionPattern = $data->decision_pattern;

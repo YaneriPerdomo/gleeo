@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ChildStoreRequest;
 use App\Models\Avatar;
 use App\Models\Children;
 use App\Models\Gender;
@@ -102,7 +103,7 @@ class ChildrenController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function store(ChildStoreRequest $request)
     {
 
 
@@ -110,11 +111,11 @@ class ChildrenController extends Controller
             FacadesDB::beginTransaction();
             $only_name = explode(' ', $request->names);
             $only_lastname = explode(' ', $request->last_names);
-            $slug = Str::slug($only_name[0] . '-' . $only_lastname[0] . '-' .  $request->Username);
+            $slug = Str::slug($only_name[0] . '-' . $only_lastname[0] . '-' .  $request->user);
 
             $newUser = new User();
             $newUser->rol_id = 3;
-            $newUser->user = $request->username;
+            $newUser->user = $request->user;
             $newUser->password = Hash::make($request->password);
             $newUser->email =  null;
             $newUser->save();
@@ -135,7 +136,7 @@ class ChildrenController extends Controller
             $newChildren->representative_id = Auth::user()->representative->representative_id;;
             $newChildren->date_of_birth = $request->date_of_birth;
             $newChildren->gender_id = $request->gender_id;
-            $newChildren->reading_mode = $request->reading_mode ?? 0;
+
             $newChildren->avatar_id = $request->avatar_id;
             $newChildren->theme_id = $request->theme_id;
             $esMasculino = ($request->gender_id == 1);
@@ -183,7 +184,7 @@ class ChildrenController extends Controller
 
     public function delete($slug)
     {
-        $idUser = Auth::user()->user_id;
+        $idUser = Auth::user()->representative->representative_id;
         $data = Player::where('slug', $slug)
             ->where('representative_id', $idUser)
             ->first();
@@ -206,9 +207,9 @@ class ChildrenController extends Controller
     public function destroy(Request $request, $slug)
     {
         $idUser = Auth::user()->user_id;
-
+     $representativeID = Auth::user()->representative->representative_id;
         $data = Player::where('slug', $slug)
-            ->where('representative_id', $idUser)
+            ->where('representative_id', $representativeID)
             ->first();
 
         if (! $data) {
@@ -299,7 +300,7 @@ class ChildrenController extends Controller
             $newChildren->surnames = $request->last_names;
             $newChildren->date_of_birth = $request->date_of_birth;
             $newChildren->gender_id = $request->gender_id;
-            $newChildren->reading_mode = $request->reading_mode ?? 0;
+
             $newChildren->avatar_id = $request->avatar_id;
             $newChildren->theme_id = $request->theme_id;
             $esMasculino = ($request->gender_id == 1);

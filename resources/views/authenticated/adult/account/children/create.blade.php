@@ -80,7 +80,7 @@
                                         'aria_label' => 'Agregar nombre del jugador(a)',
                                         'placeholder' => 'Yaneri Paola...',
                                         'form_input_value_default' => old('names'),
-                                        'attribute_a' => 'required',
+                                        'attribute_a' => '',
                                         'form_help_text' => '',
                                     ]"></x-input-text>
 
@@ -93,7 +93,7 @@
                                         'aria_label' => 'Agregar apellidos del jugador(a)',
                                         'placeholder' => 'Pérez García...',
                                         'form_input_value_default' => old('last_names'),
-                                        'attribute_a' => 'required',
+                                        'attribute_a' => '',
                                         'form_help_text' => '',
                                     ]"></x-input-text>
 
@@ -106,13 +106,13 @@
                                         'aria_label' => 'Seleccione fecha de nacimiento',
                                         'placeholder' => '',
                                         'form_input_value_default' => old('date_of_birth'),
-                                        'attribute_a' => 'required',
+                                        'attribute_a' => '',
                                         'form_help_text' => '',
                                     ]"></x-input-text>
 
 
                                     <div class="form__item mt-3">
-                                        <label for="gender" class="form__label form__label--required">Género</label>
+                                        <label for="gender" class="form__label form__label--">Género</label>
                                         <div class="input-group">
                                             <span
                                                 class="form__icon input-group-text @error('gender_id') is-invalid--border @enderror"
@@ -120,7 +120,7 @@
                                                 <i class="bi bi-gender-ambiguous"></i>
                                             </span>
                                             <select class="form-select @error('gender_id') is-invalid @enderror"
-                                                name="gender_id" id="gender" required>
+                                                name="gender_id" id="gender" >
                                                 <option value="" disabled selected>Seleccione una opción</option>
                                                 <option value="1" {{ old('gender_id') == 1 ? 'selected' : '' }}>
                                                     Masculino</option>
@@ -146,12 +146,14 @@
                                         </div>
 
                                         <div class="avatars-selector__grid flex-and-direction-row">
-                                            @forelse ($avatars as $avatar)
+                                            @forelse ($avatars as $key =>  $avatar)
+
                                                 <div class="avatar-option flex-and-direction-column">
                                                     <input type="radio" name="avatar_id"
                                                         value="{{ $avatar->avatar_id }}"
                                                         id="avatar-{{ $avatar->avatar_id }}"
                                                         class="avatar-option__input"
+                                                        {{ $key === 0 ? 'checked': '' }}
                                                         {{ old('avatar_id') == $avatar->avatar_id ? 'checked' : '' }}>
                                                     <label for="avatar-{{ $avatar->avatar_id }}"
                                                         class="avatar-option__labe flex-grow-2l">
@@ -174,14 +176,14 @@
                                         @enderror
                                     </div>
                                     <x-input-text :item="[
-                                        'form_input_name' => 'username',
+                                        'form_input_name' => 'user',
                                         'form_title' => 'Nombre de Usuario:',
                                         'type' => 'text',
                                         'icon' => 'bi-person-circle',
                                         'aria_label' => 'Agregar nombre de usuario',
                                         'placeholder' => 'yaneri_01',
-                                        'form_input_value_default' => old('username'),
-                                        'attribute_a' => 'required',
+                                        'form_input_value_default' => old('user'),
+                                        'attribute_a' => '',
                                         'form_help_text' => 'El nombre de usuario servirá para iniciar sesión.',
                                     ]"></x-input-text>
 
@@ -191,11 +193,12 @@
                                             interfaz para el jugador</small>
 
                                         <div class="theme-selector__grid flex-and-direction-row">
-                                            @forelse ($themes as $theme)
+                                            @forelse ($themes as $key =>  $theme)
                                                 <div class="theme-option">
                                                     <input type="radio" name="theme_id"
                                                         value="{{ $theme->theme_id }}"
                                                         id="theme-{{ $theme->theme_id }}" class="theme-option__input"
+                                                        {{ $key == 0 ? 'checked' : ''  }}
                                                         {{ old('theme_id') == $theme->theme_id ? 'checked' : '' }}>
                                                     <label for="theme-{{ $theme->id }}" class="theme-option__card">
 
@@ -241,7 +244,7 @@
                                         </div>
                                         <div class="form__item mt-3">
                                             <label for="assigned_level"
-                                                class="form__label form__label--required">Nivel asignado</label>
+                                                class="form__label form__label--">Nivel asignado</label>
 
                                             <div class="input-group">
                                                 <span
@@ -253,13 +256,13 @@
 
                                                 <select
                                                     class="form-select @error('assigned_level') is-invalid @enderror"
-                                                    name="assigned_level" id="assigned_level" required>
+                                                    name="assigned_level" id="assigned_level" >
                                                     <option value="" disabled selected>Seleccione un nivel
                                                         inicial</option>
 
                                                     @foreach ($levels as $level)
                                                         <option value="{{ $level->level_id }}"
-                                                            {{ old('assigned_level') == $level->id ? 'selected' : '' }}>
+                                                            {{ old('assigned_level') == $level->level_id ? 'selected' : '' }}>
                                                             Nivel {{ $level->number }}: {{ $level->name }}
                                                         </option>
                                                     @endforeach
@@ -277,27 +280,13 @@
                                             </small>
                                         </div>
                                         <hr>
-                                        <div class="form__item ">
 
-                                            <div class="form-check form-switch" style="padding: 0;">
-                                                <label for="">Modo de Lectura</label>
-                                                <div class="form-check form-switch">
-                                                    <input class="form-check-input" type="checkbox" role="switch"
-                                                        name="reading_mode" value="1" id="switchActive"
-                                                        {{ old('reading_mode') == 1 ? 'checked' : '' }}>
-                                                    <label class="form-check-label" for="switchActive">
-                                                        Activado
-                                                    </label>
-                                                </div>
-                                            </div>
-
-                                        </div>
 
                                     </div>
-                                    <hr>
+
                                     <div class="form__item">
                                         <label for="password"
-                                            class="form__label form__label--required">Contraseña</label>
+                                            class="form__label form__label--">Contraseña</label>
                                         <div class="input-group ">
                                             <span
                                                 class="form__icon input-group-text @error('password') is-invalid--border @enderror"
@@ -316,7 +305,7 @@
 
                                     <div class="form__item">
                                         <label for="password_confirmation"
-                                            class="form__label form__label--required">Confirmar
+                                            class="form__label form__label--">Confirmar
                                             Contraseña</label>
                                         <div class="input-group ">
                                             <span
@@ -344,7 +333,7 @@
 
 
                     <div class="flex-and-direction-row  form-actions flex-content-space-between form-actions mt-4">
-                        <a href="{{ route('study-plan.index') }}" class="button text__gray"
+                        <a href="{{ route('children.index') }}" class="button text__gray"
                             style="text-decoration: none;">
                             <i class="bi bi-box-arrow-in-left"></i> Regresar
                         </a>

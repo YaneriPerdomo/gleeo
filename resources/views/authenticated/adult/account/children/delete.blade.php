@@ -49,6 +49,11 @@
                         <hr class="delete-card__divider">
                     </div>
 
+                    @if (session('alert-danger'))
+                        <div class="alert alert-danger" role="alert">
+                            <i class="bi bi-x-octagon-fill"></i> {{ session('alert-danger') }}
+                        </div>
+                    @endif
                     <div class="delete-card__body">
                         <i class="delete-card__alert-label text__red">Aviso de Seguridad:</i>
                         <p class="delete-card__description">

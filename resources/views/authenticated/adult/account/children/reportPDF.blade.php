@@ -198,11 +198,11 @@
                 </div>
 
                 <div class="user-registration">
-                    Registro: {{ $player->user->created_at->format('d/m/Y') }}
+                    Fecha de Registro: {{ formatting_date($player->user->created_at) }}
                 </div>
 
                 <span class="last-session">
-                    Ultima Sesion: {{ formatting_date($player->user->last_session) }}
+                    Fecha de Ultima Sesion: {{ formatting_date($player->user->last_session) }}
                 </span>
             </div>
 

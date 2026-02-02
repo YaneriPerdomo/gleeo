@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\RepresentativeStoreRequest;
 use App\Models\Country;
 use App\Models\Representative;
 use App\Models\User;
@@ -84,7 +85,7 @@ class RepresentativeController extends Controller
         );
     }
 
-    public function create(Request $request)
+    public function create(RepresentativeStoreRequest $request)
     {
 
         $country_selected = Country::where('country', $request->country_name)->first();

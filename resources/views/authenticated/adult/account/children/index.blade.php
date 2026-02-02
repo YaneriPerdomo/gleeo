@@ -46,7 +46,8 @@
                                 </span>
                                 <input type="text" name="name" id="name"
                                     class="search__input  search__input--text form-control"
-                                    data-url="/gestion-de-cuentas/jugadores" placeholder="Ingrese usuario o correo electronico"
+                                    data-url="/gestion-de-cuentas/jugadores"
+                                    placeholder="Ingrese usuario o correo electronico"
                                     aria-label="Ingrese usuario o correo electronico" autofocus
                                     data-name="{{ isset($searchValue) ? str_replace('-', ' ', $searchValue) : '' }}"
                                     value="{{ isset($searchValue) ? str_replace('-', ' ', $searchValue) : '' }}">
@@ -62,9 +63,9 @@
                     </div>
                     <div>
                         <a href="{{ route('children.create') }}">
-                          <button class="button  button__color-black">
-                            <i class="bi bi-plus-lg"></i> Agregar Nuevo Jugador
-                        </button>
+                            <button class="button  button__color-black">
+                                <i class="bi bi-plus-lg"></i> Agregar Nuevo Jugador
+                            </button>
                         </a>
 
                     </div>
@@ -75,7 +76,10 @@
                             {!! session('alert-success') !!}
                         </div>
                     @endif
-
+                    @if (session('alert-danger'))
+                        <div class="alert alert-danger" role="alert"><i class="bi bi-x-octagon-fill"></i>
+                            {{ session('alert-danger') }}</div>
+                    @endif
                     <section class='table'>
                         <table class='dataTable'>
                             <thead>
@@ -122,15 +126,13 @@
                                                     $anioNacimiento = substr($value->date_of_birth, 0, 4);
                                                     $anioActual = date('Y');
                                                     echo intval($anioActual) - intval($anioNacimiento) . ' ';
-                                                    echo ' ' .
-                                                        intval($anioActual) -
-                                                        intval($anioNacimiento) >
-                                                    1
+                                                    echo ' ' . intval($anioActual) - intval($anioNacimiento) > 1
                                                         ? 'Años'
                                                         : 'Año';
                                                 @endphp
                                             </td>
-                                            <td>Nivel {{ $value->level_assigned->number ?? ''}} - {{ $value->level_assigned->name ?? '' }} </td>
+                                            <td>Nivel {{ $value->level_assigned->number ?? '' }} -
+                                                {{ $value->level_assigned->name ?? '' }} </td>
                                             <td>
                                                 @php
                                                     $badgeClass = match ($value->user->state ?? '') {
@@ -154,29 +156,26 @@
                                                 {{ formatting_date($value->user->created_at ?? '') }}
                                             </td>
                                             <td class='table__operations'>
-                                                <a href="@if ($value->user->player->gender_id == 1)
-                                                    {{ route('children.progress-m' ,  $value->slug ) }}
+                                                <a
+                                                    href="@if ($value->user->player->gender_id == 1) {{ route('children.progress-m', $value->slug) }}
                                                 @else
-                                                    {{ route('children.progress-f' ,  $value->slug ) }}
-                                                @endif">
+                                                    {{ route('children.progress-f', $value->slug) }} @endif">
                                                     <button type="button" class="button button__color-gold ">
                                                         <i class="bi bi-card-list"></i>
                                                     </button>
                                                 </a>
-                                                <a href="@if ($value->user->player->gender_id == 1)
-                                                    {{ route('children.edit-m' ,  $value->slug ) }}
+                                                <a
+                                                    href="@if ($value->user->player->gender_id == 1) {{ route('children.edit-m', $value->slug) }}
                                                 @else
-                                                    {{ route('children.edit-f' ,  $value->slug ) }}
-                                                @endif">
+                                                    {{ route('children.edit-f', $value->slug) }} @endif">
                                                     <button class="button button__color-green">
                                                         <i class="bi bi-pencil-square"></i>
                                                     </button>
                                                 </a>
-                                                <a href="@if ($value->user->player->gender_id == 1)
-                                                    {{ route('children.delete-m' ,  $value->slug ) }}
-                                                @else
-                                                    {{ route('children.delete-f' ,  $value->slug ) }}
-                                                @endif">
+                                                <a
+                                                    href="@if ($value->user->player->gender_id == 1) {{ route('children.delete-m', $value->slug) }}
+                                                        @else
+                                                            {{ route('children.delete-f', $value->slug) }} @endif">
                                                     <button type="button" class="button button__color-red ">
                                                         <i class="bi bi-trash-fill"></i>
                                                     </button>

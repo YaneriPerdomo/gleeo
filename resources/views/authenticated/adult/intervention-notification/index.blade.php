@@ -43,15 +43,8 @@
 <body class="flex-and-direction-column height-full">
     <x-header notificationIsActiveCount="{{ $notificationIsActiveCount }}"></x-header>
     <main class="flex-grow-2 w-100 flex-and-direction-column flex-center-full flex-center-full-start">
-        <article class="row main__article   container-xl w-100">
-            <x-aside-admin :items="[
-                [
-                    'title' => 'Jugadores',
-                    'route' => 'children.index',
-                    'icon' => 'bi bi-person-video3',
-                ],
-            ]"></x-aside-admin>
-            <div class="  col-lg-10 col-12 bg-white-border main__content">
+        <article class=" flex-and-direction-column flex-center-full  main__article   container-xl w-100">
+            <div class="  bg-white-border main__content" style="width: clamp(400px, 60vw, 1400px);">
                 <div class="flex-and-direction-row flex-content-space-between p-0 flex-gap-0-5">
                     <div class="w-100">
                         <legend><b>Listado de Notificaciones de Intervención</b></legend>
@@ -71,7 +64,7 @@
                                     </span>
                                     <input type="text" name="name" id="name"
                                         class="search__input  search__input--text form-control"
-                                        data-url="/notificacion-de-intervencion"
+                                        data-url="/notificaciones-de-intervencion"
                                         placeholder="Ingrese usuario o correo electronico"
                                         aria-label="Ingrese usuario o correo electronico" autofocus
                                         data-name="{{ isset($searchValue) ? str_replace('-', ' ', $searchValue) : '' }}"

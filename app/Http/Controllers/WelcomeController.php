@@ -11,6 +11,7 @@ class WelcomeController extends Controller
 {
     public function __invoke()
     {
+        $notificationIsActiveCount = 0;
         if (Auth::user()->rol_id == 2) {
             $representativeID = Auth::user()->representative->representative_id;
             $notificationIsActiveCount = InterventionNotification::where('representative_id', $representativeID)

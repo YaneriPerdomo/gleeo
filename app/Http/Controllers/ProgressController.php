@@ -111,7 +111,7 @@ class ProgressController extends Controller
 
         $totalProgress = Progress::where('player_id', $playerID)->count();
         $sumProgress = Progress::where('player_id', $playerID)->sum('percentage_bar');
-        $percentage_bar =  $sumProgress / $totalProgress;
+        $percentage_bar = $totalProgress > 0 ? ($sumProgress / $totalProgress) : 0;
 
 
         $player = Player::with(['theme', 'level_assigned'])
@@ -185,13 +185,14 @@ class ProgressController extends Controller
             2 => 'authenticated.adult.account.children.progress',
         };
 
+
         $data = [
             'player'         => $player,
             'percentage_bar' => $percentage_bar,
             'totalNumberLessonsCompleted' => $totalNumberLessonsCompleted,
             'totalNumberLessons' => $totalNumberLessons,
             'AVGSuccessRate' => round($AVGSuccessRate),
-            'totalDiamonds' => $totalDiamonds->diamonds,
+            'totalDiamonds' => $totalDiamonds != null ? $totalDiamonds->diamonds : 0,
             'mistakesMade' => $mistakesMade,
             'pointsObtained' => $pointsObtained,
             'totalErrorsTopic' => $totalErrorsTopic,
@@ -217,7 +218,7 @@ class ProgressController extends Controller
 
         $totalProgress = Progress::where('player_id', $playerID)->count();
         $sumProgress = Progress::where('player_id', $playerID)->sum('percentage_bar');
-        $percentage_bar =  $sumProgress / $totalProgress;
+        $percentage_bar = $totalProgress > 0 ? ($sumProgress / $totalProgress) : 0;
 
 
         $player = Player::with(['theme', 'level_assigned'])
@@ -297,7 +298,7 @@ class ProgressController extends Controller
             'totalNumberLessonsCompleted' => $totalNumberLessonsCompleted,
             'totalNumberLessons' => $totalNumberLessons,
             'AVGSuccessRate' => round($AVGSuccessRate),
-            'totalDiamonds' => $totalDiamonds->diamonds,
+            'totalDiamonds' => $totalDiamonds != null ? $totalDiamonds->diamonds : 0,
             'mistakesMade' => $mistakesMade,
             'pointsObtained' => $pointsObtained,
             'totalErrorsTopic' => $totalErrorsTopic,
@@ -310,6 +311,6 @@ class ProgressController extends Controller
             $data
         );
 
-        return $pdf->download($player->names . ' ' . $player->surnames .' - Progreso General del usuario '. $player->user->user.' - '  . date('d-m-Y') . '.pdf');
+        return $pdf->download($player->names . ' ' . $player->surnames . ' - Progreso General del usuario ' . $player->user->user . ' - '  . date('d-m-Y') . '.pdf');
     }
 }

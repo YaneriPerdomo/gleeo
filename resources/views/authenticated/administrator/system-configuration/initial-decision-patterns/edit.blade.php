@@ -25,8 +25,8 @@
             gap: 0.5rem;
         }
 
-        .is-invalid--border{
-            border:  solid 1px var(--red);
+        .is-invalid--border {
+            border: solid 1px var(--red);
         }
     </style>
 </head>
@@ -50,7 +50,7 @@
             <div class="col-lg-10 col-12 main__content bg-white-border">
                 <small class="text__gray">
                     <a href="{{ route('initial-decision-patterns.index') }}" class="text__gray">
-                        Configuración del Tutor  </a>
+                        Configuración del Tutor </a>
                     >
                     <a href="{{ route('initial-decision-patterns.index') }}" class="text__gray"> Patrones de Decisión
                         Iniciales del Tutor Inteligente </a>
@@ -66,12 +66,12 @@
                             Iniciales del Tutor Inteligente</b>
                     </legend>
                     @if (session('alert-success'))
-                    <div class="alert alert-success"><i class="bi bi-check-circle-fill"></i>
-                        {{ session('alert-success') }}</div>
+                        <div class="alert alert-success"><i class="bi bi-check-circle-fill"></i>
+                            {{ session('alert-success') }}</div>
                     @endif
                     @if (session('alert-danger'))
-                    <div class="alert alert-danger" role="alert"><i class="bi bi-x-octagon-fill"></i>
-                        {{ session('alert-danger') }}</div>
+                        <div class="alert alert-danger" role="alert"><i class="bi bi-x-octagon-fill"></i>
+                            {{ session('alert-danger') }}</div>
                     @endif
                     <div class="row mt-4">
                         <fieldset class="col-lg-6 col-12">
@@ -79,18 +79,19 @@
                                 Umbral de Ayuda Inmediata (Contenido de
                                 Esfuerzo)
                             </legend>
-                            <x-input-text :item="
-                                [
-                                    'form_input_name' => 'refuerzo_limit',
-                                    'form_title' => 'Límite de Fallos para Refuerzo (CE):',
-                                    'type' => 'text',
-                                    'icon' => 'bi-x-octagon-fill',
-                                    'aria_label' => 'Límite de fallos consecutivos antes de activar el Contenido de Esfuerzo.',
-                                    'placeholder' => 3,
-                                    'form_input_value_default' => $data->refuerzo_fail_limit ?? 0,
-                                    'attribute_a' => 'min=1',
-                                    'form_help_text' => 'Cantidad de errores consecutivos para que el sistema active automáticamente el Contenido de Esfuerzo (CE) remedial.'
-                                ]"></x-input-text>
+                            <x-input-text :item="[
+                                'form_input_name' => 'refuerzo_limit',
+                                'form_title' => 'Límite de Fallos para Refuerzo (CE):',
+                                'type' => 'text',
+                                'icon' => 'bi-x-octagon-fill',
+                                'aria_label' =>
+                                    'Límite de fallos consecutivos antes de activar el Contenido de Esfuerzo.',
+                                'placeholder' => 3,
+                                'form_input_value_default' => old('refuerzo_limit', $data->refuerzo_fail_limit ?? 0),
+                                'attribute_a' => 'min=1',
+                                'form_help_text' =>
+                                    'Cantidad de errores consecutivos para que el sistema active automáticamente el Contenido de Esfuerzo (CE) remedial.',
+                            ]"></x-input-text>
                         </fieldset>
                         <fieldset class="col-lg-6 col-12">
                             <legend class="fs-5 mb-3">
@@ -106,17 +107,14 @@
                                     <select id="pattern_status" name="pattern_status"
                                         class="form-control form__input-select @error('pattern_status') is-invalid @enderror">
                                         <option disabled selected>Seleccione una opción</option>
-                                        <option value="activo" @if ( $data->is_active == 1)
-                                            selected
-                                            @endif >Activo</option>
-                                        <option value="inactivo" @if ( $data->is_active == 0)
-                                            selected
-                                            @endif
-                                            >Inactivo</option>
+                                        <option value="activo" @if (old('pattern_status', $data->is_active) == 1) selected @endif>Activo
+                                        </option>
+                                        <option value="inactivo" @if (old('pattern_status', $data->is_active) == 0) selected @endif>
+                                            Inactivo</option>
                                     </select>
                                 </div>
                                 @error('pattern_status')
-                                <div class="alert alert-danger mt-1">{{ $message }}</div>
+                                    <div class="alert alert-danger mt-1">{{ $message }}</div>
                                 @enderror
                                 <div class="form-help text-muted mt-1">
                                     <small>Define si este patrón de decisión se encuentra activo o inactivo para los

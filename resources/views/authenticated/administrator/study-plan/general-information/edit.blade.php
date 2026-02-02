@@ -83,8 +83,8 @@
                                     'icon' => 'bi-book-half',
                                     'aria_label' => 'Nombre de la materia',
                                     'placeholder' => 'ej. Matemáticas Divertidas',
-                                    'form_input_value_default' => $data->subject ?? '',
-                                    'attribute_a' => 'required',
+                                    'form_input_value_default' => old('subject', $data->subject ) ?? '',
+                                    'attribute_a' => '',
                                     'form_help_text' => 'Nombre de la asignatura que verá el niño.',
                                 ]"></x-input-text>
                             </div>
@@ -95,7 +95,7 @@
                                         <span class="form__icon input-group-text"><i
                                                 class="bi bi-blockquote-left"></i></span>
                                         <textarea name="description" id="description" rows="3" class="form-control"
-                                            placeholder="Escribe aquí el texto instructivo para la lección..." aria-label="Contenido de la guía">{{ $data->description ?? '' }}</textarea>
+                                            placeholder="Escribe aquí el texto instructivo para la lección..." aria-label="Contenido de la guía">{{ old('description', $data->description) ?? '' }}</textarea>
                                     </div>
                                     <small class="text-muted">Breve explicación para orientar al niño al entrar a la
                                         plataforma educativa.</small>

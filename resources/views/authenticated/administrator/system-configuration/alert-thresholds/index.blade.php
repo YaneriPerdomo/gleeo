@@ -96,7 +96,7 @@
                 paragraph="Este módulo configura los umbrales de alerta escalonada.
                     Cuando el estudiante activa el Contenido de Esfuerzo (CE) un número predefinido de veces (ej., 3)
                     dentro de un periodo específico (Día, Semana o Mes), el sistema genera una notificación de
-                    Intervención Requerida para el profesor."
+                    Intervención Requerida para el profesional o representante."
                 :parameters="$allParameters"
                 ></x-tutor-configuration-content>
             </div>

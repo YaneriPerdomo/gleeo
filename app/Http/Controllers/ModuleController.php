@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ModuleStoreRequest;
+use App\Http\Requests\ModuleUpdateRequest;
 use App\Models\Lesson;
 use App\Models\Level;
 use App\Models\Module;
@@ -31,7 +33,7 @@ class ModuleController extends Controller
         );
     }
 
-    public function store(Request $request, $slug)
+    public function store(ModuleStoreRequest $request, $slug)
     {
 
         $level_ = Level::where('slug', $slug)->first();
@@ -88,7 +90,7 @@ class ModuleController extends Controller
         );
     }
 
-    public function update(Request $request, $slug_level, $slug_module)
+    public function update(ModuleUpdateRequest $request, $slug_level, $slug_module)
     {
         $module = Module::with(['topic' => function ($query) {
             return $query;
@@ -98,6 +100,19 @@ class ModuleController extends Controller
             return back()->with('alert-danger', 'Sucedio un error: Registro no encontrado');
         }
 
+          if (
+            Module::where('title', $request->module_title)
+            ->whereNot('module_id', $module->module_id)->exists()
+        ) {
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(
+                    [
+                        'module_title' =>
+                        'Este nombre del modulo ya está registrado.'
+                    ]
+                );
+        }
         try {
             FacadesDB::beginTransaction();
 

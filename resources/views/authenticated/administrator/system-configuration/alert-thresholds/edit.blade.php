@@ -33,7 +33,7 @@
         <article class="row main__article container-xl w-100">
             <x-aside-admin :items="[
                 [
-                    'title' => 'Patrones de Decisión Iniciales del Tutor Inteligente',
+                    'title' => 'Contenido de Esfuerzo',
                     'route' => 'initial-decision-patterns.index',
                     'icon' => 'bi bi-gear-wide-connected',
                 ],
@@ -98,7 +98,7 @@
                                             'Veces que el estudiante debe activar el Contenido de Esfuerzo (CE) antes de generar una alerta al profesor.',
                                     ]"></x-input-text>
                                 </fieldset>
-                                <fieldset class="col-6">
+                                <fieldset class="col-lg-6 col-12">
                                     <legend class="fs-5 mb-3 ">Ventana de Medición Temporal</legend>
                                     <div class="form__item">
                                         <label for="time_window" class="form__label">Ventana de
@@ -112,13 +112,13 @@
                                                 class="form-control initial-decision-patterns__select @error('time_window') is-invalid @enderror">
                                                 <option value="lesson" selected disabled>En una sola Lección</option>
                                                 <option value="24 Horas"
-                                                    @if ($data[0]->time_frame == '24 Horas') selected @endif> 24 Horas (Día)
+                                                    @if (old('time_window_{{ $count }}', $data[0]->time_frame) == '24 Horas') selected @endif> 24 Horas (Día)
                                                 </option>
                                                 <option value="7 Dias"
-                                                    @if ($data[0]->time_frame == '7 Dias') selected @endif> 7 Días (Semana)
+                                                    @if (old('time_window_{{ $count }}', $data[0]->time_frame) == '24 Horas') selected @endif> 7 Días (Semana)
                                                 </option>
                                                 <option value="30 Dias"
-                                                    @if ($data[0]->time_frame == '30 Dias') selected @endif> 30 Días (Mes)
+                                                    @if (old('time_window_{{ $count }}', $data[0]->time_frame) == '24 Horas') selected @endif> 30 Días (Mes)
                                                 </option>
 
                                             </select>
@@ -144,9 +144,9 @@
                                                 class="form-control form__input-select @error('state') is-invalid @enderror">
                                                 <option disabled selected>Seleccione una opción</option>
                                                 <option value="activo"
-                                                    @if (old('state_'.$count,  $value->state) == 1) selected @endif>Activo</option>
+                                                    @if (old('state_' . $count, $value->state) == 1) selected @endif>Activo</option>
                                                 <option value="inactivo"
-                                                    @if (old('state_'.$count,  $value->state) == 0) selected @endif>Inactivo</option>
+                                                    @if (old('state_' . $count, $value->state) == 0) selected @endif>Inactivo</option>
                                             </select>
                                         </div>
                                         @error('state')

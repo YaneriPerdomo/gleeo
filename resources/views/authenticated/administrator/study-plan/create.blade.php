@@ -74,7 +74,7 @@
                         'aria_label' => 'Agregar nombre del nivel',
                         'placeholder' => 'Basico, Intermedio, Avanzado...',
                         'form_input_value_default' => old('level_title'),
-                        'attribute_a' => 'required',
+                        'attribute_a' => '',
                         'form_help_text' => 'El nombre del nivel sera visible para los niños.',
                     ]"></x-input-text>
 

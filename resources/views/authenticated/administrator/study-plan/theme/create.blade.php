@@ -77,11 +77,11 @@
                     @endif
 
                     <div class="row">
-                        <fieldset class="col-lg-4 col-12">
+                        <fieldset class="col-4 col-12">
                             <legend class="h5 ">Información
                                 General</legend>
                             <div class="row">
-                                <div class="col-lg-6 mb-3">
+                                <div class="col-12 col-lg-6 mb-3">
                                     <x-input-text :item="[
                                         'form_input_name' => 'theme_title',
                                         'form_title' => 'Nombre del Tema:',
@@ -102,7 +102,7 @@
                             </div>
                         </fieldset>
 
-                        <fieldset class="col-lg-12 mb-4">
+                        <fieldset class="col-lg-12 col-6 mb-4">
                             <legend class="h5 ">Configuración de
                                 Colores</legend>
                             <div class="row">
@@ -148,7 +148,7 @@
                             </div>
                         </fieldset>
 
-                        <fieldset class="col-lg-12 mb-4">
+                        <fieldset class="col-lg-12 col-6 mb-4">
                             <legend class="h5 ">Apariencia
                                 del Fondo</legend>
                             <div class="row">

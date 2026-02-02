@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreLevelRequest;
 use App\Models\Lesson;
 use App\Models\Level;
 use App\Models\Module;
@@ -69,7 +70,7 @@ class StudyPlanController extends Controller
         );
     }
 
-    public function store(Request $request)
+    public function store(StoreLevelRequest $request)
     {
 
         try {
@@ -148,6 +149,19 @@ class StudyPlanController extends Controller
         $level = Level::where('slug', $slugLevel)->first();
         if (! $level) {
             return back()->with('alert-danger', 'Sucedio un error: Registro no encontrado');
+        }
+         if (
+            Level::where('name', $request->level_title)
+            ->whereNot('level_id', $level->level_id)->exists()
+        ) {
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(
+                    [
+                        'level_title' =>
+                        'Este nombre del nivel ya está registrado.'
+                    ]
+                );
         }
         try {
             FacadesDB::beginTransaction();

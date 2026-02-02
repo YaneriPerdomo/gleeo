@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\LoginRequest;
 use App\Models\Player;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -16,7 +17,7 @@ class LoginController extends Controller
         return view('auth.login');
     }
 
-    public function auth(Request $request)
+    public function auth(LoginRequest $request)
     {
 
         $credentials = $request->only('user', 'password');
@@ -28,7 +29,7 @@ class LoginController extends Controller
                 ]);
             }
             if (FacadesAuth::user()->state == 0) {
-                return back()->withErrors([
+                return back()->with([
                     'alert-danger' => 'Lo sentimos, tu cuenta de usuario está deshabilitada. Para obtener asistencia, comunícate con el administrador.'
                 ]);
             }
@@ -47,8 +48,8 @@ class LoginController extends Controller
             }
             return redirect()->intended('/inicio');
         } else {
-            return back()->withErrors([
-                'message_incorrect_credentials' => 'Credenciales incorrectas'
+            return back()->with([
+                'alert-danger' => 'El correo electrónico o la contraseña son incorrectos.'
             ]);
         }
     }

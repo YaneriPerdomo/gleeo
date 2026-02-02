@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AvatarStoreRequest;
+use App\Http\Requests\AvatarUpdateRequest;
 use App\Models\Avatar;
 use App\Models\Player;
 use Exception;
@@ -45,7 +47,7 @@ class AvatarController extends Controller
         return view('authenticated.administrator.study-plan.avatar.create');
     }
 
-    public function store(Request $request)
+    public function store(AvatarStoreRequest $request)
     {
         try {
             FacadesDB::beginTransaction();
@@ -177,11 +179,37 @@ class AvatarController extends Controller
         );
     }
 
-    public function update(Request $request, $slug)
+    public function update(AvatarUpdateRequest $request, $slug)
     {
         $data = Avatar::where('slug', $slug)->first();
         if (! $data) {
             return back()->with('alert-danger', 'Sucedio un error: Registro no encontrado');
+        }
+        if (
+            Avatar::where('name', $request->name_avatar)
+            ->whereNot('avatar_id', $data->avatar_id)->exists()
+        ) {
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(
+                    [
+                        'name' =>
+                        'Este nombre del Avatar ya está registrado.'
+                    ]
+                );
+        }
+        if (
+            Avatar::where('url', $request->name_avatar)
+            ->whereNot('avatar_id', $data->avatar_id)->exists()
+        ) {
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(
+                    [
+                        'name_avatar' =>
+                        'Esta imagen de perfil ya está registrada.'
+                    ]
+                );
         }
         try {
             FacadesDB::beginTransaction();

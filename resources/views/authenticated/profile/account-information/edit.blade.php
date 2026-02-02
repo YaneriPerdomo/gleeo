@@ -73,8 +73,8 @@
                         'type' => 'text',
                         'icon' => 'bi-person-fill',
                         'aria_label' => 'Introduce tu nombre de usuario.',
-                        'placeholder' => 'ej. MiUsuario123',
-                        'form_input_value_default' => $data->user ?? '',
+                        'placeholder' => 'YiyeAvila',
+                        'form_input_value_default' => old('user_name', $data->user) ?? '',
                         'attribute_a' => '',
                         'form_help_text' => '',
                     ]"></x-input-text>
@@ -86,8 +86,8 @@
                         'type' => 'email',
                         'icon' => 'bi-envelope-fill',
                         'aria_label' => 'Introduce tu dirección de correo electrónico.',
-                        'placeholder' => 'ej. tu.correo@dominio.com',
-                        'form_input_value_default' => $data->email ?? '',
+                        'placeholder' => 'yiyeavila2012@gmail.com',
+                        'form_input_value_default' => old('email', $data->email) ?? '',
                         'attribute_a' => '',
                         'form_help_text' => '',
                     ]"></x-input-text>

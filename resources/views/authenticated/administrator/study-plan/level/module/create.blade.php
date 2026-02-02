@@ -86,7 +86,7 @@
                         'aria_label' => 'Introduce el nombre del módulo.',
                         'placeholder' => 'Ampliando el Concepto de Número',
                         'form_input_value_default' => old('module_title'),
-                        'attribute_a' => 'required',
+                        'attribute_a' => '',
                         'form_help_text' => 'Este es el título principal que verán los niños.',
                     ]"></x-input-text>
 
@@ -103,7 +103,7 @@
                         </a>
 
                         <button type="submit" class="button button__color-purple">
-                            <i class="bi bi-plus-lg"></i> Agregar Nuevo Módulo
+                            <i class="bi bi-save"></i> Agregar Nuevo Módulo
                         </button>
                     </div>
                 </form>

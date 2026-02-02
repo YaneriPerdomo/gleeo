@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\GeneralInformationUpdateRequest;
 use App\Models\NewsBoard;
 use Exception;
 use Illuminate\Database\QueryException;
@@ -35,7 +36,7 @@ class NewsBoardController extends Controller
         ]);
     }
 
-    public function update(Request $request)
+    public function update(GeneralInformationUpdateRequest $request)
     {
         $data = NewsBoard::where('news_board_id', 1)->first();
 
@@ -55,7 +56,7 @@ class NewsBoardController extends Controller
 
             $message = '¡La información general de la plataforma ha sido actualizada con éxito!';
             $request->session()->flash('alert-success', $message);
-            return redirect()->route('news-board.index');
+            return redirect()->route('news-board.edit');
         } catch (QueryException $ex) {
             $request->session()->flash('alert-danger', 'Sucedio un error: ' . $ex->getMessage());
             FacadesDB::rollBack();

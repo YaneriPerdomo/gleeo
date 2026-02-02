@@ -33,7 +33,7 @@ return new class extends Migration
             $table->string('names', 200);
             $table->string('surnames', 200);
             $table->date('date_of_birth');
-            $table->boolean('reading_mode')->default(0);
+
             $table->string('slug', 150)->unique();
             $table->timestamps();
         });
