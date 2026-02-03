@@ -87,7 +87,7 @@
             ]"></x-aside-admin>
             <div class=" col-lg-10 col-12 bg-white-border main__content">
                 <div class="row ">
-                    <div class="col-6 welcome ">
+                    <div class="col-lg-6 col-12 welcome ">
                         <small class="text__gray">
                             <a href="{{ route('initial-decision-patterns.index') }}" class="text__gray">Inicio > </a>
                             <a href="{{ route('alert-thresholds.index') }}" class="text__gray">
@@ -155,7 +155,7 @@
                         </div>
 
                     </div>
-                    <div class="col-6 flex-center-full flex-and-direction-column">
+                    <div class="col-lg-6 col-12 flex-center-full flex-and-direction-column">
                         <figure style="margin:0rem;">
                             <img src="{{ asset('img/logo.png') }}" draggable="false" class="img-fluid"
                                 style="height: 140px;" alt="">

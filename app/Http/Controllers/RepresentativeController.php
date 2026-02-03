@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\RepresentativeStoreRequest;
+use App\Http\Requests\RepresentativeUpdateRequest;
 use App\Models\Country;
 use App\Models\Representative;
 use App\Models\User;
@@ -69,8 +70,8 @@ class RepresentativeController extends Controller
         }])->with(['gender' => function ($query) {
             return $query;
         }])->whereHas('user', function ($query) use ($search_l) {
-            return $query->where('email',  'like', '%'.$search_l.'%')
-                    ->orWhere('user',  'like', '%'.$search_l.'%');
+            return $query->where('email',  'like', '%' . $search_l . '%')
+                ->orWhere('user',  'like', '%' . $search_l . '%');
         })->with(['user' => function ($query) {
             return $query->select('user_id', 'user', 'email', 'last_session', 'state', 'rol_id');
         }])->paginate(5);
@@ -80,7 +81,7 @@ class RepresentativeController extends Controller
             'authenticated.administrator.account.representative.index',
             [
                 'data' => $data,
-                 'searchValue' => $search_l,
+                'searchValue' => $search_l,
             ]
         );
     }
@@ -177,7 +178,7 @@ class RepresentativeController extends Controller
         );
     }
 
-    public function update(Request $request, $slug)
+    public function update(RepresentativeUpdateRequest $request, $slug)
     {
         $data = Representative::select(
             'representative_id',
@@ -205,6 +206,35 @@ class RepresentativeController extends Controller
             return back()->with('alert-danger', 'Sucedio un error: Registro no encontrado');
         }
         $user = $data->user;
+
+
+        if (
+            User::where('user', $user->user)
+            ->whereNot('user_id', $data->user_id)->exists()
+        ) {
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(
+                    [
+                        'Username' =>
+                        'Este nombre de usuario ya está registrado.'
+                    ]
+                );
+        }
+
+        if (
+            User::where('email', $user->email)
+            ->whereNot('user_id', $data->user_id)->exists()
+        ) {
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(
+                    [
+                        'email' =>
+                        'Este correo electrónico ya está registrado.'
+                    ]
+                );
+        }
         try {
             FacadesDB::beginTransaction();
             /*$only_name = explode(' ', $request->name);

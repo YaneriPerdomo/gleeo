@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\TopicStoreRequest;
+use App\Http\Requests\TopicUpdateRequest;
 use App\Models\Lesson;
 use App\Models\Level;
 use App\Models\Module;
@@ -21,7 +23,7 @@ class TopicController extends Controller
 
 
 
-        $infoLevel = Level::where('slug' , $slugLevel)->first();
+        $infoLevel = Level::where('slug', $slugLevel)->first();
 
         return view(
             'authenticated.administrator.study-plan.level.topic.create',
@@ -34,7 +36,7 @@ class TopicController extends Controller
         );
     }
 
-    public function store(Request $request, $slug_level, $slug_module)
+    public function store(TopicStoreRequest $request, $slug_level, $slug_module)
     {
 
         $module = Module::select('module_id', 'slug', 'title')->where('slug', $slug_module)->first();
@@ -71,12 +73,12 @@ class TopicController extends Controller
             $request->session()->flash('alert-danger', 'Sucedio un error: ' . $ex->getMessage());
             FacadesDB::rollBack();
 
-            return redirect()->route('topic.create', ['nivel' => $slug_level , 'slug' => $slug_module]);
+            return redirect()->route('topic.create', ['nivel' => $slug_level, 'slug' => $slug_module]);
         } catch (Exception $ex) {
             $request->session()->flash('alert-danger', 'Sucedio un error: ' . $ex->getMessage());
             FacadesDB::rollBack();
 
-            return redirect()->route('topic.create', ['nivel' => $slug_level , 'slug' => $slug_module]);
+            return redirect()->route('topic.create', ['nivel' => $slug_level, 'slug' => $slug_module]);
         }
     }
 
@@ -100,7 +102,7 @@ class TopicController extends Controller
         );
     }
 
-    public function update(Request $request, $level, $slug)
+    public function update(TopicUpdateRequest $request, $level, $slug)
     {
 
         $topic = Topic::where('slug', $slug)->first();
@@ -109,6 +111,19 @@ class TopicController extends Controller
             return back()->with('alert-danger', 'Sucedio un error: Registro no encontrado');
         }
 
+        if (
+            Topic::where('title', $request->topic_title)
+            ->whereNot('topic_id', $topic->module_id)->exists()
+        ) {
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(
+                    [
+                        'topic_title' =>
+                        'Este nombre del tema ya está registrado.'
+                    ]
+                );
+        }
         try {
             FacadesDB::beginTransaction();
 
@@ -145,11 +160,9 @@ class TopicController extends Controller
 
     public function delete($level, $slug)
     {
-        $data = Topic::
-        with(['module' => function ($query){
-            return $query;
-        }])->
-        where('slug' ,  $slug)->first();
+        $data = Topic::with(['module' => function ($query) {
+                return $query;
+            }])->where('slug',  $slug)->first();
 
 
 

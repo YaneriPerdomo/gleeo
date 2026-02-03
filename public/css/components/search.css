@@ -7,7 +7,8 @@
 }
 
 .search__seeker {
-    width: clamp(340px, 30vh, 200px);
+    /*clamp(mín, ideal, máx)*/
+    width: clamp(290px, 50vw, 500px);
 }
 
 .search__action {

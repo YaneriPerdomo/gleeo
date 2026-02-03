@@ -40,6 +40,18 @@ body {
         margin-top: 0rem !important;
         margin-bottom: 0rem !important;
     }
+
+    .text__gray + br + div {
+        justify-content: center;
+    }
+    .search {
+        justify-content: center;
+    }
+
+    .main__content > div > div:nth-child(2) {
+        width: 100%;
+        text-align: center;
+    }
 }
 
 .notification__is-active {
@@ -52,7 +64,7 @@ body {
     left: 0.7rem;
 }
 
-.notification{
+.notification {
     position: relative;
     cursor: pointer;
 }

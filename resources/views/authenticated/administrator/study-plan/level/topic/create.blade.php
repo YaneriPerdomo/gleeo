@@ -54,7 +54,7 @@
                     <a href="{{ route('study-plan.index') }}" class="text__gray">Plan de Estudio</a> >
                     <a href="{{ route('study-plan.index') }}" class="text__gray">Nivel {{ $infoLevel->number ?? '' }}
                         - {{ $infoLevel->name ?? '' }}</a> >
-                    <span>Registrar Nuevo Tema </span>
+                    <span>Agregar Nuevo Tema </span>
                 </small>
 
                 <form action="{{ route('topic.store', ['nivel' => $slugLevel ?? '', 'slug' => $slugModule]) }}"
@@ -63,7 +63,7 @@
                     @method('POST')
 
                     <legend class="form__title">
-                        <b> Registrar Nuevo Tema</b>
+                        <b> Agregar Nuevo Tema</b>
                     </legend>
 
                     @if (session('alert-success'))
@@ -86,7 +86,7 @@
                         'aria_label' => 'Introduce el nombre del tema.',
                         'placeholder' => 'Números Naturales',
                         'form_input_value_default' => old('topic_title'),
-                        'attribute_a' => 'required',
+                        'attribute_a' => '',
                         'form_help_text' => 'Título del primer tema asociado a este módulo.',
                     ]"></x-input-text>
 
@@ -100,7 +100,7 @@
                         </a>
 
                         <button type="submit" class="button button__color-purple">
-                            <i class="bi bi-plus-lg"></i> Registrar Nuevo Tema
+                            <i class="bi bi-plus-lg"></i> Agregar Nuevo Tema
                         </button>
                     </div>
                 </form>

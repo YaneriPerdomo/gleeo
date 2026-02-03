@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ThemeStoreRequest;
+use App\Http\Requests\ThemeUpdateRequest;
 use App\Models\Player;
 use App\Models\Theme;
 use Exception;
@@ -42,17 +44,17 @@ class ThemeController extends Controller
     {
         return view('authenticated.administrator.study-plan.theme.create');
     }
-    public function store(Request $request)
+    public function store(ThemeStoreRequest $request)
     {
 
 
         try {
             FacadesDB::beginTransaction();
 
-            $slug = Str::slug($request->theme_title);
+            $slug = Str::slug($request->name);
             $newTheme = new Theme();
             $newTheme->slug = $slug;
-            $newTheme->name = $request->theme_title;
+            $newTheme->name = $request->name;
             $newTheme->main_color = $request->main_color;
             $newTheme->secondary_color = $request->secondary_color;
             if ($request->solid_background == '#ffffff') {
@@ -79,7 +81,7 @@ class ThemeController extends Controller
 
             FacadesDB::commit();
 
-            $request->session()->flash('alert-success', "El tema de interfaz '{$request->theme_title}'  ha sido agregado correctamente.");
+            $request->session()->flash('alert-success', "El tema de interfaz '{$request->name}'  ha sido agregado correctamente.");
 
             return redirect()->route('theme.index');
         } catch (QueryException $ex) {
@@ -97,13 +99,26 @@ class ThemeController extends Controller
         }
     }
 
-    public function update(Request $request, $slug)
+    public function update(ThemeUpdateRequest $request, $slug)
     {
         $data = Theme::where('slug', $slug)->first();
         if (! $data) {
             return back()->with('alert-danger', 'Sucedio un error: Registro no encontrado');
         }
 
+        if (
+            Theme::where('name', $request->theme_title)
+            ->whereNot('theme_id', $data->theme_id)->exists()
+        ) {
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(
+                    [
+                        'topic_title' =>
+                        'Este nombre del tema ya está registrado.'
+                    ]
+                );
+        }
         try {
             FacadesDB::beginTransaction();
             $slugNew = Str::slug($request->theme_title);
@@ -127,7 +142,7 @@ class ThemeController extends Controller
                     $data->background_path = $fileName;
                     $data->solid_background = null;
                 }
-            }else{
+            } else {
                 $data->solid_background = $request->solid_background;
                 $data->background_path = null;
             }

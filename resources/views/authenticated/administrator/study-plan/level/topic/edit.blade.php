@@ -85,7 +85,7 @@
                         'icon' => 'bi-collection-play-fill',
                         'aria_label' => 'Introduce el nombre del módulo.',
                         'placeholder' => 'Ampliando el Concepto de Número',
-                        'form_input_value_default' => old('module_title', $levelInfo->title),
+                        'form_input_value_default' => old('module_title', $levelInfo->title ),
                         'attribute_a' => 'disabled',
                         'form_help_text' => 'Este es el título principal que verán los niños.',
                     ]"></x-input-text>

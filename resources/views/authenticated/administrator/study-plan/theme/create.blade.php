@@ -83,14 +83,14 @@
                             <div class="row">
                                 <div class="col-12 col-lg-6 mb-3">
                                     <x-input-text :item="[
-                                        'form_input_name' => 'theme_title',
+                                        'form_input_name' => 'name',
                                         'form_title' => 'Nombre del Tema:',
                                         'type' => 'text',
                                         'icon' => 'bi-pencil-square',
                                         'aria_label' => 'Nombre del tema visual',
                                         'placeholder' => 'Selva de Números',
-                                        'form_input_value_default' => old('theme_title'),
-                                        'attribute_a' => 'required',
+                                        'form_input_value_default' => old('name'),
+                                        'attribute_a' => '',
                                         'form_help_text' => 'El título principal que aparecerá en la interfaz.',
                                     ]"></x-input-text>
                                     <div class="form__item ">
