@@ -58,13 +58,23 @@
     <x-header></x-header>
     <main class="flex-grow-2 w-100 flex-and-direction-column flex-center-full flex-center-full-start">
         <article class="row main__article container-xl w-100">
-            <x-aside-admin :items="[
-                [
-                    'title' => 'Jugadores',
-                    'route' => 'children.index',
-                    'icon' => 'bi bi-person-video3',
-                ],
-            ]"></x-aside-admin>
+               @if (Auth::user()->rol_id == 2)
+                <x-aside-admin :items="[
+                    [
+                        'title' => 'Jugadores',
+                        'route' => 'children.index',
+                        'icon' => 'bi bi-person-video3',
+                    ],
+                ]"></x-aside-admin>
+            @else
+                <x-aside-admin :items="[
+                    [
+                        'title' => 'Representantes y <br> Profesionales',
+                        'route' => 'representative.index',
+                        'icon' => 'bi bi-people-fill',
+                    ],
+                ]"></x-aside-admin>
+            @endif
             <div class="col-lg-10 col-12 main__content bg-white-border ">
                 <small class="text__gray">
                     <a href="{{ route('study-plan.index') }}" class="text__gray">Gestión de Contenido</a> >

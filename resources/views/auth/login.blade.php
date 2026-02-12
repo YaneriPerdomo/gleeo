@@ -52,13 +52,14 @@
             margin-bottom: 1rem;
         }
 
-        .form--login, .form--create-account{
+        .form--login,
+        .form--create-account {
             border-radius: 2rem;
             background: white;
             padding: 2rem;
         }
 
-        .h-100{
+        .h-100 {
             height: 100%;
         }
     </style>
@@ -66,7 +67,8 @@
 
 <body class="h-100 height-full ">
 
-    <main class="row border-top-purple login  height-full login login__row p-0 m-0 flex-and-direction-row  flex-center-full">
+    <main
+        class="row border-top-purple login  height-full login login__row p-0 m-0 flex-and-direction-row  flex-center-full">
         <section class="flex-and-direction-column  flex-center-full">
 
             <form action="{{ route('login.auth') }}" class="form form--login" method="POST">
@@ -85,6 +87,11 @@
                         {{ session('alert-danger') }}
                     </div>
                 @endif
+                @if (session('alert-success'))
+                    <div class="alert alert-success">
+                        {!! session('alert-success') !!}
+                    </div>
+                @endif
 
                 <x-input-text :item="[
                     'form_input_name' => 'user',
@@ -99,17 +106,17 @@
                     'form_help_text' => '',
                 ]"></x-input-text>
                 <x-input-text :item="[
-                        'form_input_name' => 'password',
-                        'form_title' => 'Contraseña',
-                        'type' => 'password',
-                        'icon' => 'bi-key-fill',
-                        'aria_label' => 'Contraseña',
-                        'placeholder' => '*******',
-                        'form_input_value_default' => old('password'),
-                        'additional_class' => '',
-                        'attribute_a' => '',
-                        'form_help_text' => '',
-                    ]"></x-input-text>
+                    'form_input_name' => 'password',
+                    'form_title' => 'Contraseña',
+                    'type' => 'password',
+                    'icon' => 'bi-key-fill',
+                    'aria_label' => 'Contraseña',
+                    'placeholder' => '*******',
+                    'form_input_value_default' => old('password'),
+                    'additional_class' => '',
+                    'attribute_a' => '',
+                    'form_help_text' => '',
+                ]"></x-input-text>
 
                 <button class="button button__color-purple w-100 mt-3">
                     Entrar

@@ -136,9 +136,9 @@
                                                 {{ formatting_date($value->created_at) }}
                                             </td>
                                             <td class='table__operations'>
-                                                <a href=" ">
+                                                <a href="{{ Route('children.representative', $value->slug ?? '')  }}">
                                                     <button type="button" class="button button__color-gold ">
-                                                        <i class="bi bi-card-list"></i>
+                                                        <i class="bi bi-person-workspace"></i>
                                                     </button>
                                                 </a>
                                                 <a href="{{ route('representative.edit', $value->slug ?? '') }}">

@@ -6,6 +6,7 @@ use App\Models\Level;
 use App\Models\Player;
 use App\Models\PlayerLesson;
 use App\Models\Progress;
+use App\Models\Representative;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Container\Attributes\DB;
 use Illuminate\Http\Request;
@@ -95,7 +96,7 @@ class ProgressController extends Controller
         ]);
     }
 
-    public function general(Request $request, $slugPlayer = '')
+    public function general(Request $request, $slugRepresentative = '', $slugChildren = '')
     {
         if (Auth::user()->rol_id == 3) {
             $playerID = $request->session()->get('player_id');
@@ -103,6 +104,18 @@ class ProgressController extends Controller
                 ->where('player_id', $playerID)
                 ->firstOrFail();
         } else {
+            $notificationIsActiveCount = '';
+            $dataAdult = '';
+            if (Auth::user()->rol_id == 1) {
+                $dataAdult = Representative::with(['user' => function ($query) {
+                    return $query;
+                }])->where('slug', $slugRepresentative)->first();
+            }
+            $slugPlayer = Auth::user()->rol_id == 2 ? $slugRepresentative : $slugChildren;
+            $idUser = Auth::user()->rol_id == 2 ? Auth::user()->representative->representative_id
+                : $dataAdult->representative_id;
+
+
             $player = Player::where('slug', $slugPlayer)->first();
             $playerID = $player->player_id;
         }
@@ -183,6 +196,7 @@ class ProgressController extends Controller
         $view = match (Auth::user()->rol_id) {
             3 => 'authenticated.educational-platform.general-progress',
             2 => 'authenticated.adult.account.children.progress',
+            1 => 'authenticated.adult.account.children.progress'
         };
 
 
@@ -290,6 +304,7 @@ class ProgressController extends Controller
         $view = match (Auth::user()->rol_id) {
             3 => 'authenticated.educational-platform.general-progress',
             2 => 'authenticated.adult.account.children.progress',
+            1 => 'authenticated.adult.account.children.progress',
         };
 
         $data = [

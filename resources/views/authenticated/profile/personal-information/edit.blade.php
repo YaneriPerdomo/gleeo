@@ -46,6 +46,13 @@
                     'route' => 'change-password.edit',
                     'icon' => 'bi bi-person-lock',
                 ];
+                if (Auth::user()->rol_id == 2) {
+                    $sidebarItems[] = [
+                        'title' => 'Eliminar Cuenta',
+                        'route' => 'account.delete',
+                        'icon' => 'bi bi-person-fill-x',
+                    ];
+                }
             @endphp
 
             <x-aside-admin :items="$sidebarItems"></x-aside-admin>

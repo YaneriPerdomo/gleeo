@@ -778,7 +778,8 @@
                         <div clas="introduction__stats-icon  ">
                             <i class="bi bi-speedometer2  fs-2 statistics-icon--time statistics-icon "></i>
                         </div>
-                        <div class="statistics__value  fs-2 flex-and-direction-row" title="Tiempo" style="flex-wrap: nowrap">
+                        <div class="statistics__value  fs-2 flex-and-direction-row" title="Tiempo"
+                            style="flex-wrap: nowrap">
                             <b class="statistics__value--time">0</b>
                             <span class="statistics__time-unit " style="margin-left: 0.3rem;"></span>
                         </div>
@@ -849,6 +850,20 @@
 
 
 <script>
+    const espIP = "192.168.100.178";
+
+    function cambiarColor(color) {
+        fetch(`http://${espIP}/set-color?color=${color}`, {
+                mode: 'no-cors'
+            })
+            .then(response => {
+                console.log("Comando enviado: " + color);
+            })
+            .catch(error => {
+                console.error("Error al conectar con el ESP8266:", error);
+            });
+    }
+
     //dispose destruir
     let gameContentAttemptsText = document.querySelector('.game-content__attempts-text')
     let introductionSection = document.querySelector('.introduction');
@@ -869,7 +884,6 @@
 
     introductionBeginBtn.addEventListener('click', e => {
         setTimeout(() => {
-            //volument bajo
             audioBackgroundMusic.volume = 0.2;
             audioBackgroundMusic.loop = true;
             audioBackgroundMusic.play().catch(err => console.log("Esperando interacción..."));
@@ -883,17 +897,8 @@
     })
 
     let refuerzoModalButtonExit = document.querySelector('.refuerzo-modal__close');
-    refuerzoModalButtonExit.addEventListener('click', e => {
 
-        start();
-        updateTutor('.tutor__img', '¡Gleeo dice!',
-            'Recuerda que eres capaz, Dios está contigo, ¿quién contra ti? ¡Te doy otra oportunidad para que esta vez triunfes!'
-        );
-        setTimeout(() => {
-            instanciaPopover.hide();
-        }, 5000);
-    })
-        let gameContentAttemptsNumber = document.querySelector('.game-content__attempts-number');
+    let gameContentAttemptsNumber = document.querySelector('.game-content__attempts-number');
 
     let gleoIndicatesPopover = document.querySelector('[data-bs-toggle="popover"]')
     const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
@@ -966,7 +971,7 @@
     let gameContentScreen = document.querySelector('.game-content__screen');
     console.log(practices[1]);
     const totalPractices = @js($totalExercises);
-    console.clear();
+
     console.info('hola');
     console.info(@js($reinforcementFailureLimit->is_active))
     let refuerzoFailLimit = 3;
@@ -1007,7 +1012,7 @@
 
         if (e.target.closest('.tutor__img')) {
             hablar(e.target.getAttribute('data-voice'));
-            e.target.getAttribute('data-is-he-talking',  true);
+            e.target.getAttribute('data-is-he-talking', true);
         }
     });
 
@@ -1044,6 +1049,8 @@
     }
 
     function handleSuccess(button, autoComplete) {
+        cambiarColor('verde');
+        hablar('¡Respuesta acertada!');
         gameState.correctAnswers = gameState.correctAnswers + 1;
         gameState.diamonds = gameState.diamonds + 1;
         VALUE_DIAMONTD.innerHTML = gameState.diamonds;
@@ -1073,6 +1080,8 @@
     }
 
     function handleFailure(button, reinforcement, correctVariable, autoComplete) {
+        cambiarColor('rojo')
+        hablar('Respuesta errónea.');
         gameState.totalFailuresPractice += 1;
         const gameSelect = '';
         if (autoComplete) {
@@ -1088,6 +1097,9 @@
             ;
             updateTutor('.tutor__img', '¡Gleeo al rescate!',
                 '¡Mira! He preparado un refuerzo especial para ayudarte en este paso.');
+            hablar('¡Gleeo dice! ' +
+                '¡Mira! He preparado un refuerzo especial para ayudarte en este paso.'
+            )
 
         }
         if (autoComplete) {
@@ -1116,6 +1128,7 @@
             updateTutor('.tutor__img', '¡Gleeo dice!',
                 '¡Cuidado! Nos queda una última oportunidad, antes de activar el modo de refuerzo. ¡Concéntrate, tú puedes hacerlo!.'
             );
+            hablar('¡Cuidado! Nos queda una última oportunidad, antes de activar el modo de refuerzo. ¡Concéntrate, tú puedes hacerlo!.')
             setTimeout(() => {
                 instanciaPopover.hide();
             }, 5000);
@@ -1157,7 +1170,7 @@
         let calculoFailplayerDom = gameState.failLimit.playerDom + 1;
         gameState.failLimit.playerDom = calculoFailplayerDom;
         gameContentAttemptsNumber.innerHTML = await calculoFailplayerDom;
-        console.clear();
+
         console.info(calculoFailplayerDom);
         miModal.show();
         //refuerzoModalTitle.textContent = reinforcement.title;
@@ -1175,7 +1188,7 @@
         gameState.currentPracticeIndex++;
         gameState.failLimit.playerDom = gameState.failLimit.fixed;
         gameContentAttemptsNumber.textContent = await gameState.failLimit.playerDom;
-        console.clear();
+
         console.info(gameState.currentPracticeIndex);
         //summerBarPercentage
         let progressBar = document.querySelector('.progress-bar');
@@ -1186,6 +1199,7 @@
             renderPractice(practices[gameState.currentPracticeIndex]);
 
         } else {
+            audioCompleted.volume = 0.4; // Baja el volumen al 40%
             audioCompleted.play();
             audioBackgroundMusic.pause();
             console.info('¡Lección completada!');
@@ -1223,16 +1237,27 @@
                 lessonModalTitle.textContent = '¡Sigue practicando!';
                 lessonModalButtonBack.textContent = 'Mejorar puntaje';
                 lessonModalButtonContinue.textContent = 'Volver al inicio';
+                hablar('Necesitas al menos un acierto para completar esta lección.')
                 lessonModalMsg.textContent = 'Necesitas al menos un acierto para completar esta lección.';
             }
 
             if (gameState.diamonds == 0) {
-                return lessonStatsBadge.textContent = 'AY NO...';
+                const msg =
+                    "¡Oh, no! Parece que esta vez no logramos recolectar diamantes. No te preocupes, ¡la próxima lección será tu revancha!";
+                hablar(msg);
+                return lessonStatsBadge.textContent = 'SIGUE INTENTÁNDOLO';
             }
+
             if (gameState.diamonds <= (gameState.totalPractices / 2)) {
-                return lessonStatsBadge.textContent = 'EXCELENTE';
+                const msg =
+                    "¡Excelente trabajo! Has demostrado un gran dominio. ¡Sigue así y pronto serás un experto!";
+                hablar(msg);
+                return lessonStatsBadge.textContent = '¡EXCELENTE!';
             } else {
-                return lessonStatsBadge.textContent = 'EPICO';
+                const msg =
+                    "¡Esto ha sido épico! Tu desempeño es de otro nivel. ¡Has superado todas las expectativas!";
+                hablar(msg);
+                return lessonStatsBadge.textContent = '¡ÉPICO!';
             }
         }
     }
@@ -1299,6 +1324,9 @@
         const options = variables.split(",");
         updateTutor('.tutor__img', '¡Gleeo dice!', practice.title);
         setTimeout(() => {
+            hablar('¡Gleeo dice! ' + practice.title)
+        }, 3000);
+        setTimeout(() => {
             instanciaPopover.hide();
         }, 5000);
         if (practice.type_dynamic == 'Autocompletar') {
@@ -1356,6 +1384,28 @@
         console.info(tutorImg);
         tutorImg.setAttribute('data-voice', header + '...' + body);
     }
+
+
+    console.clear();
+    hablar(`¡Bienvenid${genderMsgWelcome} a Gleeo! Soy tu tutor inteligente y estaré contigo en cada paso de tu aprendizaje.
+                 Mi misión es darte el apoyo personalizado que necesitas para que alcancemos tus metas juntos. Para empezar, exploraremos
+                 la lección que tiene como nombre,: ${@js($lesson->title)}.`);
+    console.info(@js($lesson->title))
+
+    refuerzoModalButtonExit.addEventListener('click', e => {
+
+        start();
+        updateTutor('.tutor__img', '¡Gleeo dice!',
+            'Recuerda que eres capaz, Dios está contigo, ¿quién contra ti? ¡Te doy otra oportunidad para que esta vez triunfes!'
+        );
+
+        hablar('¡Gleeo dice! ' +
+            'Recuerda que eres capaz, Dios está contigo, ¿quién contra ti? ¡Te doy otra oportunidad para que esta vez triunfes!'
+        )
+        setTimeout(() => {
+            instanciaPopover.hide();
+        }, 5000);
+    })
 </script>
 </body>
 

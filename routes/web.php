@@ -77,6 +77,8 @@ Route::controller(ProfileController::class)->middleware(['auth'])->group(functio
     Route::put('perfil/acceso/cambiar', 'ChangePasswordUpdate')->name('change-password.update');
     Route::get('perfil/personal', 'IndexPersonal')->name('personal-profile.index');
     Route::get('perfil/personal/editar', 'EditPersonal')->name('personal-profile.edit');
+    Route::get('perfil/acceso/eliminar-cuenta', 'delete')->name('account.delete');
+    Route::delete('perfil/acceso/eliminar-cuenta', 'destroy')->name('account.delete');
     Route::put('perfil/personal/editar', 'updatePersonal')->name('personal-profile.update');
 });
 
@@ -126,6 +128,15 @@ Route::controller(ChildrenController::class)->middleware(['auth'])->group(functi
     Route::get('gestion-de-cuentas/jugador/{slug}/eliminar', 'delete')->name('children.delete-m');
     Route::get('gestion-de-cuentas/jugadora/{slug}/agregar', 'delete')->name('children.delete-f');
     Route::delete('gestion-de-cuentas/jugador-a/{slug}/agregar', 'destroy')->name('children.destroy');
+    Route::get('/gestion-de-cuentas/representantes-y-profesionales/{slugRepresentative}/jugador/{slugChildren}/editar', 'edit')->name('children.representative-edit-m');
+    Route::get('/gestion-de-cuentas/representantes-y-profesionales/{slugRepresentative}/jugadora/{slugChildren}/editar', 'edit')->name('children.representative-edit-f');
+    Route::get('/gestion-de-cuentas/representantes-y-profesionales/{slugRepresentative}/jugador/{slugChildren}/eliminar', 'delete')->name('children.representative-delete-m');
+    Route::get('/gestion-de-cuentas/representantes-y-profesionales/{slugRepresentative}/jugadora/{slugChildren}/eliminar', 'delete')->name('children.representative-delete-f');
+    Route::delete('/gestion-de-cuentas/representantes-y-profesionales/{slugRepresentative}/jugadora/{slugChildren}/eliminar', 'destroy')->name('children.representative-destroy');
+
+    Route::put('/gestion-de-cuentas/representantes-y-profesionales/{slugRepresentative}/jugador/{slugChildren}/actualizar', 'update')->name('children.representative-update');
+    Route::get('/gestion-de-cuentas/representantes-y-profesionales/{slug}/jugadores', 'index')->name('children.representative');
+    Route::get('/gestion-de-cuentas/representantes-y-profesionales/{slug}/jugadores/{search}/filtrar', 'filter')->name('children.representative-filter');
 });
 
 
@@ -160,6 +171,9 @@ Route::controller(ProgressController::class)->middleware(['auth'])->group(functi
     Route::get('niveles/{slugCurrentLevel}/progreso-por-nivel', 'player')->name('progress.index');
     Route::get('gestion-de-cuentas/jugador/{slug}/progreso-general', 'general')->name('children.progress-m');
     Route::get('gestion-de-cuentas/jugadora/{slug}/progreso-general', 'general')->name('children.progress-f');
+    Route::get('/gestion-de-cuentas/representantes-y-profesionales/{slugRepresentative}/jugadora/{slugChildren}/progreso-general', 'general')->name('children.representative-progress-f');
+    Route::get('/gestion-de-cuentas/representantes-y-profesionales/{slugRepresentative}/jugador/{slugChildren}/progreso-general', 'general')->name('children.representative-progress-m');
+
     Route::post('gestion-de-cuentas/jugador/{slug}/progreso-general', 'reportPDF')->name('children.progress-reportPDF');
     Route::get('progreso-general', 'general')->name('children.general-progress');
 });

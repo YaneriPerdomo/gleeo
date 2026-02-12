@@ -27,13 +27,23 @@
     <x-header  notificationIsActiveCount="{{ $notificationIsActiveCount }}"></x-header>
     <main class="flex-grow-2 w-100 flex-and-direction-column flex-center-full flex-center-full-start">
         <article class="row main__article   container-xl w-100">
-            <x-aside-admin :items="[
-                [
-                    'title' => 'Representantes y <br> Profesionales',
-                    'route' => 'representative.index',
-                    'icon' => 'bi bi-people-fill',
-                ],
-            ]"></x-aside-admin>
+           @if (Auth::user()->rol_id == 2)
+                <x-aside-admin :items="[
+                    [
+                        'title' => 'Jugadores',
+                        'route' => 'children.index',
+                        'icon' => 'bi bi-person-video3',
+                    ],
+                ]"></x-aside-admin>
+            @else
+                <x-aside-admin :items="[
+                    [
+                        'title' => 'Representantes y <br> Profesionales',
+                        'route' => 'representative.index',
+                        'icon' => 'bi bi-people-fill',
+                    ],
+                ]"></x-aside-admin>
+            @endif
             <div class="col-lg-10 col-12 bg-white-border main__content">
                 <div class="delete-card">
                     <div class="delete-card__header">
@@ -66,13 +76,19 @@
 
                     <hr class="delete-card__divider">
                     <div class="delete-card__actions form-actions flex-and-direction-row flex-content-space-between">
-                        <a href="{{ route('children.index') }}" class="delete-card__link">
+                        <a href=" @if (Auth::user()->rol_id == 2) {{ route('children.index') }}
+                            @else
+                                {{ route('children.representative', $dataAdult->slug) }} @endif " class="delete-card__link">
                             <button class="button button__color-green " type="button">
                                 <i class="bi bi-box-arrow-in-left"></i> Cancelar, conservar registro
                             </button>
                         </a>
 
-                        <form action="{{ route('children.destroy', $data->slug) }}" method="POST"
+                        <form action="@if (Auth::user()->rol_id == 2)
+                    {{ route('children.destroy', $data->slug) }}
+                @else
+                    {{ route('children.representative-destroy', ['slugRepresentative' => $dataAdult->slug , 'slugChildren' =>  $data->slug]) }}
+                @endif" method="POST"
                             class="delete-card__form">
                             @method('DELETE')
                             @csrf

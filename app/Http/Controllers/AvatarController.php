@@ -194,7 +194,7 @@ class AvatarController extends Controller
                 ->withErrors(
                     [
                         'name' =>
-                        'Este nombre del Avatar ya está registrado.'
+                        'Este nombre del avatar ya está registrado.'
                     ]
                 );
         }

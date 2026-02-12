@@ -209,4 +209,49 @@ class ProfileController extends Controller
     }
 
     public function verification() {}
+
+    public function delete()
+    {
+
+        $notificationIsActiveCount = 0;
+
+        $representativeID = FacadesAuth::user()->representative->representative_id;
+        $notificationIsActiveCount = InterventionNotification::where('representative_id', $representativeID)
+            ->where('is_read', 0)->count();
+
+
+        return view('authenticated.profile.delete-account', ['notificationIsActiveCount' => $notificationIsActiveCount]);
+    }
+
+    public function destroy(Request $request)
+    {
+        $data = User::where('user_id', FacadesAuth::user()->user_id)->first();
+        $user_id = $data->user_id;
+        if (!$data) {
+            return back()->with('alert-danger', 'Sucedio un error: Registro no encontrado');
+        }
+
+        try {
+            FacadesDB::beginTransaction();
+            $data->delete();
+            User::where('user_id', $user_id)->delete();
+            FacadesDB::commit();
+            $message = 'Cuenta eliminada. Todos tus datos han sido borrados de nuestro sistema.';
+            $request->session()->flash('alert-success', $message);
+
+            return redirect()->route('login.index');
+        } catch (QueryException $ex) {
+            $request->session()->flash('alert-danger', 'Sucedio un error: ' . $ex->getMessage());
+            FacadesDB::rollBack();
+            return redirect()->route('account.delete');
+        } catch (PDOException $ex) {
+            $request->session()->flash('alert-danger', 'Sucedio un error: ' . $ex->getMessage());
+            FacadesDB::rollBack();
+            return redirect()->route('account.delete');
+        } catch (Exception $ex) {
+            $request->session()->flash('alert-danger', 'Sucedio un error: ' . $ex->getMessage());
+            FacadesDB::rollBack();
+            return redirect()->route('account.delete');
+        }
+    }
 }

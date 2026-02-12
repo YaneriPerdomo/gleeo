@@ -28,17 +28,27 @@
     <x-header notificationIsActiveCount="{{ $notificationIsActiveCount }}"></x-header>
     <main class="flex-grow-2 w-100 flex-and-direction-column flex-center-full flex-center-full-start">
         <article class="row main__article   container-xl w-100">
-            <x-aside-admin :items="[
-                [
-                    'title' => 'Jugadores',
-                    'route' => 'children.index',
-                    'icon' => 'bi bi-person-video3',
-                ],
-            ]"></x-aside-admin>
+            @if (Auth::user()->rol_id == 2)
+                <x-aside-admin :items="[
+                    [
+                        'title' => 'Jugadores',
+                        'route' => 'children.index',
+                        'icon' => 'bi bi-person-video3',
+                    ],
+                ]"></x-aside-admin>
+            @else
+                <x-aside-admin :items="[
+                    [
+                        'title' => 'Representantes y <br> Profesionales',
+                        'route' => 'representative.index',
+                        'icon' => 'bi bi-people-fill',
+                    ],
+                ]"></x-aside-admin>
+            @endif
             <div class="  col-lg-10 col-12 bg-white-border main__content">
                 <div class="flex-and-direction-row flex-content-space-between p-0 flex-gap-0-5">
                     <div>
-                        <legend><b>Listado de Jugadores</b></legend>
+                        <legend><b>Listado de Jugadores del {{ Auth::user()->rol_id != 2 ? $dataAdult->type : '' }} {{ Auth::user()->rol_id != 2 ? $dataAdult->user->user : '' }}</b></legend>
                         <div class="search ">
                             <div class="input-group  search__seeker">
                                 <span class="search__icon-wrapper input-group-text" id="product-name-addon">
@@ -46,7 +56,7 @@
                                 </span>
                                 <input type="text" name="name" id="name"
                                     class="search__input  search__input--text form-control"
-                                    data-url="/gestion-de-cuentas/jugadores"
+                                    data-url="{{ Auth::user()->rol_id == 2 ? '/gestion-de-cuentas/jugadores' : '/gestion-de-cuentas/representantes-y-profesionales/' . $dataAdult->slug . '/jugadores' }}"
                                     placeholder="Ingrese usuario o correo electronico"
                                     aria-label="Ingrese usuario o correo electronico" autofocus
                                     data-name="{{ isset($searchValue) ? str_replace('-', ' ', $searchValue) : '' }}"
@@ -61,7 +71,8 @@
                         </div>
                         <script type="module" src="{{ asset('js/components/buttonSearch.js') }}"></script>
                     </div>
-                    <div>
+                    @if (Auth::user()->rol_id == 2)
+                        <div>
                         <a href="{{ route('children.create') }}">
                             <button class="button  button__color-black">
                                 <i class="bi bi-plus-lg"></i> Agregar Nuevo Jugador
@@ -69,6 +80,7 @@
                         </a>
 
                     </div>
+                    @endif
                 </div>
                 <div class="">
                     @if (session('alert-success'))
@@ -157,25 +169,61 @@
                                             </td>
                                             <td class='table__operations'>
                                                 <a
-                                                    href="@if ($value->user->player->gender_id == 1) {{ route('children.progress-m', $value->slug) }}
-                                                @else
-                                                    {{ route('children.progress-f', $value->slug) }} @endif">
+                                                    href="
+
+                                                    @if (Auth::user()->rol_id == 2)
+                                                        @if ($value->user->player->gender_id == 1)
+                                                            {{ route('children.progress-m', $value->slug) }}
+                                                        @else
+                                                            {{ route('children.progress-f', $value->slug) }}
+                                                        @endif
+                                                    @else
+                                                         @if ($value->user->player->gender_id == 1)
+                                                            {{ route('children.representative-progress-m', ['slugRepresentative' => $dataAdult->slug, 'slugChildren' => $value->slug]) }}
+                                                        @else
+                                                            {{ route('children.representative-progress-f', ['slugRepresentative' => $dataAdult->slug, 'slugChildren' => $value->slug]) }}
+                                                        @endif
+                                                    @endif
+ ">
                                                     <button type="button" class="button button__color-gold ">
-                                                        <i class="bi bi-card-list"></i>
+                                                        <i class="bi bi-graph-up"></i>
                                                     </button>
                                                 </a>
                                                 <a
-                                                    href="@if ($value->user->player->gender_id == 1) {{ route('children.edit-m', $value->slug) }}
-                                                @else
-                                                    {{ route('children.edit-f', $value->slug) }} @endif">
+                                                    href="
+                                                    @if (Auth::user()->rol_id == 2)
+                                                        @if ($value->user->player->gender_id == 1)
+                                                            {{ route('children.edit-m', $value->slug) }}
+                                                        @else
+                                                            {{ route('children.edit-f', $value->slug) }}
+                                                        @endif
+                                                    @else
+                                                         @if ($value->user->player->gender_id == 1)
+                                                            {{ route('children.representative-edit-m', ['slugRepresentative' => $dataAdult->slug, 'slugChildren' => $value->slug]) }}
+                                                        @else
+                                                            {{ route('children.representative-edit-f', ['slugRepresentative' => $dataAdult->slug, 'slugChildren' => $value->slug]) }}
+                                                        @endif
+                                                    @endif
+                                                    ">
                                                     <button class="button button__color-green">
                                                         <i class="bi bi-pencil-square"></i>
                                                     </button>
                                                 </a>
                                                 <a
-                                                    href="@if ($value->user->player->gender_id == 1) {{ route('children.delete-m', $value->slug) }}
+                                                    href="
+                                                     @if (Auth::user()->rol_id == 2)
+                                                        @if ($value->user->player->gender_id == 1)
+                                                            {{ route('children.delete-m', $value->slug) }}
                                                         @else
-                                                            {{ route('children.delete-f', $value->slug) }} @endif">
+                                                            {{ route('children.delete-f', $value->slug) }}
+                                                        @endif
+                                                    @else
+                                                         @if ($value->user->player->gender_id == 1)
+                                                            {{ route('children.representative-delete-m', ['slugRepresentative' => $dataAdult->slug, 'slugChildren' => $value->slug]) }}
+                                                        @else
+                                                            {{ route('children.representative-delete-f', ['slugRepresentative' => $dataAdult->slug, 'slugChildren' => $value->slug]) }}
+                                                        @endif
+                                                    @endif">
                                                     <button type="button" class="button button__color-red ">
                                                         <i class="bi bi-trash-fill"></i>
                                                     </button>

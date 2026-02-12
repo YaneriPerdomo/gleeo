@@ -19,16 +19,16 @@
     <link rel="stylesheet" href="{{ asset('css/components/header.css') }}">
     <link rel="stylesheet" href="{{ asset('css/components/table.css') }}">
     <link rel="stylesheet" href="{{ asset('css/components/text.css') }}">
-        <link rel="stylesheet" href="{{ asset('css/components/theme.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/components/theme.css') }}">
     <link rel="icon" type="image/x-icon" href="{{ asset('img/logo.ico') }}">
     <style>
         .avatar-option__img {
             width: 70px
         }
 
-         .avatar__circle {
+        .avatar__circle {
             width: 75px;
-                height: 95px;
+            height: 95px;
             clip-path: circle(39% at 50% 50%);
             object-fit: contain;
         }
@@ -36,16 +36,26 @@
 </head>
 
 <body class="flex-and-direction-column ">
-    <x-header  notificationIsActiveCount="{{ $notificationIsActiveCount }}"></x-header>
+    <x-header notificationIsActiveCount="{{ $notificationIsActiveCount }}"></x-header>
     <main class="flex-grow-2 w-100 flex-and-direction-column flex-center-full flex-center-full-start">
         <article class="row main__article container-xl w-100">
-            <x-aside-admin :items="[
-                [
-                    'title' => 'Jugadores',
-                    'route' => 'children.index',
-                    'icon' => 'bi bi-person-video3',
-                ],
-            ]"></x-aside-admin>
+            @if (Auth::user()->rol_id == 2)
+                <x-aside-admin :items="[
+                    [
+                        'title' => 'Jugadores',
+                        'route' => 'children.index',
+                        'icon' => 'bi bi-person-video3',
+                    ],
+                ]"></x-aside-admin>
+            @else
+                <x-aside-admin :items="[
+                    [
+                        'title' => 'Representantes y <br> Profesionales',
+                        'route' => 'representative.index',
+                        'icon' => 'bi bi-people-fill',
+                    ],
+                ]"></x-aside-admin>
+            @endif
             <div class="col-lg-10 col-12 main__content bg-white-border">
                 <small class="text__gray">
                     <a href="{{ route('study-plan.index') }}" class="text__gray">Gestión de Contenido</a> >
@@ -53,17 +63,21 @@
                     <span>Agregar Nuevo Nivel</span>
                 </small>
 
-                <form action="{{ route('children.update', $data->slug) }}" class="form" method="POST">
+                <form action="@if (Auth::user()->rol_id == 2)
+                    {{ route('children.update', $data->slug) }}
+                @else
+                    {{ route('children.representative-update', ['slugRepresentative' => $dataAdult->slug , 'slugChildren' =>  $data->slug]) }}
+                @endif" class="form" method="POST">
                     @csrf
                     @method('PUT')
                     <legend class="form__title">
-                        <b>Agregar Nuevo Jugador(a)</b>
+                        <b>Editar Informacion del Jugador {{ $data->gender_id == 1 ? '' : 'a' }}</b>
                     </legend>
                     @if (session('alert-danger'))
                         <div class="alert alert-danger" role="alert"><i class="bi bi-x-octagon-fill"></i>
                             {{ session('alert-danger') }}</div>
                     @endif
-                     @if (session('alert-success'))
+                    @if (session('alert-success'))
                         <div class="alert alert-success">
                             {!! session('alert-success') !!}
                         </div>
@@ -127,9 +141,11 @@
                                             <select class="form-select @error('gender_id') is-invalid @enderror"
                                                 name="gender_id" id="gender" required>
                                                 <option value="" disabled selected>Seleccione una opción</option>
-                                                <option value="1" {{ old('gender_id', $data->gender_id) == 1 ? 'selected' : '' }}>
+                                                <option value="1"
+                                                    {{ old('gender_id', $data->gender_id) == 1 ? 'selected' : '' }}>
                                                     Masculino</option>
-                                                <option value="2" {{ old('gender_id', $data->gender_id) == 2 ? 'selected' : '' }}>
+                                                <option value="2"
+                                                    {{ old('gender_id', $data->gender_id) == 2 ? 'selected' : '' }}>
                                                     Femenino</option>
                                             </select>
                                         </div>
@@ -160,13 +176,13 @@
                                                         {{ old('avatar_id', $data->avatar_id) == $avatar->avatar_id ? 'checked' : '' }}>
                                                     <label for="avatar-{{ $avatar->avatar_id }}"
                                                         class="avatar-option__labe flex-grow-2l">
-                                                        <img src="{{ asset('img/avatars/' . $avatar->url ) }}"
-                                                        class=" clip-path-50 avatar__circle"
+                                                        <img src="{{ asset('img/avatars/' . $avatar->url) }}"
+                                                            class=" clip-path-50 avatar__circle"
                                                             title="{{ $avatar->name }}" alt="{{ $avatar->name }}"
-                                                            draggable="false" >
+                                                            draggable="false">
                                                     </label>
                                                     <div>
-                                                         <span> {{ $avatar->name }}</span>
+                                                        <span> {{ $avatar->name }}</span>
                                                     </div>
                                                 </div>
                                             @empty
@@ -202,15 +218,17 @@
                                                         value="{{ $theme->theme_id }}"
                                                         id="theme-{{ $theme->theme_id }}" class="theme-option__input"
                                                         {{ old('theme_id', $data->theme_id) == $theme->theme_id ? 'checked' : '' }}>
-                                                    <label for="theme-{{ $theme->id }}" class="theme-option__card">
+                                                    <label for="theme-{{ $theme->id }}"
+                                                        class="theme-option__card">
 
-                                                         <div class="theme-option__figure">
+                                                        <div class="theme-option__figure">
                                                             @if ($theme->background_path != null)
-                                                                <img src="{{ asset('img/themes/' . $theme->background_path ) }}"
+                                                                <img src="{{ asset('img/themes/' . $theme->background_path) }}"
                                                                     class="theme-option__bg-preview"
                                                                     alt="Fondo del tema">
                                                             @else
-                                                                <div class="theme-option__no-bg" style="background: {{ $theme->solid_background }}">
+                                                                <div class="theme-option__no-bg"
+                                                                    style="background: {{ $theme->solid_background }}">
 
                                                                     <span style="filter: invert(1)">Fondo Solido</span>
                                                                 </div>
@@ -221,7 +239,7 @@
                                                                     style="background-color: {{ $theme->main_color }}"></span>
                                                                 <span class="theme-option__dot"
                                                                     style="background-color: {{ $theme->secondary_color }}"></span>
-                                                                    <span class="theme-option__dot"
+                                                                <span class="theme-option__dot"
                                                                     style="background-color: {{ $theme->solid_background }}"></span>
                                                             </div>
                                                         </div>
@@ -264,10 +282,7 @@
                                                     @foreach ($levels as $level)
                                                         <option value="{{ $level->level_id }}"
                                                             {{ old('assigned_level', $data->level_assigned_id) == $level->level_id ? 'selected' : '' }}
-                                                            @if($level->number < $data->level_assigned->number)
-                                                                disabled
-                                                            @endif
-                                                        >
+                                                            @if ($level->number < $data->level_assigned->number) disabled @endif>
                                                             Nivel {{ $level->number }}: {{ $level->name }}
                                                         </option>
                                                     @endforeach
@@ -335,8 +350,11 @@
 
 
                     <div class="flex-and-direction-row flex-content-space-between form-actions mt-4">
-                        <a href="{{ route('study-plan.index') }}" class="button text__gray"
-                            style="text-decoration: none;">
+                        <a href="
+                            @if (Auth::user()->rol_id == 2) {{ route('children.index') }}
+                            @else
+                                {{ route('children.representative', $dataAdult->slug) }} @endif "
+                            class="button text__gray" style="text-decoration: none;">
                             <i class="bi bi-box-arrow-in-left"></i> Regresar
                         </a>
 

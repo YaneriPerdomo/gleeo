@@ -113,7 +113,7 @@ class RepresentativeController extends Controller
                 'user_id' => $user->user_id,
             ]);
 
-            $message = 'La Cuenta ha sido Creada Correctamente.';
+            $message = 'La cuenta ha sido creada correctamente.';
             FacadesDB::commit();
 
             $request->session()->flash('alert-success', $message);
@@ -395,4 +395,6 @@ class RepresentativeController extends Controller
             return redirect()->route('representative.delete');
         }
     }
+
+
 }

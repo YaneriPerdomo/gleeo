@@ -685,6 +685,8 @@
         let skipPreviousLessonsModal = new bootstrap.Modal(document.getElementById('inforSkipPreviousLessonsModal'));
         skipPreviousLessonsModal.show();
     }
+
+     window.speechSynthesis.cancel();
 </script>
 
 </html>

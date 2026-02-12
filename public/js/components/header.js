@@ -21,11 +21,15 @@ else if (url.href.includes("/inicio")) {
     headerNavigationBarListItem[0].classList.add("item-selected--nav");
 }
 else if (url.href.includes("/perfil")) {
+    if(url.href.includes("/eliminar-cuenta")){
+        return tutorSettingsListIcons[3].classList.add("item-selected");
+    }
     if (url.href.includes("/acceso")) {
         tutorSettingsListIcons[2].classList.add("item-selected");
     } else if (url.href.includes("/cuenta")) {
         tutorSettingsListIcons[1].classList.add("item-selected");
-    } else {
+    }
+     else {
         tutorSettingsListIcons[0].classList.add("item-selected");
     }
 }

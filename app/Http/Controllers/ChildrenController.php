@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ChildrenUpdateRequest;
 use App\Http\Requests\ChildStoreRequest;
 use App\Models\Avatar;
 use App\Models\Children;
@@ -10,6 +11,7 @@ use App\Models\InterventionNotification;
 use App\Models\Level;
 use App\Models\Player;
 use App\Models\Progress;
+use App\Models\Representative;
 use App\Models\Theme;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -24,61 +26,105 @@ use PDOException;
 
 class ChildrenController extends Controller
 {
-    public function index()
+    public function index($slug = '')
     {
-
-        $idUser = Auth::user()->representative->representative_id;
-        $data = Player::with(['gender' => function ($query) {
-            return $query;
-        }])
-            ->with(['level_assigned' => function ($query) {
-                return $query;
-            }])->with(['user' => function ($query) {
+        $notificationIsActiveCount = '';
+        $dataAdult = '';
+        if (Auth::user()->rol_id == 2) {
+            $idUser = Auth::user()->representative->representative_id;
+            $data = Player::with(['gender' => function ($query) {
                 return $query;
             }])
-            ->where('representative_id', $idUser)
-            ->paginate(5);
+                ->with(['level_assigned' => function ($query) {
+                    return $query;
+                }])->with(['user' => function ($query) {
+                    return $query;
+                }])
+                ->where('representative_id', $idUser)
+                ->paginate(5);
 
-        if (Auth::user()->rol_id == 2) {
+
             $representativeID = Auth::user()->representative->representative_id;
             $notificationIsActiveCount = InterventionNotification::where('representative_id', $representativeID)
                 ->where('is_read', 0)->count();
+        } else {
+            $dataAdult = Representative::with(['user' => function ($query) {
+                return $query;
+            }])->where('slug', $slug)->first();
+
+            $id = $dataAdult->representative_id;
+            $data = Player::with(['gender' => function ($query) {
+                return $query;
+            }])
+                ->with(['level_assigned' => function ($query) {
+                    return $query;
+                }])->with(['user' => function ($query) {
+                    return $query;
+                }])
+                ->where('representative_id', $id)
+                ->paginate(5);
         }
 
         return view('authenticated.adult.account.children.index', [
             'data' => $data,
-            'notificationIsActiveCount' => $notificationIsActiveCount || 0
+            'notificationIsActiveCount' => $notificationIsActiveCount || 0,
+            'dataAdult' => $dataAdult
         ]);
     }
 
-    public function filter($search)
+    public function filter($slug = '', $search = '')
     {
-        $idUser = Auth::user()->user_id;
-        $test = explode('[', $search);
-        $search_l =  str_replace(']', '', $test[1]);
-        $data = Player::with(['gender' => function ($query) {
-            return $query;
-        }])->with(['level_assigned' => function ($query) {
-            return $query;
-        }])->with(['user' => function ($query) {
-            return $query;
-        }])
-            ->where('representative_id', $idUser)
-            ->where('names',   'like', '%' . $search_l . '%')
-            ->orWhere('surnames', 'like', '%' . $search_l . '%')
-            ->paginate(5);
-
+        $notificationIsActiveCount = '';
+        $dataAdult = '';
         if (Auth::user()->rol_id == 2) {
-            $representativeID = Auth::user()->representative->representative_id;
-            $notificationIsActiveCount = InterventionNotification::where('representative_id', $representativeID)
-                ->where('is_read', 0)->count();
+            $idUser = Auth::user()->user_id;
+            $test = explode('[', $slug);
+            $search_l =  str_replace(']', '', $test[1]);
+            $data = Player::with(['gender' => function ($query) {
+                return $query;
+            }])->with(['level_assigned' => function ($query) {
+                return $query;
+            }])->with(['user' => function ($query) {
+                return $query;
+            }])
+                ->where('representative_id', $idUser)
+                ->where('names',   'like', '%' . $search_l . '%')
+                ->orWhere('surnames', 'like', '%' . $search_l . '%')
+                ->paginate(5);
+
+            if (Auth::user()->rol_id == 2) {
+                $representativeID = Auth::user()->representative->representative_id;
+                $notificationIsActiveCount = InterventionNotification::where('representative_id', $representativeID)
+                    ->where('is_read', 0)->count();
+            }
+        } else {
+            $dataAdult = Representative::with(['user' => function ($query) {
+                return $query;
+            }])->where('slug', $slug)->first();
+
+            $id = $dataAdult->user->user_id;
+            $test = explode('[', $search);
+            $search_l =  str_replace(']', '', $test[1]);
+            $data = Player::with(['gender' => function ($query) {
+                return $query;
+            }])->with(['level_assigned' => function ($query) {
+                return $query;
+            }])->with(['user' => function ($query) {
+                return $query;
+            }])
+                ->where('representative_id', $id)
+                ->where('names',   'like', '%' . $search_l . '%')
+                ->orWhere('surnames', 'like', '%' . $search_l . '%')
+                ->paginate(5);
         }
+
         return view(
             'authenticated.adult.account.children.index',
             [
                 'data' => $data,
                 'searchValue' => $search_l,
-                'notificationIsActiveCount' => $notificationIsActiveCount
+                'notificationIsActiveCount' => $notificationIsActiveCount,
+                'dataAdult' => $dataAdult
             ]
         );
     }
@@ -111,7 +157,7 @@ class ChildrenController extends Controller
             FacadesDB::beginTransaction();
             $only_name = explode(' ', $request->names);
             $only_lastname = explode(' ', $request->last_names);
-            $slug = Str::slug($only_name[0] . '-' . $only_lastname[0] . '-' .  $request->user);
+            $slug = Str::slug($only_name[0] . '-' . $only_lastname[0] . '-' .  $request->username);
 
             $newUser = new User();
             $newUser->rol_id = 3;
@@ -182,9 +228,18 @@ class ChildrenController extends Controller
         }
     }
 
-    public function delete($slug)
+    public function delete($slugRepresentative = '', $slugChildren = '')
     {
-        $idUser = Auth::user()->representative->representative_id;
+        $notificationIsActiveCount = '';
+        $dataAdult = '';
+        if (Auth::user()->rol_id == 1) {
+            $dataAdult = Representative::with(['user' => function ($query) {
+                return $query;
+            }])->where('slug', $slugRepresentative)->first();
+        }
+        $slug = Auth::user()->rol_id == 2 ? $slugRepresentative : $slugChildren;
+        $idUser = Auth::user()->rol_id == 2 ? Auth::user()->representative->representative_id
+            : $dataAdult->representative_id;
         $data = Player::where('slug', $slug)
             ->where('representative_id', $idUser)
             ->first();
@@ -200,14 +255,25 @@ class ChildrenController extends Controller
         }
         return view('authenticated.adult.account.children.delete', [
             'data' => $data,
-            'notificationIsActiveCount' => $notificationIsActiveCount || 0
+            'notificationIsActiveCount' => $notificationIsActiveCount || 0,
+            'dataAdult' => $dataAdult
         ]);
     }
 
-    public function destroy(Request $request, $slug)
+    public function destroy(Request $request, $slugRepresentative = '', $slugChildren = '')
     {
-        $idUser = Auth::user()->user_id;
-     $representativeID = Auth::user()->representative->representative_id;
+
+        $notificationIsActiveCount = '';
+        $dataAdult = '';
+        if (Auth::user()->rol_id == 1) {
+            $dataAdult = Representative::with(['user' => function ($query) {
+                return $query;
+            }])->where('slug', $slugRepresentative)->first();
+        }
+        $slug = Auth::user()->rol_id == 2 ? $slugRepresentative : $slugChildren;
+
+        $representativeID = Auth::user()->rol_id == 2 ? Auth::user()->representative->representative_id
+            : $dataAdult->representative_id;
         $data = Player::where('slug', $slug)
             ->where('representative_id', $representativeID)
             ->first();
@@ -227,33 +293,62 @@ class ChildrenController extends Controller
             User::where('user_id', $user_id)->delete();
             FacadesDB::commit();
             $request->session()->flash('alert-success', $message);
-            return redirect()->route('children.index');
+            if (Auth::user()->rol_id == 2) {
+                return redirect()->route('children.index');
+            } else {
+                return redirect()->route('children.representative', ['slug' => $dataAdult->slug]);
+            }
         } catch (QueryException $ex) {
             $request->session()->flash('alert-danger', 'Sucedio un error: ' . $ex->getMessage());
             FacadesDB::rollBack();
-
-            return redirect()->route('children.delete-' . $es_masculino ? 'm' : 'f', $data->slug);
+            if (Auth::user()->rol_id == 2) {
+                return redirect()->route('children.delete-' . $es_masculino ? 'm' : 'f', $data->slug);
+            } else {
+                return redirect()->route(
+                    'children.representative-delete-' . $es_masculino ? 'm' : 'f',
+                    ['slugRepresentative' => $slugRepresentative, 'slugChildren' => $slugChildren]
+                );
+            }
         } catch (PDOException $ex) {
             $request->session()->flash('alert-danger', 'Sucedio un error: ' . $ex->getMessage());
             FacadesDB::rollBack();
-
-            return redirect()->route('children.delete' . $es_masculino ? 'm' : 'f', $data->slug);
+            if (Auth::user()->rol_id == 2) {
+                return redirect()->route('children.delete-' . $es_masculino ? 'm' : 'f', $data->slug);
+            } else {
+                return redirect()->route(
+                    'children.representative-delete-' . $es_masculino ? 'm' : 'f',
+                    ['slugRepresentative' => $slugRepresentative, 'slugChildren' => $slugChildren]
+                );
+            }
         } catch (Exception $ex) {
             $request->session()->flash('alert-danger', 'Sucedio un error: ' . $ex->getMessage());
             FacadesDB::rollBack();
-
-            return redirect()->route('children.delete' . $es_masculino ? 'm' : 'f', $data->slug);
+            if (Auth::user()->rol_id == 2) {
+                return redirect()->route('children.delete-' . $es_masculino ? 'm' : 'f', $data->slug);
+            } else {
+                return redirect()->route(
+                    'children.representative-delete-' . $es_masculino ? 'm' : 'f',
+                    ['slugRepresentative' => $slugRepresentative, 'slugChildren' => $slugChildren]
+                );
+            }
         }
     }
 
-    public function edit($slug)
+    public function edit($slugRepresentative = '', $slugChildren = '')
     {
+        $dataAdult = '';
+        if (Auth::user()->rol_id == 1) {
+            $dataAdult = Representative::with(['user' => function ($query) {
+                return $query;
+            }])->where('slug', $slugRepresentative)->first();
+        }
+        $slug = Auth::user()->rol_id == 2 ? $slugRepresentative : $slugChildren;
         $avatars = Avatar::all();
         $themes = Theme::all();
         $genders = Gender::all();
         $levels = Level::all();
         $data = Player::where('slug', $slug)->first();
-
+        $notificationIsActiveCount = '';
         if (Auth::user()->rol_id == 2) {
             $representativeID = Auth::user()->representative->representative_id;
             $notificationIsActiveCount = InterventionNotification::where('representative_id', $representativeID)
@@ -265,27 +360,56 @@ class ChildrenController extends Controller
             'themes' => $themes,
             'genders' => $genders,
             'levels' => $levels,
-            'notificationIsActiveCount' => $notificationIsActiveCount || 0
+            'notificationIsActiveCount' => $notificationIsActiveCount || 0,
+            'dataAdult' => $dataAdult
         ]);
     }
 
-    public function update(Request $request, $slug)
+    public function update(ChildrenUpdateRequest $request, $slugRepresentative = '', $slugChildren = '')
     {
-        $idUser = Auth::user()->user_id;
+        $dataAdult = '';
+        if (Auth::user()->rol_id == 1) {
+            $dataAdult = Representative::with(['user' => function ($query) {
+                return $query;
+            }])->where('slug', $slugRepresentative)->first();
+        }
+        $slug = Auth::user()->rol_id == 2 ? $slugRepresentative : $slugChildren;
+        $idUser = Auth::user()->rol_id == 2 ? Auth::user()->representative->representative_id : $dataAdult->representative_id;
+
 
         $data = Player::where('slug', $slug)
             ->where('representative_id', $idUser)
             ->first();
+
+
         if (! $data) {
             return back()->with('alert-danger', 'Sucedio un error: Registro no encontrado');
         }
+
+          if (
+            User::where('user', $request->username)
+            ->whereNot('user_id', $data->user_id)->exists()
+        ) {
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(
+                    [
+                        'username' =>
+                        'Este nombre de usuario ya está registrado.'
+                    ]
+                );
+        }
         try {
-            $url = 'children.edit-';
+            if (Auth::user()->rol_id == 2) {
+                $url = 'children.edit-';
+            } else {
+                $url = 'children.representative-edit-';
+            }
             $url .= $data->gender_id == 1 ? 'm' : 'f';
             FacadesDB::beginTransaction();
             $only_name = explode(' ', $request->names);
             $only_lastname = explode(' ', $request->last_names);
-            $slugNew = Str::slug($only_name[0] . '-' . $only_lastname[0] . '-' .  $request->Username);
+            $slugNew = Str::slug($only_name[0] . '-' . $only_lastname[0] . '-' .  $request->username);
             $newUser = $data->user;
             $newUser->user = $request->username;
             if ($request->password  != '') {
@@ -308,9 +432,15 @@ class ChildrenController extends Controller
             $message = !$esMasculino ? 'La jugadora ha sido actualizada de manera exitosa' : 'El jugador  ha sido actualizado de manera exitoso';
             FacadesDB::commit();
             $request->session()->flash('alert-success', $message);
-            $url = 'children.edit-';
-            $url .= $esMasculino ? 'm' : 'f';
-            return redirect()->route($url, ['slug' => $slugNew]);
+            if (Auth::user()->rol_id == 2) {
+                $url = 'children.edit-';
+                $url .= $esMasculino ? 'm' : 'f';
+                return redirect()->route($url, ['slug' => $slugNew]);
+            } else {
+                $url = 'children.representative-edit-';
+                $url .= $esMasculino ? 'm' : 'f';
+                return redirect()->route($url, ['slugRepresentative' => $dataAdult->slug, 'slugChildren' => $slugNew]);
+            }
         } catch (QueryException $ex) {
             $request->session()->flash('alert-danger', 'Sucedio un error: ' . $ex->getMessage());
             FacadesDB::rollBack();

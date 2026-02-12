@@ -30,7 +30,7 @@ class ChildStoreRequest extends FormRequest
             'assigned_level' => ['required', 'exists:levels,level_id'],
             'reading_mode'   => ['nullable', 'boolean'],
 
-            'user'       => ['required', 'string', 'alpha_num', 'min:4', 'max:20', 'unique:users'],
+            'username'       => ['required', 'string', 'alpha_num', 'min:4', 'max:20', 'unique:users, user'],
             'password'       => ['required', 'string', 'min:6', 'max:50', 'confirmed'],
         ];
     }
@@ -60,11 +60,11 @@ class ChildStoreRequest extends FormRequest
             'assigned_level.exists'  => 'El nivel seleccionado no es válido.',
 
             // Usuario
-            'user.required'      => 'El nombre de usuario es obligatorio.',
-            'user.unique'        => 'Este nombre de usuario ya está en uso.',
-            'user.alpha_num'     => 'El usuario solo puede contener letras y números.',
-            'user.min'           => 'El usuario debe tener al menos 4 caracteres.',
-            'user.max'           => 'El usuario no puede exceder los 20 caracteres.',
+            'username.required'      => 'El nombre de usuario es obligatorio.',
+            'username.unique'        => 'Este nombre de usuario ya está en uso.',
+            'username.alpha_num'     => 'El usuario solo puede contener letras y números.',
+            'username.min'           => 'El usuario debe tener al menos 4 caracteres.',
+            'username.max'           => 'El usuario no puede exceder los 20 caracteres.',
 
             // Contraseña
             'password.required'      => 'La contraseña es obligatoria.',
@@ -85,7 +85,7 @@ class ChildStoreRequest extends FormRequest
             'gender_id'      => 'género',
             'avatar_id'      => 'avatar',
             'theme_id'       => 'tema',
-            'user'       => 'nombre de usuario',
+            'username'       => 'nombre de usuario',
             'password'       => 'contraseña',
             'assigned_level' => 'nivel inicial',
         ];

@@ -49,7 +49,7 @@ class LoginController extends Controller
             return redirect()->intended('/inicio');
         } else {
             return back()->with([
-                'alert-danger' => 'El correo electrónico o la contraseña son incorrectos.'
+                'alert-danger' => 'El usuario o la contraseña son incorrectos.'
             ]);
         }
     }
