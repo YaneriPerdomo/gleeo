@@ -850,19 +850,69 @@
 
 
 <script>
-    const espIP = "192.168.100.178";
+    /* ==============================
+   CONFIGURACIÓN ARDUINO (ESP8266)
+   ============================== */
+    const ESP_IP = "192.168.4.1";
+    let ws;
+    let wsConnected = false;
 
-    function cambiarColor(color) {
-        fetch(`http://${espIP}/set-color?color=${color}`, {
-                mode: 'no-cors'
-            })
-            .then(response => {
-                console.log("Comando enviado: " + color);
-            })
-            .catch(error => {
-                console.error("Error al conectar con el ESP8266:", error);
-            });
+    function conectarWS() {
+        console.log("Intentando conectar con Arduino...");
+        ws = new WebSocket(`ws://${ESP_IP}:81/`);
+
+        ws.onopen = () => {
+            wsConnected = true;
+            console.info("✅ Conectado al Hardware de Gleeo");
+        };
+
+        ws.onclose = () => {
+            wsConnected = false;
+            console.warn("❌ Conexión perdida. Reintentando...");
+            setTimeout(conectarWS, 2000);
+        };
+
+        ws.onmessage = (event) => {
+            const msg = event.data;
+            if (msg.startsWith("TOUCH:")) {
+                const indice = parseInt(msg.split(":")[1]);
+                ejecutarAccionFisica(indice);
+            }
+        };
     }
+
+    function ejecutarAccionFisica(indice) {
+        // Si el Arduino envía 1, 2, 3... lo normalizamos a 0, 1, 2...
+        // Si tu Arduino ya envía 0 para la opción 1, elimina el "- 1"
+        const idxNormalizado = indice - 1;
+
+        const select = document.querySelector('.game-select');
+        const botones = document.querySelectorAll('.game-content__type-dynamics button');
+
+        if (select) {
+            // En el select, el índice 0 es el mensaje "Seleccione una respuesta"
+            // Por lo tanto, la Opción 1 (idx 0) debe ser el index 1 del select.
+            const valorASeleccionar = idxNormalizado + 1;
+
+            if (select.options[valorASeleccionar]) {
+                select.selectedIndex = valorASeleccionar;
+                select.dispatchEvent(new Event('change', {
+                    bubbles: true
+                }));
+                console.log("Hardware: Seleccionada opción " + valorASeleccionar + " en Select");
+            }
+        } else if (botones[idxNormalizado]) {
+            // Para botones normales (Verdadero/Falso o Múltiple)
+            const valor = botones[idxNormalizado].textContent.trim();
+            verifyAnswer(valor, botones[idxNormalizado]);
+            console.log("Hardware: Pulsado botón índice " + idxNormalizado);
+        }
+    }
+
+    // Inicializar conexión al cargar la ventana
+    window.addEventListener('load', conectarWS);
+
+
 
     //dispose destruir
     let gameContentAttemptsText = document.querySelector('.game-content__attempts-text')
@@ -1036,8 +1086,14 @@
 
     function verifyAnswer(value, button, autoComplete) {
         const currentPractice = practices[gameState.currentPracticeIndex];
-
         const isCorrect = GAME_CONTENT_TYPE_DYNAMICS.dataset.correctVariable === value;
+
+        // --- CONEXIÓN ARDUINO ---
+        if (wsConnected) {
+            ws.send(isCorrect ? "RESULT:CORRECT" : "RESULT:WRONG");
+        }
+        // -------------------------
+
         if (isCorrect) {
             audioCorrect.play();
             handleSuccess(button, autoComplete);
@@ -1049,7 +1105,7 @@
     }
 
     function handleSuccess(button, autoComplete) {
-        cambiarColor('verde');
+
         hablar('¡Respuesta acertada!');
         gameState.correctAnswers = gameState.correctAnswers + 1;
         gameState.diamonds = gameState.diamonds + 1;
@@ -1080,7 +1136,8 @@
     }
 
     function handleFailure(button, reinforcement, correctVariable, autoComplete) {
-        cambiarColor('rojo')
+
+
         hablar('Respuesta errónea.');
         gameState.totalFailuresPractice += 1;
         const gameSelect = '';
@@ -1128,7 +1185,9 @@
             updateTutor('.tutor__img', '¡Gleeo dice!',
                 '¡Cuidado! Nos queda una última oportunidad, antes de activar el modo de refuerzo. ¡Concéntrate, tú puedes hacerlo!.'
             );
-            hablar('¡Cuidado! Nos queda una última oportunidad, antes de activar el modo de refuerzo. ¡Concéntrate, tú puedes hacerlo!.')
+            hablar(
+                '¡Cuidado! Nos queda una última oportunidad, antes de activar el modo de refuerzo. ¡Concéntrate, tú puedes hacerlo!.'
+            )
             setTimeout(() => {
                 instanciaPopover.hide();
             }, 5000);
@@ -1312,8 +1371,32 @@
     }
 
 
-    function renderPractice(practice) {
+   async function renderPractice(practice) {
         audioStart.play();
+        console.clear();
+        let PracticeContentVoice = {
+            'screen': practice.screen,
+            'variables': practice.practice_option.variables,
+        };
+
+        let splitVariables = PracticeContentVoice.variables.split(',');
+
+        let textoOpciones = '';
+
+        splitVariables.forEach((variable, index) => {
+
+                textoOpciones += 'Opcion ' + (index + 1) + ': ' + variable.trim() + '. ';
+
+        });
+
+
+        PracticeContentVoice.variables = textoOpciones;
+        console.info(PracticeContentVoice);
+         hablar('¡Gleeo dice! ' + practice.title);
+        setTimeout(async ()  => {
+              hablarRender('en la pantalla tiene: ' + PracticeContentVoice.screen.replace('__', '') + '.Las opciones son: ' + PracticeContentVoice.variables);
+        }, 3000);
+        console.info(practice.practice_option);
         GAME_CONTENT_TYPE_DYNAMICS.innerHTML = '';
         const {
             variables,
@@ -1323,9 +1406,8 @@
         gameContentScreen.textContent = practice.screen;
         const options = variables.split(",");
         updateTutor('.tutor__img', '¡Gleeo dice!', practice.title);
-        setTimeout(() => {
-            hablar('¡Gleeo dice! ' + practice.title)
-        }, 3000);
+
+
         setTimeout(() => {
             instanciaPopover.hide();
         }, 5000);
@@ -1366,6 +1448,19 @@
         utterance.rate = 1;
         window.speechSynthesis.speak(utterance);
     };
+
+    const hablarRender = (mensaje) => {
+        return new Promise(resolve => {
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(mensaje);
+            utterance.lang = 'es-ES';
+            utterance.pitch = 1.1;
+            utterance.rate = 1;
+            utterance.onend = resolve; // Resuelve la promesa cuando termine de hablar
+            window.speechSynthesis.speak(utterance);
+        });
+
+    }
 
 
     function updateTutor(element, header, body) {

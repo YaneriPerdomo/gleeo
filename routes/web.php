@@ -27,6 +27,7 @@ use App\Models\Children;
 use App\Models\NewsBoard;
 use App\Models\ReinforcementFailureLimit;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Http;
 
 Route::controller(LoginController::class)->group(function () {
     Route::get('iniciar-sesion', 'index')->name('login.index');
@@ -205,4 +206,19 @@ Route::controller(NewsBoardController::class)->middleware(['auth'])->group(funct
     Route::get('plataforma-educativa/informacion-general', 'index')->name('news-board.index');
     Route::get('plataforma-educativa/informacion-general/editar', 'edit')->name('news-board.edit');
     Route::put('plataforma-educativa/informacion-general', 'update')->name('news-board.update');
+});
+
+
+Route::get('/leer-sensor', function () {
+    try {
+
+        $response = Http::timeout(3)->get('http://192.168.100.178/leer-sensor');
+
+        if ($response->successful()) {
+            return $response->body(); // Esto devolverá "sensor uno", "sensor dos", etc.
+        }
+        return "Sin respuesta del sensor";
+    } catch (\Exception $e) {
+        return "Error de conexión: " . $e->getMessage();
+    }
 });
