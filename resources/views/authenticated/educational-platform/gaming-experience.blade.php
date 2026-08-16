@@ -1378,18 +1378,11 @@
             'screen': practice.screen,
             'variables': practice.practice_option.variables,
         };
-
         let splitVariables = PracticeContentVoice.variables.split(',');
-
         let textoOpciones = '';
-
         splitVariables.forEach((variable, index) => {
-
                 textoOpciones += 'Opcion ' + (index + 1) + ': ' + variable.trim() + '. ';
-
         });
-
-
         PracticeContentVoice.variables = textoOpciones;
         console.info(PracticeContentVoice);
          hablar('¡Gleeo dice! ' + practice.title);
@@ -1406,8 +1399,6 @@
         gameContentScreen.textContent = practice.screen;
         const options = variables.split(",");
         updateTutor('.tutor__img', '¡Gleeo dice!', practice.title);
-
-
         setTimeout(() => {
             instanciaPopover.hide();
         }, 5000);
