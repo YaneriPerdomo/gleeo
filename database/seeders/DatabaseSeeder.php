@@ -20,6 +20,10 @@ class DatabaseSeeder extends Seeder
             ThemeSeeder::class,
             NewsBoardSeeder::class,
             RepresentativeSeeder::class,
+            LevelSeeder::class,
+            ModuleSeeder::class,
+            TopicSeeder::class,
+
         ]);
     }
 }

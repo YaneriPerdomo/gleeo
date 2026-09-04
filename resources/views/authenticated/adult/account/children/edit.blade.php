@@ -97,7 +97,7 @@
                                         'type' => 'text',
                                         'icon' => 'bi-person',
                                         'aria_label' => 'Agregar nombre del jugador(a)',
-                                        'placeholder' => 'Yaneri Paola...',
+                                        'placeholder' => 'Josefa Paola...',
                                         'form_input_value_default' => old('names', $data->names),
                                         'attribute_a' => 'required',
                                         'form_help_text' => '',

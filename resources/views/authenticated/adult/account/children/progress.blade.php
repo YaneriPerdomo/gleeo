@@ -143,11 +143,11 @@
                                         aria-label="Animated striped example" aria-valuenow="75" aria-valuemin="0"
                                         aria-valuemax="100">
                                         <div class="progress-bar progress-bar-striped progress-bar-animated "
-                                            style="width: {{ $percentage_bar }}%">
+                                            style="width: {{ round($percentage_bar) }}%">
                                         </div>
                                     </div>
                                     <small class="text__gray">
-                                        {{ $percentage_bar }}%
+                                        {{ round($percentage_bar) }}%
                                     </small>
                                 </div>
                             </div>

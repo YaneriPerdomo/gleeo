@@ -38,7 +38,8 @@
             $bodyCSS = "background-image: url('$urlAsset');
                 background-repeat: repeat;
                 background-attachment: fixed;
-                background-size: auto;";
+
+                background-size: cover;";
         } else {
             $bodyCSS = "background-color: {$theme->solid_background};";
         }
@@ -215,7 +216,7 @@
             }
         }
 
-        .ranking{
+        .ranking {
             width: auto !important;
         }
     </style>
@@ -245,17 +246,16 @@
                                         class="bi fs-1
                                         {{ $level->level_id === $currentLevel->level_id ? 'level-item--current-icon' : '' }}
                                         @php
-                    if ($level->progress->state == 'Completado') { //ENUM ['Bloqueado','Completado', 'En Progreso']
-                                                                //Completado
-                                                                echo 'bi bi-check';
-                                                            }else{
-                                                                //Bloqueado
-                                                                if($level->progress->state == 'En Progreso'){
-                                                                    echo 'bi-hourglass-bottom';
-                                                                }  else{
-                                                                    echo 'bi-lock-fill';
-                                                                }
-                                                            } @endphp
+if ($level->progress->state == 'Completado') { //ENUM ['Bloqueado','Completado', 'En Progreso']
+                                                    echo 'bi bi-check';
+                                                }else{
+                                                    if($level->progress->state == 'En Progreso'){
+                                                        echo 'bi-hourglass-bottom';
+                                                    }
+                                                    else{
+                                                        echo 'bi-lock-fill';
+                                                    }
+                                                } @endphp
                                                     "></i>
                                 </div>
                                 <div class="level-item__content flex-grow-2">
@@ -275,8 +275,7 @@
                                             </div>
                                         </div>
                                         <small class="text__gray">
-                                            {{ $level->progress->percentage_bar ?? '2' }}%
-                                        </small>
+                                            {{ round($level->progress->percentage_bar ?? 2) }}% </small>
                                     </div>
                                 </div>
                             </a>
@@ -284,7 +283,7 @@
                         @empty
                             NO HAY NIVELES
                         @endforelse
-                        <!--level-item--locked--->
+
                     </nav>
 
                 </aside>
@@ -328,7 +327,7 @@
                                                 <i
                                                     class="bi
                                                     @php
-                    $stateIconLesson = $lesson->playerProgress->state;
+$stateIconLesson = $lesson->playerProgress->state;
                                                         switch ($stateIconLesson) {
                                                             case 'Completada':
                                                                 echo 'bi-check';
@@ -365,7 +364,15 @@
 
                                 </div>
                             @empty
-                                NO HAY TEMAS
+                                <div class="empty-state">
+                                    <div class="empty-state__icon">📚</div>
+                                    <h3 class="empty-state__title fs-4">¡Pronto descubriremos más!</h3>
+                                    <p class="empty-state__text">
+                                        Por los momentos <b> no hay temas disponibles</b> por ahora en este módulo,
+                                        pero nuestro equipo está preparando nuevas aventuras matemáticas
+                                        para que sigas aprendiendo de forma divertida muy pronto.
+                                    </p>
+                                </div>
                             @endforelse
                         </section>
                     @empty
@@ -686,7 +693,7 @@
         skipPreviousLessonsModal.show();
     }
 
-     window.speechSynthesis.cancel();
+    window.speechSynthesis.cancel();
 </script>
 
 </html>

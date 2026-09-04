@@ -455,6 +455,13 @@
         .introduction>a {
             display: none;
         }
+
+        body.is-blocking {
+            background-color: black !important;
+            pointer-events: none;
+            /* Evita clics en botones físicos de la pantalla */
+            transition: background-color 0.3s ease;
+        }
     </style>
 </head>
 
@@ -698,6 +705,10 @@
             class="audio-library__player audio-library__player--background-music"></audio>
         <audio src="{{ asset('audios/player/lesson/Reinforcement.mp3') }}"
             class="audio-library__player audio-library__player--reinforcement"></audio>
+        <audio src="{{ asset('audios/player/lesson/We have one more opportunity for reinforcement.mp3') }}"
+            class="audio-library__player audio-library__player--we_have_one_more_opportunity_for_reinforcement"></audio>
+
+
     </div>
 
     <script>
@@ -755,7 +766,7 @@
             <div class="introduction__header text-center mb-3">
                 <h1 class=" text__white introduction__current-progress fs-2">
                     <b>
-                        ¡Vamos por tus primeros diamantes!"
+                        ¡Vamos por esos diamantes!
                     </b>
                 </h1>
                 <div class="introduction__title">
@@ -819,7 +830,7 @@
                 </div>
                 <br>
                 <div
-                    class="introduction__buttons introduction__buttons flex-and-direction-row flex-content-space-between">
+                    class="introduction__buttons  introduction__buttons flex-and-direction-row flex-content-space-between">
                     <button class="text__gray button">
                         <a
                             href="{{ route('educational-platform.index', ['slugCurrentLevel' => $lesson->topic->module->level->slug]) }}">
@@ -830,17 +841,24 @@
                     <button class="button button__color-black introduction__begin">COMENZAR</button>
                 </div>
             </div>
+            <hr>
+            <div class="introduction__footer flex-center-full  flex-and-direction-column mb-2 gap-2 ">
+                <div>
+                    <button id="btn-conectar-hardware" class="button button__color-gold   d-flex align-items-center">
+                        <i class="fas fa-usb me-2"></i>
+                        <span id="usb-status-text">Conectar Controles Gleeo</span>
+                    </button>
+                </div>
 
-        </div>
-        <div class="introduction__guide guide">
-            <div data-bs-toggle="modal" data-bs-target="#inforGuideModal"><i class="bi bi-journal-text fs-4"></i>
+                <div id="usb-indicator" class="ms-2 badge bg-secondary">Desconectado</div>
             </div>
-            <div class="guide__one-ring guide__ring"></div>
             <div class="guide__two-ring guide__ring"></div>
             <div class="guide__third-ring guide__ring"></div>
         </div>
+
     </section>
 
+    </script>
 
 </body>
 <script src="https://unpkg.com/typed.js@2.1.0/dist/typed.umd.js"></script>
@@ -853,64 +871,181 @@
     /* ==============================
    CONFIGURACIÓN ARDUINO (ESP8266)
    ============================== */
-    const ESP_IP = "192.168.4.1";
-    let ws;
-    let wsConnected = false;
 
-    function conectarWS() {
-        console.log("Intentando conectar con Arduino...");
-        ws = new WebSocket(`ws://${ESP_IP}:81/`);
+    document.addEventListener('DOMContentLoaded', () => {
+        const btnConectar = document.getElementById('btn-conectar-hardware');
+        const usbStatusText = document.getElementById('usb-status-text');
+        const usbIndicator = document.getElementById('usb-indicator');
 
-        ws.onopen = () => {
-            wsConnected = true;
-            console.info("✅ Conectado al Hardware de Gleeo");
-        };
+        if (btnConectar) {
+            btnConectar.addEventListener('click', async () => {
 
-        ws.onclose = () => {
-            wsConnected = false;
-            console.warn("❌ Conexión perdida. Reintentando...");
-            setTimeout(conectarWS, 2000);
-        };
+                // 1. Modificamos esta línea para recibir si tuvo éxito o no
+                const exito = await conectarUSB();
 
-        ws.onmessage = (event) => {
-            const msg = event.data;
-            if (msg.startsWith("TOUCH:")) {
-                const indice = parseInt(msg.split(":")[1]);
-                ejecutarAccionFisica(indice);
+                // 2. Evaluamos el resultado de la función, no una variable global
+                if (serialConnected) {
+                    btnConectar.classList.replace('btn-primary', 'btn-success');
+                    // Lenguaje para niños: ¡Todo listo para jugar!
+                    usbStatusText.innerText = "¡Controles Listos! 🎮";
+                    usbIndicator.classList.replace('bg-secondary', 'bg-success');
+                    usbIndicator.innerText = "¡Listo!";
+
+                    btnConectar.disabled = true;
+                } else {
+                    // Si cancela o falla, usamos un tono más suave
+                    btnConectar.classList.replace('btn-primary', 'btn-danger');
+                    usbStatusText.innerText = "No se encontró el control 😮";
+                    usbIndicator.classList.replace('bg-secondary', 'bg-danger');
+                    usbIndicator.innerText = "¡Oh-oh!";
+
+                    console.error("No se pudo establecer la conexión.");
+
+                    setTimeout(() => {
+                        btnConectar.classList.replace('btn-danger', 'btn-primary');
+                        // Invitamos a intentar de nuevo de forma positiva
+                        usbStatusText.innerText = "¿Conectamos los controles?";
+                        usbIndicator.classList.replace('bg-danger', 'bg-secondary');
+                        usbIndicator.innerText = "Esperando...";
+                    }, 3000);
+                }
+            });
+        }
+    });
+
+
+    let port;
+    let reader;
+    let serialConnected = false;
+
+    // 1. Función para iniciar la conexión (Debe ser llamada por un clic de usuario)
+    async function conectarUSB() {
+        if ("serial" in navigator) {
+            try {
+                // Si el usuario da clic en "Cancelar", requestPort lanza un error
+                port = await navigator.serial.requestPort();
+
+                await port.open({
+                    baudRate: 115200
+                });
+
+                serialConnected = true;
+                console.info("✅ Conectado al Hardware vía USB");
+
+                leerDatos();
+
+                // ¡IMPORTANTE! Devolvemos true para que el botón se ponga verde
+                return true;
+
+            } catch (err) {
+                // Si entra aquí es porque dio a "Cancelar" o el cable no está
+                console.error("❌ Error al conectar:", err);
+                serialConnected = false;
+
+                // ¡IMPORTANTE! Devolvemos false para que se ejecute el mensaje "Oh-no"
+                return false;
             }
-        };
+        } else {
+            alert("Tu navegador no soporta Web Serial API. Usa Chrome o Edge.");
+            return false;
+        }
     }
+    // Intentar recuperar puertos ya autorizados previamente
+    async function autoReconectar() {
+        const ports = await navigator.serial.getPorts();
+        if (ports.length > 0) {
+            port = ports[0];
+            await port.open({
+                baudRate: 115200
+            });
+            serialConnected = true;
+            leerDatos();
+            console.log("Reconexión automática exitosa");
+        }
+    }
+    autoReconectar(); // Llamar al cargar la página para intentar reconectar automáticamente
 
-    function ejecutarAccionFisica(indice) {
-        // Si el Arduino envía 1, 2, 3... lo normalizamos a 0, 1, 2...
-        // Si tu Arduino ya envía 0 para la opción 1, elimina el "- 1"
-        const idxNormalizado = indice - 1;
+    // 2. Bucle de lectura de datos
+    async function leerDatos() {
+        const textDecoder = new TextDecoderStream();
+        const readableStreamClosed = port.readable.pipeTo(textDecoder.writable);
+        reader = textDecoder.readable.getReader();
 
-        const select = document.querySelector('.game-select');
-        const botones = document.querySelectorAll('.game-content__type-dynamics button');
+        try {
+            while (true) {
+                const {
+                    value,
+                    done
+                } = await reader.read();
+                if (done) break;
 
-        if (select) {
-            // En el select, el índice 0 es el mensaje "Seleccione una respuesta"
-            // Por lo tanto, la Opción 1 (idx 0) debe ser el index 1 del select.
-            const valorASeleccionar = idxNormalizado + 1;
-
-            if (select.options[valorASeleccionar]) {
-                select.selectedIndex = valorASeleccionar;
-                select.dispatchEvent(new Event('change', {
-                    bubbles: true
-                }));
-                console.log("Hardware: Seleccionada opción " + valorASeleccionar + " en Select");
+                if (value) {
+                    const lineas = value.split('\n'); // El ESP8266 envía Serial.println
+                    lineas.forEach(linea => {
+                        const msg = linea.trim();
+                        if (msg.startsWith("TOUCH:")) {
+                            const indice = parseInt(msg.split(":")[1]);
+                            console.log("Hardware detectado:", msg);
+                            ejecutarAccionFisica(indice);
+                        }
+                    });
+                }
             }
-        } else if (botones[idxNormalizado]) {
-            // Para botones normales (Verdadero/Falso o Múltiple)
-            const valor = botones[idxNormalizado].textContent.trim();
-            verifyAnswer(valor, botones[idxNormalizado]);
-            console.log("Hardware: Pulsado botón índice " + idxNormalizado);
+        } catch (err) {
+            console.error("Error leyendo datos:", err);
+        } finally {
+            reader.releaseLock();
         }
     }
 
-    // Inicializar conexión al cargar la ventana
-    window.addEventListener('load', conectarWS);
+    // 3. Función para enviar datos al ESP8266 (Encender LEDs)
+    async function enviarResultadoHardware(tipo) {
+        if (port && port.writable) {
+            const writer = port.writable.getWriter();
+            const msg = tipo === 'CORRECT' ? "RESULT:CORRECT\n" : "RESULT:WRONG\n";
+            await writer.write(new TextEncoder().encode(msg));
+            writer.releaseLock();
+        }
+    }
+
+     // 4. Tu lógica original adaptada (MODIFICADA)
+async function ejecutarAccionFisica(indice) {
+    // 1. ACTIVAR BLOQUEO
+    document.body.classList.add('is-blocking');
+    console.log("Sistema bloqueado: procesando...");
+
+    const idxNormalizado = indice - 1;
+    const select = document.querySelector('.game-select');
+    const botones = document.querySelectorAll('.game-content__type-dynamics button');
+
+    try {
+        if (select) {
+            const valorASeleccionar = idxNormalizado + 1;
+            if (select.options[valorASeleccionar]) {
+                select.selectedIndex = valorASeleccionar;
+                select.dispatchEvent(new Event('change', { bubbles: true }));
+                console.log("USB: Seleccionada opción " + valorASeleccionar);
+            }
+        } else if (botones[idxNormalizado]) {
+            const valor = botones[idxNormalizado].textContent.trim();
+
+            // 2. ESPERAR A LA RESPUESTA
+            // Nota: verifyAnswer debe ser una función que devuelva una Promesa o ser síncrona
+            await verifyAnswer(valor, botones[idxNormalizado]);
+
+            console.log("USB: Pulsado botón índice " + idxNormalizado);
+        }
+    } catch (error) {
+        console.error("Error en la ejecución:", error);
+    } finally {
+        // 3. QUITAR BLOQUEO (Se ejecuta pase lo que pase)
+        // Podrías poner un pequeño delay aquí si quieres que el negro dure un poco más
+        setTimeout(() => {
+            document.body.classList.remove('is-blocking');
+            console.log("Sistema liberado.");
+        }, 500);
+    }
+}
 
 
 
@@ -918,7 +1053,6 @@
     let gameContentAttemptsText = document.querySelector('.game-content__attempts-text')
     let introductionSection = document.querySelector('.introduction');
     let introductionBeginBtn = document.querySelector('.introduction__begin')
-
 
 
     //Audios Library
@@ -930,8 +1064,21 @@
     const audioNextModal = document.querySelector('.audio-library__player--next-modal');
     const audioBackgroundMusic = document.querySelector('.audio-library__player--background-music');
     const audioReinforcement = document.querySelector('.audio-library__player--reinforcement');
-
-
+    const audioWeHaveOneMoreOpportunityForReinforcement = document.querySelector(
+        '.audio-library__player--we_have_one_more_opportunity_for_reinforcement');
+    const audioWeFailedToCollectDiamonds = document.querySelector(
+        '.audio-library__player--we_failed_to_collect_diamonds');
+    const audioExcellentWork = document.querySelector('.audio-library__player--excellent-work');
+    const audioThisWasEpic = document.querySelector('.audio-library__player--this-was-epic');
+    const audioIncorrectAnswer = document.querySelector('.audio-library__player--incorrect-answer');
+    const audioCorrectAnswer = document.querySelector('.audio-library__player--correct-answer');
+    //He prepared a special reinforcement to help you with this step.
+    const audioHePreparedASpecialReinforcementToHelpYouWithThisStep = document.querySelector(
+        '.audio-library__player--he_prepared_a_special_reinforcement_to_help_you_with_this_step');
+    //You need at least one correct answer to complete this lesson -> const
+    const audioYouNeedAtLeastOneCorrectAnswerToCompleteThisLesson = document.querySelector(
+        '.audio-library__player--you_need_at_least_one_correct_answer_to_complete_this_lesson');
+    const audioGodIsWithYou = document.querySelector('.audio-library__player--god_is_with_you');
     introductionBeginBtn.addEventListener('click', e => {
         setTimeout(() => {
             audioBackgroundMusic.volume = 0.2;
@@ -1084,15 +1231,16 @@
         }
     });
 
-    function verifyAnswer(value, button, autoComplete) {
+    async function verifyAnswer(value, button, autoComplete) {
         const currentPractice = practices[gameState.currentPracticeIndex];
         const isCorrect = GAME_CONTENT_TYPE_DYNAMICS.dataset.correctVariable === value;
 
-        // --- CONEXIÓN ARDUINO ---
-        if (wsConnected) {
-            ws.send(isCorrect ? "RESULT:CORRECT" : "RESULT:WRONG");
+        // --- CONEXIÓN HARDWARE (USB) ---
+        // Sustituimos la lógica de WebSocket por el envío Serial
+        if (serialConnected) {
+          await enviarResultadoHardware(isCorrect ? "CORRECT" : "WRONG");
         }
-        // -------------------------
+        // -------------------------------
 
         if (isCorrect) {
             audioCorrect.play();
@@ -1106,7 +1254,9 @@
 
     function handleSuccess(button, autoComplete) {
 
+
         hablar('¡Respuesta acertada!');
+
         gameState.correctAnswers = gameState.correctAnswers + 1;
         gameState.diamonds = gameState.diamonds + 1;
         VALUE_DIAMONTD.innerHTML = gameState.diamonds;
@@ -1115,7 +1265,7 @@
             gameSelect.classList.add('button__correct');
             pause();
             gameContentScreen.classList.add('button__correct');
-            gameContentScreen.textContent = practices[gameState.currentPracticeIndex].screen.replace('__', button);
+            gameContentScreen.textContent = practices[gameState.currentPracticeIndex].screen.replace('___', button);
             setTimeout(() => {
                 gameContentScreen.classList.remove('button__correct');
                 gameSelect.classList.remove('button__correct');
@@ -1135,10 +1285,13 @@
         }
     }
 
+    let windowLoseModal = null;
+
     function handleFailure(button, reinforcement, correctVariable, autoComplete) {
 
 
         hablar('Respuesta errónea.');
+
         gameState.totalFailuresPractice += 1;
         const gameSelect = '';
         if (autoComplete) {
@@ -1154,16 +1307,24 @@
             ;
             updateTutor('.tutor__img', '¡Gleeo al rescate!',
                 '¡Mira! He preparado un refuerzo especial para ayudarte en este paso.');
+
+
+            windowLoseModal = 'refuerzo';
             hablar('¡Gleeo dice! ' +
                 '¡Mira! He preparado un refuerzo especial para ayudarte en este paso.'
-            )
+            );
+            console.clear();
+            setTimeout(() => {
+                hablar('Resumen Clave, ' + practices[gameState.currentPracticeIndex].reinforcement.paragraph);
+            }, 5500);
+            console.info(practices[gameState.currentPracticeIndex].reinforcement);
 
         }
         if (autoComplete) {
             if (showCorrect) {
                 gameContentScreen.classList.add('button__correct');
                 document.querySelector('.game-select').classList.add('is-locked')
-                gameContentScreen.textContent = practices[gameState.currentPracticeIndex].screen.replace('__',
+                gameContentScreen.textContent = practices[gameState.currentPracticeIndex].screen.replace('___',
                     correctVariable);
             }
         } {
@@ -1187,7 +1348,7 @@
             );
             hablar(
                 '¡Cuidado! Nos queda una última oportunidad, antes de activar el modo de refuerzo. ¡Concéntrate, tú puedes hacerlo!.'
-            )
+            );
             setTimeout(() => {
                 instanciaPopover.hide();
             }, 5000);
@@ -1258,7 +1419,8 @@
             renderPractice(practices[gameState.currentPracticeIndex]);
 
         } else {
-            audioCompleted.volume = 0.4; // Baja el volumen al 40%
+            windowLoseModal = 'endGame';
+            audioCompleted.volume = 0.2; // Baja el volumen al 40%
             audioCompleted.play();
             audioBackgroundMusic.pause();
             console.info('¡Lección completada!');
@@ -1267,7 +1429,7 @@
             let endGameDiam = document.querySelector('.lesson-stats__value--diamond');
             let endGameTime = document.querySelector('.lesson-stats__value--time');
             let endGameSuccess = document.querySelector('.lesson-stats__value--success');
-            let successRate = (gameState.correctAnswers / gameState.totalPractices) * 100;
+            let successRate = Math.round((gameState.correctAnswers / gameState.totalPractices) * 100);
             pause();
             endGameDiam.innerHTML = `+${gameState.diamonds}`;
             endGameTime.innerHTML =
@@ -1297,6 +1459,7 @@
                 lessonModalButtonBack.textContent = 'Mejorar puntaje';
                 lessonModalButtonContinue.textContent = 'Volver al inicio';
                 hablar('Necesitas al menos un acierto para completar esta lección.')
+
                 lessonModalMsg.textContent = 'Necesitas al menos un acierto para completar esta lección.';
             }
 
@@ -1371,7 +1534,7 @@
     }
 
 
-   async function renderPractice(practice) {
+    async function renderPractice(practice) {
         audioStart.play();
         console.clear();
         let PracticeContentVoice = {
@@ -1381,13 +1544,14 @@
         let splitVariables = PracticeContentVoice.variables.split(',');
         let textoOpciones = '';
         splitVariables.forEach((variable, index) => {
-                textoOpciones += 'Opcion ' + (index + 1) + ': ' + variable.trim() + '. ';
+            textoOpciones += 'Opcion ' + (index + 1) + ': ' + variable.trim() + '. ';
         });
         PracticeContentVoice.variables = textoOpciones;
         console.info(PracticeContentVoice);
-         hablar('¡Gleeo dice! ' + practice.title);
-        setTimeout(async ()  => {
-              hablarRender('en la pantalla tiene: ' + PracticeContentVoice.screen.replace('__', '') + '.Las opciones son: ' + PracticeContentVoice.variables);
+        hablar('¡Gleeo dice! ' + practice.title);
+        setTimeout(async () => {
+            hablarRender('en la pantalla tiene: ' + PracticeContentVoice.screen.replace('___', '') +
+                '.Las opciones son: ' + PracticeContentVoice.variables);
         }, 3000);
         console.info(practice.practice_option);
         GAME_CONTENT_TYPE_DYNAMICS.innerHTML = '';
@@ -1418,7 +1582,7 @@
             })
         } else {
             options.forEach((text, index) => {
-                // Limitar a 2 si es Verdadero/Falso (según tu lógica original)
+
                 if (practice.type_dynamic === 'Verdadero/Falso' && index > 1) return;
                 const button = document.createElement('button');
                 button.textContent = text.trim();
@@ -1440,6 +1604,8 @@
         window.speechSynthesis.speak(utterance);
     };
 
+
+
     const hablarRender = (mensaje) => {
         return new Promise(resolve => {
             window.speechSynthesis.cancel();
@@ -1447,7 +1613,7 @@
             utterance.lang = 'es-ES';
             utterance.pitch = 1.1;
             utterance.rate = 1;
-            utterance.onend = resolve; // Resuelve la promesa cuando termine de hablar
+            utterance.onend = resolve;
             window.speechSynthesis.speak(utterance);
         });
 
@@ -1479,19 +1645,56 @@
     console.info(@js($lesson->title))
 
     refuerzoModalButtonExit.addEventListener('click', e => {
-
+        windowLoseModal = null;
         start();
         updateTutor('.tutor__img', '¡Gleeo dice!',
             'Recuerda que eres capaz, Dios está contigo, ¿quién contra ti? ¡Te doy otra oportunidad para que esta vez triunfes!'
         );
 
-        hablar('¡Gleeo dice! ' +
-            'Recuerda que eres capaz, Dios está contigo, ¿quién contra ti? ¡Te doy otra oportunidad para que esta vez triunfes!'
-        )
+
         setTimeout(() => {
+            hablarRender('¡Te doy otra oportunidad para que esta vez triunfes!');
             instanciaPopover.hide();
         }, 5000);
     })
+
+
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Enter') {
+            if (windowLoseModal == 'refuerzo') {
+                start();
+                console.info('Enter presionado: Reiniciando juego después de refuerzo');
+                updateTutor('.tutor__img', '¡Gleeo dice!',
+                    'Recuerda que eres capaz, Dios está contigo, ¿quién contra ti? ¡Te doy otra oportunidad para que esta vez triunfes!'
+                );
+
+                //cerrar modal de refuerzo
+                let refuerzoModal = document.getElementById('inforlessonModal');
+                let modalInstance = bootstrap.Modal.getInstance(refuerzoModal);
+                if (modalInstance) {
+                    modalInstance.hide();
+                }
+                setTimeout(() => {
+                    hablarRender('¡Te doy otra oportunidad para que esta vez triunfes!');
+                    instanciaPopover.hide();
+                }, 5000);
+            }
+        }
+
+        if (event.key === 'ArrowRight') {
+            console.info('Enter presionado: Redirigiendo al inicio después de completar la lección');
+
+            window.location.href =
+                "{{ route('educational-platform.index', ['slugCurrentLevel' => $lesson->topic->module->level->slug]) }}";
+        }
+
+        //derecha
+        //boron de repetir lecccion
+        if (event.key === 'ArrowLeft') {
+            console.info('Enter presionado: Redirigiendo al inicio después de completar la lección');
+            location.reload();
+        }
+    });
 </script>
 </body>
 

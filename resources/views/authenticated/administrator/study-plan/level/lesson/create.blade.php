@@ -336,17 +336,7 @@
                                     'attribute_a' => 'required',
                                     'form_help_text' => '',
                                 ]"></x-input-text>
-                                <x-input-text :item="[
-                                    'form_input_name' => 'variable_4',
-                                    'form_title' => 'Valor Variable 3:',
-                                    'type' => 'text',
-                                    'icon' => 'bi-hash',
-                                    'aria_label' => 'Variable 4',
-                                    'placeholder' => '4',
-                                    'form_input_value_default' => old('variable_4'),
-                                    'attribute_a' => 'required',
-                                    'form_help_text' => '',
-                                ]"></x-input-text>
+
 
 
                             </div>
@@ -446,12 +436,10 @@
     const INPUT_VARIABLE_1_MODAL_FORM = document.querySelector('#variable_1')
     const INPUT_VARIABLE_2_MODAL_FORM = document.querySelector('#variable_2')
     const INPUT_VARIABLE_3_MODAL_FORM = document.querySelector('#variable_3')
-    const INPUT_VARIABLE_4_MODAL_FORM = document.querySelector('#variable_4');
 
     const FORM_ITEM_VARIABLE_1 = INPUT_VARIABLE_1_MODAL_FORM.closest('.form__item');
     const FORM_ITEM_VARIABLE_2 = INPUT_VARIABLE_2_MODAL_FORM.closest('.form__item');
     const FORM_ITEM_VARIABLE_3 = INPUT_VARIABLE_3_MODAL_FORM.closest('.form__item');
-    const FORM_ITEM_VARIABLE_4 = INPUT_VARIABLE_4_MODAL_FORM.closest('.form__item');
 
 
 
@@ -529,10 +517,7 @@
                             <span class="question-card__variable-label">Valor Variable 3</span><br>
                             <span class="question-card__variable-value">${variables[2]}</span>
                         </div>
-                        <div class="question-card__variable-item">
-                            <span class="question-card__variable-label">Valor Variable 4</span><br>
-                            <span class="question-card__variable-value">${variables[3]}</span>
-                        </div>
+
                 `;
             }
             NewDiv.innerHTML = `
@@ -617,7 +602,7 @@
 
             cleanEntryForm([INPUT_PRACTICA_PANTALLA_MODAL_FORM, INPUT_REFUERZO_PARRAFO_MODAL_FORM,
                 INPUT_VARIABLE_1_MODAL_FORM, INPUT_VARIABLE_2_MODAL_FORM, INPUT_VARIABLE_2_MODAL_FORM,
-                INPUT_VARIABLE_3_MODAL_FORM, INPUT_VARIABLE_4_MODAL_FORM,
+                INPUT_VARIABLE_3_MODAL_FORM,
                 INPUT_REFUERZO_TITULO_MODAL_FORM, INPUT_VARIABLE_CORRECTA, INPUT_TITULO_PRACTICA
             ]);
 
@@ -673,7 +658,7 @@
             cleanEntryForm([INPUT_PRACTICA_PANTALLA_MODAL_FORM, INPUT_REFUERZO_PARRAFO_MODAL_FORM,
                 INPUT_VARIABLE_1_MODAL_FORM, INPUT_VARIABLE_2_MODAL_FORM,
                 INPUT_VARIABLE_2_MODAL_FORM,
-                INPUT_VARIABLE_3_MODAL_FORM, INPUT_VARIABLE_4_MODAL_FORM,
+                INPUT_VARIABLE_3_MODAL_FORM,
                 INPUT_REFUERZO_TITULO_MODAL_FORM, INPUT_VARIABLE_CORRECTA, INPUT_TITULO_PRACTICA
             ]);
 

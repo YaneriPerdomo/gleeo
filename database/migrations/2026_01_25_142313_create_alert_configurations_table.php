@@ -13,6 +13,7 @@ return new class extends Migration
             $table->foreignId('level_id')->constrained('levels', 'level_id')->cascadeOnDelete();
             $table->integer('max_errors_allowed')->default(5);
             $table->enum('time_frame', ['1 dia', '1 semana', '1 mes'])->default('1 semana');
+              $table->boolean('is_active')->default(1);
             $table->timestamps();
         });
     }

@@ -13,7 +13,7 @@
             font-family: "Helvetica", "Arial", sans-serif;
             background-color: #e3e3e3;
             margin: 0;
-            padding: 20px;
+            padding: 10px;
             color: #2f2f2f;
         }
 
@@ -225,12 +225,12 @@
                     Trayectoria: Nivel {{ $min }} al {{ $max }}
                 </div>
                 <div class="table-cell" style="text-align: right; color: #7f8c8d; font-size: 12px;">
-                    {{ $percentage_bar }}%
+                    {{ round($percentage_bar) }}%
                 </div>
             </div>
             <div class="progress-container">
-                <div class="progress-bar-fill" style="width: {{ $percentage_bar }}%">
-                    {{ $percentage_bar }}%
+                <div class="progress-bar-fill" style="width: {{ round($percentage_bar) }}%">
+                    {{ round($percentage_bar) }}%
                 </div>
             </div>
         </div>
@@ -291,6 +291,10 @@
                 height: 200px;
             }
 
+
+
+
+
             /* Cada caja ocupará el 48% para dejar margen y evitar el salto de página */
             .chart-box-half {
                 width: 48%;
@@ -348,9 +352,11 @@
             .bar-wrapper {
                 display: inline-block;
                 width: 8%;
-                /* Ajustado para que quepan varias barras */
+
                 margin: 0 2px;
                 vertical-align: bottom;
+
+
             }
 
             .bar-value {
@@ -367,7 +373,7 @@
                 font-size: 11px;
                 color: #888;
                 display: block;
-                height: 25px;
+                height: 45px;
                 /* overflow:hidden;*/
             }
 
@@ -425,7 +431,7 @@
                             @endphp
                             <div class="bar-wrapper">
                                 <div class="bar-value">{{ $error->value }}</div>
-                                <div class="bar-visual bg-{{ $color }}" style="height: {{ $height }}px;">
+                                <div class="bar-visual bg-{{ $color }}" style="height: {{ $height / 4 }}px;">
                                 </div>
                                 <span class="bar-label">{{ $error->topic_title }}</span>
                             </div>
@@ -458,7 +464,7 @@
                             @endphp
                             <div class="bar-wrapper">
                                 <div class="bar-value">{{ $point->value }}</div>
-                                <div class="bar-visual bg-{{ $color }}" style="height: {{ $height }}px;">
+                                <div class="bar-visual bg-{{ $color }}" style="height: {{ $height / 4 }}px;">
                                 </div>
                                 <span class="bar-label">{{ $point->topic_title }}</span>
                             </div>

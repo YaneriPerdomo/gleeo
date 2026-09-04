@@ -62,6 +62,7 @@ class LessonController extends Controller
         $topic = Topic::where('slug', $slugTopic)->first();
         $topicId = $topic->topic_id;
         $numberOfItems = count($requestPraticeData) / 8;
+
         try {
             DB::beginTransaction();
             $level = Level::where('slug', $slugLevel)->first();
@@ -90,7 +91,7 @@ class LessonController extends Controller
 
                 //Añadiendo las variables al igual la correcta a la tabla de opciones que se relaciona con la tabla padre llamada practicas
                 $practiceOptiones = new practiceOption();
-                $practiceOptiones->variables = $variables;
+                $practiceOptiones->variables = rtrim($variables, ",");
                 $practiceOptiones->correct_variable = $variableCorrecta;
                 $practiceOptiones->save();
 

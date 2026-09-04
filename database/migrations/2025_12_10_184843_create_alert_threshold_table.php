@@ -23,6 +23,7 @@ return new class extends Migration
             )->nullable();
             $table->enum('alert_recipient', ['Profesor(a)', 'Estudiante']);
             $table->timestamps();
+              $table->boolean('is_active')->default(1);
         });
     }
     public function down(): void

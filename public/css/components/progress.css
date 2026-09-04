@@ -262,3 +262,10 @@
         gap: 0.5rem;
     }
 }
+
+.topic-stats__label {
+    word-wrap: break-word;
+    width: 80px;
+    line-height: 1.4;
+    display: inline-block;
+}

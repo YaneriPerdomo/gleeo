@@ -149,7 +149,7 @@ class ChildrenController extends Controller
         ]);
     }
 
-    public function store(ChildStoreRequest $request)
+    public function store(Request $request)
     {
 
 
